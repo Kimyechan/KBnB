@@ -1,14 +1,28 @@
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://15.164.222.243:5432/kbnb
+#    username: yechan
+#    password: pass
+#    driver-class-name: org.postgresql.Driver
+#
+#  jpa:
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: create
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/oauth2
-    username: yechan
-    password: pass
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:mysql://15.164.222.243:3306/kbnb?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+    username: root
+    password: jbs
 
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
   security:
     oauth2:
