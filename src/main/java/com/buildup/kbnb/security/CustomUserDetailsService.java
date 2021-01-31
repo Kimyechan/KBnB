@@ -2,7 +2,7 @@ package com.buildup.kbnb.security;
 
 
 import com.buildup.kbnb.exception.ResourceNotFoundException;
-import com.buildup.kbnb.model.User;
+import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

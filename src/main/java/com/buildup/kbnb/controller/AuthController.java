@@ -1,8 +1,8 @@
 package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.exception.BadRequestException;
-import com.buildup.kbnb.model.AuthProvider;
-import com.buildup.kbnb.model.User;
+import com.buildup.kbnb.model.user.AuthProvider;
+import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.payload.ApiResponse;
 import com.buildup.kbnb.payload.AuthResponse;
 import com.buildup.kbnb.payload.LoginRequest;

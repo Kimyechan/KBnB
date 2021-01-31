@@ -1,4 +1,4 @@
-package com.buildup.kbnb.model;
+package com.buildup.kbnb.model.user;
 
 public enum  AuthProvider {
     local,

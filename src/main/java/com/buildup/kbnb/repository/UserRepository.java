@@ -1,6 +1,6 @@
 package com.buildup.kbnb.repository;
 
-import com.buildup.kbnb.model.User;
+import com.buildup.kbnb.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

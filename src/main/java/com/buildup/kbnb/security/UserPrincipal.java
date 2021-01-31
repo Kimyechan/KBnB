@@ -1,6 +1,6 @@
 package com.buildup.kbnb.security;
 
-import com.buildup.kbnb.model.User;
+import com.buildup.kbnb.model.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

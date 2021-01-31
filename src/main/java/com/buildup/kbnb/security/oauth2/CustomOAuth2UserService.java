@@ -1,8 +1,8 @@
 package com.buildup.kbnb.security.oauth2;
 
 import com.buildup.kbnb.exception.OAuth2AuthenticationProcessingException;
-import com.buildup.kbnb.model.AuthProvider;
-import com.buildup.kbnb.model.User;
+import com.buildup.kbnb.model.user.AuthProvider;
+import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.security.oauth2.user.OAuth2UserInfo;
