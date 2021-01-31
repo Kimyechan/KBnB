@@ -11,6 +11,7 @@ import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +23,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/auth")
@@ -41,7 +45,10 @@ public class AuthController {
         }
 
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
-        return ResponseEntity.ok(new AuthResponse(token));
+
+        EntityModel<AuthResponse> model = EntityModel.of(new AuthResponse(token));
+        model.add(linkTo(methodOn(AuthController.class).authenticateUser(loginRequest)).withSelfRel());
+        return ResponseEntity.ok(model);
     }
 
     @PostMapping("/signup")

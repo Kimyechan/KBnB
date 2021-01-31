@@ -1,6 +1,5 @@
 package com.buildup.kbnb.controller;
 
-import antlr.BaseAST;
 import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.LoginRequest;
 import com.buildup.kbnb.model.user.AuthProvider;
@@ -10,26 +9,24 @@ import com.buildup.kbnb.security.TokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -79,6 +76,20 @@ class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("auth-login-email",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
+                        ),
+                        requestFields(
+                                fieldWithPath("email").description("유저 이메일"),
+                                fieldWithPath("password").description("유저 패스워드")
+                        ),
+                        responseFields(
+                                fieldWithPath("accessToken").description("JWT Access Token 값"),
+                                fieldWithPath("tokenType").description("Access Token 타입"),
+                                fieldWithPath("_links.self.href").description("해당 API URL")
+                        )
+                ));
     }
 }
