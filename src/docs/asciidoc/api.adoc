@@ -97,6 +97,10 @@
 
 유저를 생성하거나 로그인 및 로그아웃 조회할 때 사용한다
 
+[[resource-user-signup-email]]
+=== 이메일 회원가입
+operation::auth-signup-email[]
+
 [[resource-user-login-email]]
 === 이메일 로그인
 operation::auth-login-email[]

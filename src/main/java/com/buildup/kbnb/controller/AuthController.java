@@ -10,6 +10,7 @@ import com.buildup.kbnb.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,6 +48,7 @@ public class AuthController {
 
         EntityModel<AuthResponse> model = EntityModel.of(new AuthResponse(token));
         model.add(linkTo(methodOn(AuthController.class).authenticateUser(loginRequest)).withSelfRel());
+        model.add(Link.of("/docs/api.html#resource-user-login-email").withRel("profile"));
         return ResponseEntity.ok(model);
     }
 
@@ -69,11 +71,13 @@ public class AuthController {
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
         SignUpResponse response = SignUpResponse.builder()
                     .accessToken(token)
+                    .tokenType("Bearer")
                     .build();
 
         EntityModel<SignUpResponse> model = EntityModel.of(response);
         URI location = linkTo(methodOn(UserController.class).getCurrentUser(UserPrincipal.create(savedUser))).toUri();
         model.add(linkTo(methodOn(AuthController.class).registerUser(signUpRequest)).withSelfRel());
+        model.add(Link.of("/docs/api.html#resource-user-signup-email").withRel("profile"));
 
         return ResponseEntity.created(location)
                 .body(model);

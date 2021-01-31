@@ -65,8 +65,8 @@ com/buildup/kbnb/controller/SequenceGenerator.java
  com.buildup.kbnb.controller.SequenceGenerator
 com/buildup/kbnb/security/oauth2/user/OAuth2UserInfo.java
  com.buildup.kbnb.security.oauth2.user.OAuth2UserInfo
-com/buildup/kbnb/controller/AuthController.java
- com.buildup.kbnb.controller.AuthController
+com/buildup/kbnb/security/oauth2/user/OAuth2UserInfoFactory.java
+ com.buildup.kbnb.security.oauth2.user.OAuth2UserInfoFactory
 com/buildup/kbnb/model/Reservation.java
  com.buildup.kbnb.model.Reservation
  com.buildup.kbnb.model.Reservation$ReservationBuilder
@@ -91,5 +91,8 @@ com/buildup/kbnb/model/room/BathRoom.java
  com.buildup.kbnb.model.room.BathRoom$BathRoomBuilder
 com/buildup/kbnb/security/CustomUserDetailsService.java
  com.buildup.kbnb.security.CustomUserDetailsService
-com/buildup/kbnb/security/oauth2/user/OAuth2UserInfoFactory.java
- com.buildup.kbnb.security.oauth2.user.OAuth2UserInfoFactory
+com/buildup/kbnb/dto/SignUpResponse.java
+ com.buildup.kbnb.dto.SignUpResponse
+ com.buildup.kbnb.dto.SignUpResponse$SignUpResponseBuilder
+com/buildup/kbnb/controller/AuthController.java
+ com.buildup.kbnb.controller.AuthController

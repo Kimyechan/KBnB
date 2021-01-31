@@ -26,8 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -88,10 +87,14 @@ class AuthControllerTest {
                                 fieldWithPath("email").description("유저 이메일"),
                                 fieldWithPath("password").description("유저 패스워드")
                         ),
+                        responseHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
+                        ),
                         responseFields(
                                 fieldWithPath("accessToken").description("JWT Access Token 값"),
                                 fieldWithPath("tokenType").description("Access Token 타입"),
-                                fieldWithPath("_links.self.href").description("해당 API URL")
+                                fieldWithPath("_links.self.href").description("해당 API URL"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
                         )
                 ));
     }
@@ -121,7 +124,26 @@ class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(signUpRequest)))
                 .andDo(print())
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andDo(document("auth-signup-email",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
+                        ),
+                        requestFields(
+                                fieldWithPath("name").description("유저 이름"),
+                                fieldWithPath("email").description("유저 이메일"),
+                                fieldWithPath("password").description("유저 패스워드")
+                        ),
+                        responseHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
+                        ),
+                        responseFields(
+                                fieldWithPath("accessToken").description("JWT Access Token 값"),
+                                fieldWithPath("tokenType").description("Access Token 타입"),
+                                fieldWithPath("_links.self.href").description("해당 API URL"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
+                        )
+                ));
     }
 
 }
