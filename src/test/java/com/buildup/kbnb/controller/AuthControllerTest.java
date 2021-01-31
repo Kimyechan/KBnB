@@ -2,10 +2,12 @@ package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.LoginRequest;
+import com.buildup.kbnb.dto.SignUpRequest;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.TokenProvider;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -92,4 +95,33 @@ class AuthControllerTest {
                         )
                 ));
     }
+
+    @Test
+    @DisplayName("이메일 회원가입 성공")
+    public void signupEmail() throws Exception {
+        SignUpRequest signUpRequest = SignUpRequest.builder()
+                .name("test")
+                .email("test@gmail.com")
+                .password("test")
+                .build();
+
+        User user = User.builder()
+                .id(1L)
+                .name("test")
+                .email("test@gmail.com")
+                .password(passwordEncoder.encode("test"))
+                .provider(AuthProvider.local)
+                .emailVerified(false)
+                .build();
+
+        given(userRepository.existsByEmail(signUpRequest.getEmail())).willReturn(false);
+        given(userRepository.save(any())).willReturn(user);
+
+        mockMvc.perform(post("/auth/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(signUpRequest)))
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
+
 }

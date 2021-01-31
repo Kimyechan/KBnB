@@ -1,14 +1,12 @@
 package com.buildup.kbnb.controller;
 
+import com.buildup.kbnb.dto.*;
 import com.buildup.kbnb.exception.BadRequestException;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
-import com.buildup.kbnb.dto.ApiResponse;
-import com.buildup.kbnb.dto.AuthResponse;
-import com.buildup.kbnb.dto.LoginRequest;
-import com.buildup.kbnb.dto.SignUpRequest;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.TokenProvider;
+import com.buildup.kbnb.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
@@ -18,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -57,7 +56,6 @@ public class AuthController {
             throw new BadRequestException("Email address already in use.");
         }
 
-        // Creating user's account
         User user = new User();
         user.setName(signUpRequest.getName());
         user.setEmail(signUpRequest.getEmail());
@@ -66,14 +64,19 @@ public class AuthController {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        User result = userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/user/me")
-                .buildAndExpand(result.getId()).toUri();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+        SignUpResponse response = SignUpResponse.builder()
+                    .accessToken(token)
+                    .build();
+
+        EntityModel<SignUpResponse> model = EntityModel.of(response);
+        URI location = linkTo(methodOn(UserController.class).getCurrentUser(UserPrincipal.create(savedUser))).toUri();
+        model.add(linkTo(methodOn(AuthController.class).registerUser(signUpRequest)).withSelfRel());
 
         return ResponseEntity.created(location)
-                .body(new ApiResponse(true, "User registered successfully@"));
+                .body(model);
     }
 
 }
