@@ -1,4 +1,4 @@
-package com.buildup.kbnb.payload;
+package com.buildup.kbnb.dto;
 
 public class ApiResponse {
     private boolean success;

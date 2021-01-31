@@ -3,6 +3,7 @@ package com.buildup.kbnb.security.oauth2;
 import com.buildup.kbnb.config.AppProperties;
 import com.buildup.kbnb.exception.BadRequestException;
 import com.buildup.kbnb.security.TokenProvider;
+import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.util.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -61,7 +62,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
-        String token = tokenProvider.createToken(authentication);
+//        String token = tokenProvider.createToken(authentication);
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        String token = tokenProvider.createToken(String.valueOf(userPrincipal.getId()));
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", token)

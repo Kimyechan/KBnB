@@ -3,12 +3,13 @@ package com.buildup.kbnb.controller;
 import com.buildup.kbnb.exception.BadRequestException;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
-import com.buildup.kbnb.payload.ApiResponse;
-import com.buildup.kbnb.payload.AuthResponse;
-import com.buildup.kbnb.payload.LoginRequest;
-import com.buildup.kbnb.payload.SignUpRequest;
+import com.buildup.kbnb.dto.ApiResponse;
+import com.buildup.kbnb.dto.AuthResponse;
+import com.buildup.kbnb.dto.LoginRequest;
+import com.buildup.kbnb.dto.SignUpRequest;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.TokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,33 +25,22 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
+    private final UserRepository userRepository;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private TokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new BadRequestException("email or password wrong"));
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            throw new BadRequestException("email or password wrong");
+        }
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
-                        loginRequest.getPassword()
-                )
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String token = tokenProvider.createToken(authentication);
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
         return ResponseEntity.ok(new AuthResponse(token));
     }
 
