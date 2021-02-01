@@ -1,4 +1,4 @@
-package com.buildup.kbnb.exception;
+package com.buildup.kbnb.advice.exception;
 
 import org.springframework.security.core.AuthenticationException;
 
