@@ -631,6 +631,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
     -H 'Content-Type: application/json;charset=UTF-8' \
     -d '{
   "name" : "test",
+  "birth" : "1999-07-18",
   "email" : "test@gmail.com",
   "password" : "test"
 }'</code></pre>
@@ -643,11 +644,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /auth/signup HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 74
+Content-Length: 100
 Host: localhost:8080
 
 {
   "name" : "test",
+  "birth" : "1999-07-18",
   "email" : "test@gmail.com",
   "password" : "test"
 }</code></pre>
@@ -673,7 +675,7 @@ X-Frame-Options: DENY
 Content-Length: 398
 
 {
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEyMTYwMDMxLCJleHAiOjE2MTMwMjQwMzF9.0CQ7O37-GNSzbTVLSuiOvs5IGfRMQTjDNXPPdi_70nKcXXCugX3al4nXWaiB-bv5hBeq-6u3ocZKB3erDSoByA",
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEyMTY0MjA5LCJleHAiOjE2MTMwMjgyMDl9.ravX-RcHICuPR04F8tFBJuGgWSe8-7jC-IFHDIMQ_XkCKVio4v6QNnV0iCbcZSaHF7FbnZI9EwOSmn91HgnOag",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -693,6 +695,7 @@ Content-Length: 398
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ echo '{
   "name" : "test",
+  "birth" : "1999-07-18",
   "email" : "test@gmail.com",
   "password" : "test"
 }' | http POST 'http://localhost:8080/auth/signup' \
@@ -706,6 +709,7 @@ Content-Length: 398
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code>{
   "name" : "test",
+  "birth" : "1999-07-18",
   "email" : "test@gmail.com",
   "password" : "test"
 }</code></pre>
@@ -732,6 +736,11 @@ Content-Length: 398
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>birth</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 생년월일</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>email</code></p></td>
@@ -772,7 +781,7 @@ Content-Length: 398
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code>{
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEyMTYwMDMxLCJleHAiOjE2MTMwMjQwMzF9.0CQ7O37-GNSzbTVLSuiOvs5IGfRMQTjDNXPPdi_70nKcXXCugX3al4nXWaiB-bv5hBeq-6u3ocZKB3erDSoByA",
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEyMTY0MjA5LCJleHAiOjE2MTMwMjgyMDl9.ravX-RcHICuPR04F8tFBJuGgWSe8-7jC-IFHDIMQ_XkCKVio4v6QNnV0iCbcZSaHF7FbnZI9EwOSmn91HgnOag",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -896,7 +905,7 @@ X-Frame-Options: DENY
 Content-Length: 392
 
 {
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMTYwMDMxLCJleHAiOjE2MTMwMjQwMzF9.9ogX8tEW3wQtICdncnl3bJ2tXZcl4jbfxA2_ZoAuRw649egm4jo_Bw4YacBquhPg54PcqjembOYiJ2RHS2Co8w",
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMTY0MjA4LCJleHAiOjE2MTMwMjgyMDh9.x_XaHlOO6CLneoTsZuFZtr11H2lrq_fTO1dFmUmLuqmK7iUCARiBlfICZOF3syiypOLuiFtkTX0qN_FjOB1IAQ",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -988,7 +997,7 @@ Content-Length: 392
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code>{
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMTYwMDMxLCJleHAiOjE2MTMwMjQwMzF9.9ogX8tEW3wQtICdncnl3bJ2tXZcl4jbfxA2_ZoAuRw649egm4jo_Bw4YacBquhPg54PcqjembOYiJ2RHS2Co8w",
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMTY0MjA4LCJleHAiOjE2MTMwMjgyMDh9.x_XaHlOO6CLneoTsZuFZtr11H2lrq_fTO1dFmUmLuqmK7iUCARiBlfICZOF3syiypOLuiFtkTX0qN_FjOB1IAQ",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
