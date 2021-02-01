@@ -104,3 +104,7 @@ operation::auth-signup-email[]
 [[resource-user-login-email]]
 === 이메일 로그인
 operation::auth-login-email[]
+
+[[resource-user-get-me]]
+=== 유저 정보 조회
+operation::user-get-me[]
