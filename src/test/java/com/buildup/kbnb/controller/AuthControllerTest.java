@@ -60,18 +60,18 @@ class AuthControllerTest {
     @Test
     @DisplayName("이메일 로그인 성공")
     public void loginEmail() throws Exception {
-        User user = User.builder()
-                .id(1L)
-                .name("test")
-                .email("test@gmail.com")
-                .password(passwordEncoder.encode("test"))
-                .provider(AuthProvider.local)
-                .emailVerified(false)
-                .build();
-
         LoginRequest loginRequest = LoginRequest.builder()
                 .email("test@gmail.com")
                 .password("test")
+                .build();
+
+        User user = User.builder()
+                .id(1L)
+                .name("test")
+                .email(loginRequest.getEmail())
+                .password(passwordEncoder.encode(loginRequest.getPassword()))
+                .provider(AuthProvider.local)
+                .emailVerified(false)
                 .build();
 
         given(userRepository.findByEmail(user.getEmail())).willReturn(java.util.Optional.of(user));
