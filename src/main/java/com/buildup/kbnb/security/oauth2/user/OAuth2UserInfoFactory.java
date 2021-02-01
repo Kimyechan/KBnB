@@ -1,7 +1,7 @@
 package com.buildup.kbnb.security.oauth2.user;
 
 
-import com.buildup.kbnb.exception.OAuth2AuthenticationProcessingException;
+import com.buildup.kbnb.advice.exception.OAuth2AuthenticationProcessingException;
 import com.buildup.kbnb.model.user.AuthProvider;
 
 import java.util.Map;

@@ -3,7 +3,7 @@
 REPOSITORY=/opt/kbnb
 cd $REPOSITORY
 
-APP_NAME=action_codedeploy
+APP_NAME=kbnb
 JAR_NAME=$(ls $REPOSITORY/build/libs/ | grep '.jar' | tail -n 1)
 JAR_PATH=$REPOSITORY/build/libs/$JAR_NAME
 

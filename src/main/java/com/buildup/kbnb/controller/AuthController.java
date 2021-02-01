@@ -1,25 +1,24 @@
 package com.buildup.kbnb.controller;
 
-import com.buildup.kbnb.dto.*;
-import com.buildup.kbnb.exception.BadRequestException;
+import com.buildup.kbnb.dto.AuthResponse;
+import com.buildup.kbnb.dto.LoginRequest;
+import com.buildup.kbnb.dto.SignUpRequest;
+import com.buildup.kbnb.dto.SignUpResponse;
+import com.buildup.kbnb.advice.exception.BadRequestException;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.TokenProvider;
 import com.buildup.kbnb.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -60,10 +59,10 @@ public class AuthController {
 
         User user = new User();
         user.setName(signUpRequest.getName());
+        user.setBirth(signUpRequest.getBirth());
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(signUpRequest.getPassword());
         user.setProvider(AuthProvider.local);
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         User savedUser = userRepository.save(user);

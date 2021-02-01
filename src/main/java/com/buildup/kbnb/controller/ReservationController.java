@@ -1,11 +1,10 @@
 package com.buildup.kbnb.controller;
 
+import com.buildup.kbnb.advice.exception.BadRequestException;
+import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
 import com.buildup.kbnb.dto.ReservationRequest;
 import com.buildup.kbnb.dto.ReservationResponse;
 import com.buildup.kbnb.dto.Reservation_ConfirmedResponse;
-import com.buildup.kbnb.dto.Reservation_Detail_Response;
-import com.buildup.kbnb.exception.BadRequestException;
-import com.buildup.kbnb.exception.ResourceNotFoundException;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.User;
