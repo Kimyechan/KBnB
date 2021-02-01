@@ -24,6 +24,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
@@ -104,15 +106,17 @@ class AuthControllerTest {
     public void signupEmail() throws Exception {
         SignUpRequest signUpRequest = SignUpRequest.builder()
                 .name("test")
+                .birth(LocalDate.of(1999, 7, 18))
                 .email("test@gmail.com")
                 .password("test")
                 .build();
 
         User user = User.builder()
                 .id(1L)
-                .name("test")
-                .email("test@gmail.com")
-                .password(passwordEncoder.encode("test"))
+                .name(signUpRequest.getName())
+                .birth(signUpRequest.getBirth())
+                .email(signUpRequest.getEmail())
+                .password(passwordEncoder.encode(signUpRequest.getPassword()))
                 .provider(AuthProvider.local)
                 .emailVerified(false)
                 .build();
@@ -131,6 +135,7 @@ class AuthControllerTest {
                         ),
                         requestFields(
                                 fieldWithPath("name").description("유저 이름"),
+                                fieldWithPath("birth").description("유저 생년월일"),
                                 fieldWithPath("email").description("유저 이메일"),
                                 fieldWithPath("password").description("유저 패스워드")
                         ),
