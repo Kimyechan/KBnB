@@ -16,8 +16,10 @@ import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.asm.IModelFilter;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.hibernate.EntityMode;
@@ -52,10 +54,15 @@ public class ReservationController {
 
 
     }*/
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> getConfirmedReservationList(@CurrentUser UserPrincipal userPrincipal) {
+    @GetMapping(value = "/{pageNumber}",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> getConfirmedReservationList(@CurrentUser UserPrincipal userPrincipal, @PathVariable int pageNumber) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException("User","id", userPrincipal.getId()));
-        List<Reservation> reservationList = user.getReservationList();
+        System.out.println(pageNumber);
+        Pageable paging = PageRequest.of(pageNumber, 20, Sort.Direction.DESC, "id");
+        System.out.println(reservationRepository.findAll());
+        Page<Reservation> pageInfo = reservationRepository.findByUser(user, paging);
+        List<Reservation> reservationList = pageInfo.getContent();
+
         List<EntityModel<Reservation_ConfirmedResponse>> entityResponses = new ArrayList<>();
 
         for(Reservation reservation : reservationList) {
@@ -76,7 +83,7 @@ public class ReservationController {
             entityResponses.add(reservation_confirmedResponseEntityModel);
         }
         CollectionModel model = CollectionModel.of(entityResponses);
-        model.add(linkTo(methodOn(ReservationController.class).getConfirmedReservationList(userPrincipal)).withSelfRel());
+        model.add(linkTo(methodOn(ReservationController.class).getConfirmedReservationList(userPrincipal, pageNumber)).withSelfRel());
         model.add(Link.of("/docs/api.html#resource-reservation-lookupList").withRel("profile"));
 //        model.add(Link.of())
         return ResponseEntity.ok(model);

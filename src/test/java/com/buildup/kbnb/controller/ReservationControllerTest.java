@@ -223,14 +223,16 @@ public void filter() {
                 .reservationList(reservationList)
                 .build();
 
+        host.setReservationList(reservationList);
+
         User savedUser = userRepository.save(user);
-        String userToken = tokenProvider.createToken(savedUser.getId().toString());
+        String userToken = tokenProvider.createToken(host.getId().toString());
 
         reservationRepository.save(reservation);
 
         Map<String, String> map = new HashMap<>();
         map.put("NONE", "NONE");
-        mockMvc.perform(get("/reservation")
+        mockMvc.perform(get("/reservation/0")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + userToken)
                 .content(objectMapper.writeValueAsString(map))

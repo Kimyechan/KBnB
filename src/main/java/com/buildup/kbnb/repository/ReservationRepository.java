@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-    Page<Reservation> findAllByUser(User user, Pageable page);
+    Page<Reservation> findByUser(User user, Pageable page);
     Page<Reservation> findAll(Pageable page);
     @Query("select r from Reservation r where r.user.id = :userId")
     List<Reservation> findByUserId(@Param("userId") Long userId);
