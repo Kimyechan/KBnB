@@ -38,10 +38,10 @@ public class Room {
 
     private Boolean isParking;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Location location;
 
     @OneToMany(mappedBy = "room",fetch = FetchType.LAZY)

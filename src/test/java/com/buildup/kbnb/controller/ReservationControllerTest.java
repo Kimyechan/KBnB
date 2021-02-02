@@ -9,6 +9,7 @@ import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
+import com.buildup.kbnb.repository.ReservationRepository;
 import com.buildup.kbnb.repository.RoomRepository;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.CurrentUser;
@@ -88,6 +89,9 @@ class ReservationControllerTest {
 
     @Autowired
     TokenProvider tokenProvider;
+
+    @Autowired
+    ReservationRepository reservationRepository;
 
     @Autowired
     WebApplicationContext webApplicationContext;
@@ -206,7 +210,9 @@ public void filter() {
                 .guestNum(2)
                 .room(room)
                 .totalCost(Double.valueOf(2000))
+                .user(host)
                 .build();
+
         reservationList.add(reservation);
         User user = User.builder()
                 .name("test")
@@ -218,8 +224,10 @@ public void filter() {
                 .build();
 
         User savedUser = userRepository.save(user);
-
         String userToken = tokenProvider.createToken(savedUser.getId().toString());
+
+        reservationRepository.save(reservation);
+
         Map<String, String> map = new HashMap<>();
         map.put("NONE", "NONE");
         mockMvc.perform(get("/reservation")

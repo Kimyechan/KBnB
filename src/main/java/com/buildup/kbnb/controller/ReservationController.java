@@ -5,6 +5,7 @@ import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
 import com.buildup.kbnb.dto.ReservationRequest;
 import com.buildup.kbnb.dto.ReservationResponse;
 import com.buildup.kbnb.dto.Reservation_ConfirmedResponse;
+import com.buildup.kbnb.dto.Reservation_Detail_Response;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.User;
@@ -15,6 +16,8 @@ import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.asm.IModelFilter;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.hibernate.EntityMode;
@@ -45,7 +48,7 @@ public class ReservationController {
     private final ReservationRepository reservationRepository;
 
     /*@GetMapping("/reservation_id")
-    public EntityResponse<Reservation_Detail_Response> getDetailReservation(@CurrentUser UserPrincipal userPrincipal) {
+    public ResponseE<Reservation_Detail_Response> getDetailReservation(@CurrentUser UserPrincipal userPrincipal) {
 
 
     }*/
