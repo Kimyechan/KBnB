@@ -19,6 +19,8 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.hibernate.EntityMode;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
@@ -47,7 +49,7 @@ public class ReservationController {
 
 
     }*/
-    @GetMapping
+    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getConfirmedReservationList(@CurrentUser UserPrincipal userPrincipal) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException("User","id", userPrincipal.getId()));
         List<Reservation> reservationList = user.getReservationList();
@@ -72,6 +74,7 @@ public class ReservationController {
         }
         CollectionModel model = CollectionModel.of(entityResponses);
         model.add(linkTo(methodOn(ReservationController.class).getConfirmedReservationList(userPrincipal)).withSelfRel());
+        model.add(Link.of("/docs/api.html#resource-reservation-lookupList").withRel("profile"));
 //        model.add(Link.of())
         return ResponseEntity.ok(model);
 
