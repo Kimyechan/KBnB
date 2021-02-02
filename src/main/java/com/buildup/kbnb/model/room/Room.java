@@ -22,10 +22,6 @@ public class Room {
 
     private String name;
 
-    private String roomType;
-
-    private Double roomCost;
-
     private Double cleaningCost;
 
     private Double tax;
@@ -48,6 +44,6 @@ public class Room {
     @OneToOne(fetch = FetchType.LAZY)
     private Location location;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "room",fetch = FetchType.LAZY)
     private List<UserRoom> check;
 }
