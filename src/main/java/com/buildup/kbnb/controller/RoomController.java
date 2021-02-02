@@ -38,8 +38,31 @@ public class RoomController {
     public ResponseEntity<?> getRoomList(@RequestBody RoomSearchCondition roomSearchCondition,
                                          Pageable pageable,
                                          PagedResourcesAssembler<RoomDto> assembler) {
-        Page<Room> roomPage = roomRepository.searchByCondition(roomSearchCondition, pageable);
-        List<RoomDto> roomDtoList = roomService.getRoomDtoList(roomPage.getContent());
+        Page<Room> roomPage = roomService.searchListByCondition(roomSearchCondition, pageable);
+//        List<RoomDto> roomDtoList = roomService.getRoomDtoList(roomPage.getContent());
+        List<RoomDto> roomDtoList = new ArrayList<>();
+
+        for (Room room : roomPage.getContent()) {
+            RoomDto roomDto = RoomDto.builder()
+                    .id(room.getId())
+                    .name(room.getName())
+                    .roomType(room.getRoomType())
+                    .cost(room.getRoomCost())
+                    .peopleLimit(room.getPeopleLimit())
+                    .grade(room.getGrade())
+                    .bedRoomNum(room.getBedRoomList().size())
+                    .bathRoomNum(room.getBathRoomList().size())
+                    .checkInTime(room.getCheckInTime())
+                    .checkOutTime(room.getCheckOutTime())
+                    .isSmoking(room.getIsSmoking())
+                    .isParking(room.getIsParking())
+                    .latitude(room.getLocation().getLatitude())
+                    .longitude(room.getLocation().getLongitude())
+                    .commentCount(room.getCommentList().size())
+                    .build();
+
+            roomDtoList.add(roomDto);
+        }
 
         Page<RoomDto> result = new PageImpl<>(roomDtoList, pageable, roomPage.getTotalElements());
         PagedModel<EntityModel<RoomDto>> model = assembler.toModel(result);
