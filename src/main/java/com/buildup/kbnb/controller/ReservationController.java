@@ -14,6 +14,7 @@ import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.asm.IModelFilter;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.hibernate.EntityMode;
@@ -46,11 +47,11 @@ public class ReservationController {
 
 
     }*/
-    @GetMapping("/")
-    public CollectionModel<EntityResponse<Reservation_ConfirmedResponse>> getConfirmedReservationList(@CurrentUser UserPrincipal userPrincipal) {
+    @GetMapping
+    public ResponseEntity<?> getConfirmedReservationList(@CurrentUser UserPrincipal userPrincipal) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException("User","id", userPrincipal.getId()));
         List<Reservation> reservationList = user.getReservationList();
-        List<EntityResponse<Reservation_ConfirmedResponse>> entityResponses = new ArrayList<>();
+        List<EntityModel<Reservation_ConfirmedResponse>> entityResponses = new ArrayList<>();
 
         for(Reservation reservation : reservationList) {
             Reservation_ConfirmedResponse reservation_confirmedResponse = new Reservation_ConfirmedResponse().builder()
@@ -66,9 +67,13 @@ public class ReservationController {
             {
                 reservation_confirmedResponse.setStatus("완료된 여정");
             }
+            EntityModel<Reservation_ConfirmedResponse> reservation_confirmedResponseEntityModel = EntityModel.of(reservation_confirmedResponse);
+            entityResponses.add(reservation_confirmedResponseEntityModel);
         }
-
-        return CollectionModel.of(entityResponses,linkTo(methodOn(ReservationController.class).getConfirmedReservationList(userPrincipal)).withSelfRel());
+        CollectionModel model = CollectionModel.of(entityResponses);
+        model.add(linkTo(methodOn(ReservationController.class).getConfirmedReservationList(userPrincipal)).withSelfRel());
+//        model.add(Link.of())
+        return ResponseEntity.ok(model);
 
     }
 

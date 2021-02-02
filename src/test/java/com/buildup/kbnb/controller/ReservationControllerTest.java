@@ -4,6 +4,7 @@ import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.LoginRequest;
 import com.buildup.kbnb.dto.ReservationRequest;
 import com.buildup.kbnb.dto.SignUpRequest;
+import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
@@ -39,13 +40,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -77,6 +83,9 @@ class ReservationControllerTest {
     TokenProvider tokenProvider;
     @Mock
     Room room;
+    @Mock
+    Reservation reservation;
+
 
     @Test
     public void getReservationList() throws Exception {
@@ -137,5 +146,44 @@ class ReservationControllerTest {
 
     }
 
+    @Test
+    public void getConfirmedReservationList() throws Exception {
+        //유저 필요하고 유저 findBYid
+        //룸 필요하고 룸 findBYid
+        List<Reservation> reservationList = new ArrayList<>();
+
+        Room room = Room.builder()
+                .checkInTime(LocalTime.of(14,0))
+                .checkOutTime(LocalTime.of(11,0))
+                .isParking(true)
+                .isSmoking(true)
+                .cleaningCost((double) 1000)
+                .name("빵꾸똥꾸야")
+                .tax((double) 100)
+                .peopleLimit(2)
+                .description("헤으응")
+                .build();
+        reservationList.add(reservation);
+
+        User user = User.builder()
+                .name("test")
+                .email("test@gmail.com")
+                .password(passwordEncoder.encode("test"))
+                .provider(AuthProvider.local)
+                .emailVerified(false)
+                .reservationList(reservationList)
+                .build();
+        User savedUser = userRepository.save(user);
+
+
+
+        String userToken = tokenProvider.createToken(savedUser.getId().toString());
+        mockMvc.perform(get("/reservation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + userToken)
+        ).andDo(print())
+                .andExpect(status().isOk());
+
+    }
 
 }
