@@ -117,3 +117,10 @@ operation::user-get-me[]
 [[resource-room-get-list-by-condition]]
 === 숙소 리스트 조건 검색
 operation::room-get-roomList-by-condition[]
+
+[[resource-reservation]]
+== 예약
+
+[[resource-reservation-register]]
+=== 예약 등록
+operation::reservation-register[]

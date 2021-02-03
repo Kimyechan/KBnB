@@ -59,7 +59,4 @@ public class Room {
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<Comment> commentList;
-
-//    @OneToMany(mappedBy = "room",fetch = FetchType.LAZY)
-//    private List<UserRoom> check;
 }
