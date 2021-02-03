@@ -1,5 +1,6 @@
 package com.buildup.kbnb.model.room;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,14 +16,9 @@ public class BathRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer queenSize;
+    private Boolean isPrivate;
 
-    private Integer doubleSize;
-
-    private Integer singleSize;
-
-    private Integer superSingleSize;
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private Room room;
 }

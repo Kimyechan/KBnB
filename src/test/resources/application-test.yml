@@ -7,6 +7,8 @@ spring:
     hikari:
       jdbc-url: jdbc:h2:mem:testdb
   jpa:
+    hibernate:
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
