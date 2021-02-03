@@ -26,4 +26,5 @@ public class RoomDto {
     private Double latitude;
     private Double longitude;
     private Integer commentCount;
+    private Boolean isCheck;
 }

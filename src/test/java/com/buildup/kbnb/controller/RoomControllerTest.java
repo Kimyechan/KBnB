@@ -15,6 +15,7 @@ import com.buildup.kbnb.security.CustomUserDetailsService;
 import com.buildup.kbnb.security.TokenProvider;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.RoomService;
+import com.buildup.kbnb.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -74,6 +75,9 @@ class RoomControllerTest {
     @MockBean
     RoomService roomService;
 
+    @MockBean
+    UserService userService;
+
     public User createUser() {
         User user = User.builder()
                 .id(1L)
@@ -108,6 +112,7 @@ class RoomControllerTest {
 
         given(roomService.searchListByCondition(any(), any())).willReturn(roomPage);
         given(roomService.getBedNum(any())).willReturn(2);
+        given(userService.checkRoomByUser(eq(user.getId()), any())).willReturn(false);
 
         mockMvc.perform(post("/room/list")
                 .param("page", String.valueOf(pageable.getPageNumber()))
