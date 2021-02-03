@@ -44,6 +44,9 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.headers.HeaderDocumentation.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -101,7 +104,7 @@ class RoomControllerTest {
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
 
         RoomSearchCondition roomSearchCondition = getRoomSearchCondition();
-        Pageable pageable = PageRequest.of(0, 5);
+        Pageable pageable = PageRequest.of(1, 5);
         List<Room> roomList = getRoomList().subList((int) pageable.getOffset(), (int) (pageable.getOffset() + pageable.getPageSize()));
         Page<Room> roomPage = new PageImpl<>(
                 roomList,
@@ -119,7 +122,64 @@ class RoomControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .content(objectMapper.writeValueAsString(roomSearchCondition)))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("room-get-roomList-by-condition",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT 인증 토큰"),
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
+                        ),
+                        requestFields(
+                                fieldWithPath("locationSearch").description("위치 검색 조건").optional(),
+                                fieldWithPath("locationSearch.latitude").description("설정한 위도 값").optional(),
+                                fieldWithPath("locationSearch.latitudeMin").description("설정한 위도 최소 값").optional(),
+                                fieldWithPath("locationSearch.latitudeMax").description("설정한 위도 최대 값").optional(),
+                                fieldWithPath("locationSearch.longitude").description("설정한 경도 값").optional(),
+                                fieldWithPath("locationSearch.longitudeMin").description("설정한 경도 최소 값").optional(),
+                                fieldWithPath("locationSearch.longitudeMax").description("설정한 경도 최대 값").optional(),
+                                fieldWithPath("checkDateSearch").description("날짜 검색 조건").optional(),
+                                fieldWithPath("guestSearch").description("게스트 수 검색 조건").optional(),
+                                fieldWithPath("guestSearch.numOfAdult").description("성인 수").optional(),
+                                fieldWithPath("guestSearch.numOfKid").description("어린이 수").optional(),
+                                fieldWithPath("guestSearch.numOfInfant").description("유아 수").optional(),
+                                fieldWithPath("costSearch").description("비용 검색 조건").optional(),
+                                fieldWithPath("costSearch.minCost").description("최소 비용").optional(),
+                                fieldWithPath("costSearch.maxCost").description("최대 비용").optional(),
+                                fieldWithPath("roomType").description("숙소 유형 검색").optional()
+                        ),
+                        responseHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
+                        ),
+                        responseFields(
+                                fieldWithPath("_embedded.roomDtoList").description("숙소 리스트"),
+                                fieldWithPath("_embedded.roomDtoList[].id").description("숙소 식별자 값"),
+                                fieldWithPath("_embedded.roomDtoList[].name").description("숙소 이름"),
+                                fieldWithPath("_embedded.roomDtoList[].peopleLimit").description("게스트 제한 인원 수"),
+                                fieldWithPath("_embedded.roomDtoList[].bedRoomNum").description("침실 수"),
+                                fieldWithPath("_embedded.roomDtoList[].bedNum").description("침대 수"),
+                                fieldWithPath("_embedded.roomDtoList[].bathRoomNum").description("욕실 수"),
+                                fieldWithPath("_embedded.roomDtoList[].checkInTime").description("체크 인 시간"),
+                                fieldWithPath("_embedded.roomDtoList[].checkOutTime").description("체크 아웃 시간"),
+                                fieldWithPath("_embedded.roomDtoList[].isSmoking").description("흡연 가능 여부"),
+                                fieldWithPath("_embedded.roomDtoList[].isParking").description("주차 가능 여부"),
+                                fieldWithPath("_embedded.roomDtoList[].roomType").description("숙소 유형"),
+                                fieldWithPath("_embedded.roomDtoList[].cost").description("숙소 비용"),
+                                fieldWithPath("_embedded.roomDtoList[].grade").description("숙소 평점"),
+                                fieldWithPath("_embedded.roomDtoList[].latitude").description("숙소 위치 위도 값"),
+                                fieldWithPath("_embedded.roomDtoList[].longitude").description("숙소 위치 경도 값"),
+                                fieldWithPath("_embedded.roomDtoList[].commentCount").description("댓글 수"),
+                                fieldWithPath("_embedded.roomDtoList[].isCheck").description("해당 숙소 좋아요 여부"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 URL"),
+                                fieldWithPath("_links.first.href").description("첫번째 페이지 URL"),
+                                fieldWithPath("_links.prev.href").description("이전 페이지 URL"),
+                                fieldWithPath("_links.self.href").description("현재 페이지 URL"),
+                                fieldWithPath("_links.next.href").description("이후 페이지 URL"),
+                                fieldWithPath("_links.last.href").description("마지막 페이지 URL"),
+                                fieldWithPath("page.size").description("한 페이지 당 크기"),
+                                fieldWithPath("page.totalElements").description("전체 숙소 개수"),
+                                fieldWithPath("page.totalPages").description("전체 페이지 개수"),
+                                fieldWithPath("page.number").description("현재 페이지 번호")
+                        )
+                ));
     }
 
     private RoomSearchCondition getRoomSearchCondition() {
@@ -189,7 +249,7 @@ class RoomControllerTest {
                     .checkOutTime(LocalTime.of(12, 0))
                     .cleaningCost(5000.0)
                     .isParking(false)
-                    .isSmoking(false )
+                    .isSmoking(false)
                     .grade(4.5)
                     .location(location)
                     .bathRoomList(bathRooms)

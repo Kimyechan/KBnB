@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,6 @@ public class RoomController {
     private final BedRoomRepository bedRoomRepository;
     private final BathRoomRepository bathRoomRepository;
     private final LocationRepository locationRepository;
-    private final UserRepository userRepository;
 
     @PostMapping("/list")
     public ResponseEntity<?> getRoomList(@RequestBody RoomSearchCondition roomSearchCondition,
@@ -48,9 +48,19 @@ public class RoomController {
                                          PagedResourcesAssembler<RoomDto> assembler,
                                          @CurrentUser UserPrincipal userPrincipal) {
         Page<Room> roomPage = roomService.searchListByCondition(roomSearchCondition, pageable);
-        List<RoomDto> roomList = new ArrayList<>();
+        List<RoomDto> roomList = getRoomDtoList(userPrincipal.getId(), roomPage.getContent());
 
-        for (Room room : roomPage.getContent()) {
+        Page<RoomDto> result = new PageImpl<>(roomList, pageable, roomPage.getTotalElements());
+        PagedModel<EntityModel<RoomDto>> model = assembler.toModel(result);
+        model.add(Link.of("/docs/api.html#resource-room-get-list-by-condition").withRel("profile"));
+
+        return ResponseEntity.ok().body(model);
+    }
+
+    private List<RoomDto> getRoomDtoList(Long userId, List<Room> roomList) {
+        List<RoomDto> roomDtoList = new ArrayList<>();
+
+        for (Room room : roomList) {
             int bedNum = roomService.getBedNum(room.getBedRoomList());
 
             RoomDto roomDto = RoomDto.builder()
@@ -70,16 +80,12 @@ public class RoomController {
                     .latitude(room.getLocation().getLatitude())
                     .longitude(room.getLocation().getLongitude())
                     .commentCount(room.getCommentList().size())
-                    .isCheck(userService.checkRoomByUser(userPrincipal.getId(), room.getId()))
+                    .isCheck(userService.checkRoomByUser(userId, room.getId()))
                     .build();
 
-            roomList.add(roomDto);
+            roomDtoList.add(roomDto);
         }
-
-        Page<RoomDto> result = new PageImpl<>(roomList, pageable, roomPage.getTotalElements());
-        PagedModel<EntityModel<RoomDto>> model = assembler.toModel(result);
-
-        return ResponseEntity.ok().body(model);
+        return roomDtoList;
     }
 
     @GetMapping("/test")
