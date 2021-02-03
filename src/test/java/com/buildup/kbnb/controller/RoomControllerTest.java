@@ -100,13 +100,18 @@ class RoomControllerTest {
 
         RoomSearchCondition roomSearchCondition = getRoomSearchCondition();
         Pageable pageable = PageRequest.of(0, 5);
+        List<Room> roomList = getRoomList().subList((int) pageable.getOffset(), (int) (pageable.getOffset() + pageable.getPageSize()));
+        Page<Room> roomPage = new PageImpl<>(
+                roomList,
+                pageable,
+                getRoomList().size());
 
-        Page<Room> roomPage = new PageImpl<>(getRoomList(), pageable, getRoomList().size());
         given(roomService.searchListByCondition(any(), any())).willReturn(roomPage);
+        given(roomService.getBedNum(any())).willReturn(2);
 
         mockMvc.perform(post("/room/list")
-                .param("page", "0")
-                .param("size", "5")
+                .param("page", String.valueOf(pageable.getPageNumber()))
+                .param("size", String.valueOf(pageable.getPageSize()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .content(objectMapper.writeValueAsString(roomSearchCondition)))
@@ -159,6 +164,9 @@ class RoomControllerTest {
             for (int j = 0; j < 2; j++) {
                 BedRoom bedRoom = BedRoom.builder()
                         .doubleSize(2)
+                        .queenSize(0)
+                        .singleSize(0)
+                        .superSingleSize(0)
                         .build();
                 bedRooms.add(bedRoom);
             }
@@ -178,7 +186,7 @@ class RoomControllerTest {
                     .checkOutTime(LocalTime.of(12, 0))
                     .cleaningCost(5000.0)
                     .isParking(false)
-                    .isSmoking(false)
+                    .isSmoking(false )
                     .grade(4.5)
                     .location(location)
                     .bathRoomList(bathRooms)

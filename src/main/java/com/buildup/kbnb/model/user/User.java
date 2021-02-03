@@ -44,6 +44,6 @@ public class User {
 
     private String providerId;
 
-    @OneToMany(mappedBy = "room",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private List<UserRoom> checkRoomList;
 }
