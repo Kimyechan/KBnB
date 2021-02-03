@@ -1,5 +1,6 @@
 package com.buildup.kbnb.model.room;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ public class RoomImg {
 
     private String url;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private Room room;
 }

@@ -1,5 +1,6 @@
 package com.buildup.kbnb.model.room;
 
+import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.UserRoom;
 import com.buildup.kbnb.model.user.User;
@@ -42,12 +43,23 @@ public class Room {
 
     private Boolean isParking;
 
+    private Double grade;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @OneToOne(fetch = FetchType.LAZY)
     private Location location;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
-    private List<UserRoom> check;
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
+    private List<BathRoom> bathRoomList;
+
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
+    private List<BedRoom> bedRoomList;
+
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
+    private List<Comment> commentList;
+
+//    @OneToMany(mappedBy = "room",fetch = FetchType.LAZY)
+//    private List<UserRoom> check;
 }

@@ -501,6 +501,24 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </li>
+<li><a href="#resource-room">숙소</a>
+<ul class="sectlevel2">
+<li><a href="#resource-room-get-list-by-condition">숙소 리스트 조건 검색</a>
+<ul class="sectlevel3">
+<li><a href="#resource-room-get-list-by-condition_curl_request">Example request</a></li>
+<li><a href="#resource-room-get-list-by-condition_http_request">HTTP request</a></li>
+<li><a href="#resource-room-get-list-by-condition_http_response">Example response</a></li>
+<li><a href="#resource-room-get-list-by-condition_httpie_request">HTTPie request</a></li>
+<li><a href="#resource-room-get-list-by-condition_request_body">Request body</a></li>
+<li><a href="#resource-room-get-list-by-condition_request_fields">Request fields</a></li>
+<li><a href="#resource-room-get-list-by-condition_request_headers">Request headers</a></li>
+<li><a href="#resource-room-get-list-by-condition_response_body">Response body</a></li>
+<li><a href="#resource-room-get-list-by-condition_response_fields">Response fields</a></li>
+<li><a href="#resource-room-get-list-by-condition_response_headers">Response headers</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -688,7 +706,7 @@ X-Frame-Options: DENY
 Content-Length: 398
 
 {
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEyMTc1NTYzLCJleHAiOjE2MTMwMzk1NjN9.QsSHymI3In7ye8o0cz9sJHyhwYTworS4Vm5ut7TNrZQiqPgTrq6OarZ1hjDkQ6gyTBOIHNnVsC4iJ5D3iuaLGg",
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEyMzYwNzE1LCJleHAiOjE2MTMyMjQ3MTV9.ezH282CKICYNwrnwp4DpuHytaRYRQOvSpdx6UXouIoWPbO-iIme4rOunC7-hPL6fs-fPpukOZHLtjlMVIBle6Q",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -794,7 +812,7 @@ Content-Length: 398
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code>{
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEyMTc1NTYzLCJleHAiOjE2MTMwMzk1NjN9.QsSHymI3In7ye8o0cz9sJHyhwYTworS4Vm5ut7TNrZQiqPgTrq6OarZ1hjDkQ6gyTBOIHNnVsC4iJ5D3iuaLGg",
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEyMzYwNzE1LCJleHAiOjE2MTMyMjQ3MTV9.ezH282CKICYNwrnwp4DpuHytaRYRQOvSpdx6UXouIoWPbO-iIme4rOunC7-hPL6fs-fPpukOZHLtjlMVIBle6Q",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -918,7 +936,7 @@ X-Frame-Options: DENY
 Content-Length: 392
 
 {
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMTc1NTYzLCJleHAiOjE2MTMwMzk1NjN9.2r9ZXpOXA6wuJE5DSEO3bbqGqr-yjuL63w1i84v8vJTeP2vNOZeN66LC1zL9GWYO4vi5BrR6L0AXyYGKE5h6bA",
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMzYwNzE1LCJleHAiOjE2MTMyMjQ3MTV9.zWBKBk1aMuA_Yo6MUQ8VgaUFItl6a5Ot7e_sDp3BibAH88GrpwT28baYlw5AvrfuFM9R9df6WuMR1tHk3OJarw",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -1010,7 +1028,7 @@ Content-Length: 392
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code>{
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMTc1NTYzLCJleHAiOjE2MTMwMzk1NjN9.2r9ZXpOXA6wuJE5DSEO3bbqGqr-yjuL63w1i84v8vJTeP2vNOZeN66LC1zL9GWYO4vi5BrR6L0AXyYGKE5h6bA",
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMzYwNzE1LCJleHAiOjE2MTMyMjQ3MTV9.zWBKBk1aMuA_Yo6MUQ8VgaUFItl6a5Ot7e_sDp3BibAH88GrpwT28baYlw5AvrfuFM9R9df6WuMR1tHk3OJarw",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -1093,7 +1111,7 @@ Content-Length: 392
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/user/me' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMTc1NTYwLCJleHAiOjE2MTMwMzk1NjB9.PGREASgRllB4_V2W47_2XMpCtjN4oqrPhjBMNey7tvaKQlv3oURQk82heUdNAckPCrUxruiPyb_nMr_ObNawVA'</code></pre>
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMzYwNzEwLCJleHAiOjE2MTMyMjQ3MTB9.uFovXIgBZqvYyP0mN3bbhuujHPu3r7Yhiynj6YaO1THxzcsfdPLhFjxE1nnVxM7pUBLiZXCiCQGoY_Lr3VuuWw'</code></pre>
 </div>
 </div>
 </div>
@@ -1103,7 +1121,7 @@ Content-Length: 392
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /user/me HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMTc1NTYwLCJleHAiOjE2MTMwMzk1NjB9.PGREASgRllB4_V2W47_2XMpCtjN4oqrPhjBMNey7tvaKQlv3oURQk82heUdNAckPCrUxruiPyb_nMr_ObNawVA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMzYwNzEwLCJleHAiOjE2MTMyMjQ3MTB9.uFovXIgBZqvYyP0mN3bbhuujHPu3r7Yhiynj6YaO1THxzcsfdPLhFjxE1nnVxM7pUBLiZXCiCQGoY_Lr3VuuWw
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1149,7 +1167,7 @@ Content-Length: 298
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ http GET 'http://localhost:8080/user/me' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMTc1NTYwLCJleHAiOjE2MTMwMzk1NjB9.PGREASgRllB4_V2W47_2XMpCtjN4oqrPhjBMNey7tvaKQlv3oURQk82heUdNAckPCrUxruiPyb_nMr_ObNawVA'</code></pre>
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMzYwNzEwLCJleHAiOjE2MTMyMjQ3MTB9.uFovXIgBZqvYyP0mN3bbhuujHPu3r7Yhiynj6YaO1THxzcsfdPLhFjxE1nnVxM7pUBLiZXCiCQGoY_Lr3VuuWw'</code></pre>
 </div>
 </div>
 </div>
@@ -1286,10 +1304,717 @@ Content-Length: 298
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="resource-room"><a class="link" href="#resource-room">숙소</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>숙소에 대한 상세조회, 리스트 조회, 등록, 삭제, 찜하기등을 할때 사용한다</p>
+</div>
+<div class="sect2">
+<h3 id="resource-room-get-list-by-condition"><a class="link" href="#resource-room-get-list-by-condition">숙소 리스트 조건 검색</a></h3>
+<div class="sect3">
+<h4 id="resource-room-get-list-by-condition_curl_request"><a class="link" href="#resource-room-get-list-by-condition_curl_request">Example request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/room/list?page=1&amp;size=5' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMzYwNzE5LCJleHAiOjE2MTMyMjQ3MTl9.y218OG-KbkirF5fR05zNpe-xNUQDlRd85FJ1-dZtuIDGT_uWsVZq-cvexWOQ84UkBm3V3KU2dAjQ6vj8Qfy1jg' \
+    -d '{
+  "locationSearch" : {
+    "latitude" : 10.0,
+    "longitude" : 10.0,
+    "latitudeMax" : 12.0,
+    "latitudeMin" : 8.0,
+    "longitudeMax" : 12.0,
+    "longitudeMin" : 8.0
+  },
+  "checkDateSearch" : null,
+  "guestSearch" : {
+    "numOfAdult" : 2,
+    "numOfKid" : 1,
+    "numOfInfant" : 1
+  },
+  "costSearch" : {
+    "minCost" : 1000.0,
+    "maxCost" : 100000.0
+  },
+  "roomType" : "Shared room"
+}'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resource-room-get-list-by-condition_http_request"><a class="link" href="#resource-room-get-list-by-condition_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /room/list?page=1&amp;size=5 HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMzYwNzE5LCJleHAiOjE2MTMyMjQ3MTl9.y218OG-KbkirF5fR05zNpe-xNUQDlRd85FJ1-dZtuIDGT_uWsVZq-cvexWOQ84UkBm3V3KU2dAjQ6vj8Qfy1jg
+Content-Length: 400
+Host: localhost:8080
+
+{
+  "locationSearch" : {
+    "latitude" : 10.0,
+    "longitude" : 10.0,
+    "latitudeMax" : 12.0,
+    "latitudeMin" : 8.0,
+    "longitudeMax" : 12.0,
+    "longitudeMin" : 8.0
+  },
+  "checkDateSearch" : null,
+  "guestSearch" : {
+    "numOfAdult" : 2,
+    "numOfKid" : 1,
+    "numOfInfant" : 1
+  },
+  "costSearch" : {
+    "minCost" : 1000.0,
+    "maxCost" : 100000.0
+  },
+  "roomType" : "Shared room"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resource-room-get-list-by-condition_http_response"><a class="link" href="#resource-room-get-list-by-condition_http_response">Example response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/hal+json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 2952
+
+{
+  "_embedded" : {
+    "roomDtoList" : [ {
+      "id" : 6,
+      "name" : "test room 6",
+      "peopleLimit" : 4,
+      "bedRoomNum" : 2,
+      "bedNum" : 2,
+      "bathRoomNum" : 2,
+      "checkInTime" : "15:00:00",
+      "checkOutTime" : "12:00:00",
+      "isSmoking" : false,
+      "isParking" : false,
+      "roomType" : "Shared room",
+      "cost" : 30000.0,
+      "grade" : 4.5,
+      "latitude" : 37.0,
+      "longitude" : 138.0,
+      "commentCount" : 0,
+      "isCheck" : false
+    }, {
+      "id" : 7,
+      "name" : "test room 7",
+      "peopleLimit" : 4,
+      "bedRoomNum" : 2,
+      "bedNum" : 2,
+      "bathRoomNum" : 2,
+      "checkInTime" : "15:00:00",
+      "checkOutTime" : "12:00:00",
+      "isSmoking" : false,
+      "isParking" : false,
+      "roomType" : "Shared room",
+      "cost" : 35000.0,
+      "grade" : 4.5,
+      "latitude" : 37.0,
+      "longitude" : 138.0,
+      "commentCount" : 0,
+      "isCheck" : false
+    }, {
+      "id" : 8,
+      "name" : "test room 8",
+      "peopleLimit" : 4,
+      "bedRoomNum" : 2,
+      "bedNum" : 2,
+      "bathRoomNum" : 2,
+      "checkInTime" : "15:00:00",
+      "checkOutTime" : "12:00:00",
+      "isSmoking" : false,
+      "isParking" : false,
+      "roomType" : "Shared room",
+      "cost" : 40000.0,
+      "grade" : 4.5,
+      "latitude" : 37.0,
+      "longitude" : 138.0,
+      "commentCount" : 0,
+      "isCheck" : false
+    }, {
+      "id" : 9,
+      "name" : "test room 9",
+      "peopleLimit" : 4,
+      "bedRoomNum" : 2,
+      "bedNum" : 2,
+      "bathRoomNum" : 2,
+      "checkInTime" : "15:00:00",
+      "checkOutTime" : "12:00:00",
+      "isSmoking" : false,
+      "isParking" : false,
+      "roomType" : "Shared room",
+      "cost" : 45000.0,
+      "grade" : 4.5,
+      "latitude" : 37.0,
+      "longitude" : 138.0,
+      "commentCount" : 0,
+      "isCheck" : false
+    }, {
+      "id" : 10,
+      "name" : "test room 10",
+      "peopleLimit" : 4,
+      "bedRoomNum" : 2,
+      "bedNum" : 2,
+      "bathRoomNum" : 2,
+      "checkInTime" : "15:00:00",
+      "checkOutTime" : "12:00:00",
+      "isSmoking" : false,
+      "isParking" : false,
+      "roomType" : "Shared room",
+      "cost" : 50000.0,
+      "grade" : 4.5,
+      "latitude" : 37.0,
+      "longitude" : 138.0,
+      "commentCount" : 0,
+      "isCheck" : false
+    } ]
+  },
+  "_links" : {
+    "first" : {
+      "href" : "http://localhost:8080/room/list?page=0&amp;size=5"
+    },
+    "prev" : {
+      "href" : "http://localhost:8080/room/list?page=0&amp;size=5"
+    },
+    "self" : {
+      "href" : "http://localhost:8080/room/list?page=1&amp;size=5"
+    },
+    "next" : {
+      "href" : "http://localhost:8080/room/list?page=2&amp;size=5"
+    },
+    "last" : {
+      "href" : "http://localhost:8080/room/list?page=4&amp;size=5"
+    },
+    "profile" : {
+      "href" : "/docs/api.html#resource-room-get-list-by-condition"
+    }
+  },
+  "page" : {
+    "size" : 5,
+    "totalElements" : 25,
+    "totalPages" : 5,
+    "number" : 1
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resource-room-get-list-by-condition_httpie_request"><a class="link" href="#resource-room-get-list-by-condition_httpie_request">HTTPie request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ echo '{
+  "locationSearch" : {
+    "latitude" : 10.0,
+    "longitude" : 10.0,
+    "latitudeMax" : 12.0,
+    "latitudeMin" : 8.0,
+    "longitudeMax" : 12.0,
+    "longitudeMin" : 8.0
+  },
+  "checkDateSearch" : null,
+  "guestSearch" : {
+    "numOfAdult" : 2,
+    "numOfKid" : 1,
+    "numOfInfant" : 1
+  },
+  "costSearch" : {
+    "minCost" : 1000.0,
+    "maxCost" : 100000.0
+  },
+  "roomType" : "Shared room"
+}' | http POST 'http://localhost:8080/room/list?page=1&amp;size=5' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyMzYwNzE5LCJleHAiOjE2MTMyMjQ3MTl9.y218OG-KbkirF5fR05zNpe-xNUQDlRd85FJ1-dZtuIDGT_uWsVZq-cvexWOQ84UkBm3V3KU2dAjQ6vj8Qfy1jg'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resource-room-get-list-by-condition_request_body"><a class="link" href="#resource-room-get-list-by-condition_request_body">Request body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code>{
+  "locationSearch" : {
+    "latitude" : 10.0,
+    "longitude" : 10.0,
+    "latitudeMax" : 12.0,
+    "latitudeMin" : 8.0,
+    "longitudeMax" : 12.0,
+    "longitudeMin" : 8.0
+  },
+  "checkDateSearch" : null,
+  "guestSearch" : {
+    "numOfAdult" : 2,
+    "numOfKid" : 1,
+    "numOfInfant" : 1
+  },
+  "costSearch" : {
+    "minCost" : 1000.0,
+    "maxCost" : 100000.0
+  },
+  "roomType" : "Shared room"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resource-room-get-list-by-condition_request_fields"><a class="link" href="#resource-room-get-list-by-condition_request_fields">Request fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>locationSearch</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">위치 검색 조건</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>locationSearch.latitude</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">설정한 위도 값</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>locationSearch.latitudeMin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">설정한 위도 최소 값</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>locationSearch.latitudeMax</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">설정한 위도 최대 값</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>locationSearch.longitude</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">설정한 경도 값</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>locationSearch.longitudeMin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">설정한 경도 최소 값</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>locationSearch.longitudeMax</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">설정한 경도 최대 값</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>checkDateSearch</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">날짜 검색 조건</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>guestSearch</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">게스트 수 검색 조건</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>guestSearch.numOfAdult</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">성인 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>guestSearch.numOfKid</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">어린이 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>guestSearch.numOfInfant</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유아 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>costSearch</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">비용 검색 조건</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>costSearch.minCost</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">최소 비용</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>costSearch.maxCost</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">최대 비용</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>roomType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">숙소 유형 검색</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="resource-room-get-list-by-condition_request_headers"><a class="link" href="#resource-room-get-list-by-condition_request_headers">Request headers</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT 인증 토큰</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Content-Type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application/json 타입</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="resource-room-get-list-by-condition_response_body"><a class="link" href="#resource-room-get-list-by-condition_response_body">Response body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code>{
+  "_embedded" : {
+    "roomDtoList" : [ {
+      "id" : 6,
+      "name" : "test room 6",
+      "peopleLimit" : 4,
+      "bedRoomNum" : 2,
+      "bedNum" : 2,
+      "bathRoomNum" : 2,
+      "checkInTime" : "15:00:00",
+      "checkOutTime" : "12:00:00",
+      "isSmoking" : false,
+      "isParking" : false,
+      "roomType" : "Shared room",
+      "cost" : 30000.0,
+      "grade" : 4.5,
+      "latitude" : 37.0,
+      "longitude" : 138.0,
+      "commentCount" : 0,
+      "isCheck" : false
+    }, {
+      "id" : 7,
+      "name" : "test room 7",
+      "peopleLimit" : 4,
+      "bedRoomNum" : 2,
+      "bedNum" : 2,
+      "bathRoomNum" : 2,
+      "checkInTime" : "15:00:00",
+      "checkOutTime" : "12:00:00",
+      "isSmoking" : false,
+      "isParking" : false,
+      "roomType" : "Shared room",
+      "cost" : 35000.0,
+      "grade" : 4.5,
+      "latitude" : 37.0,
+      "longitude" : 138.0,
+      "commentCount" : 0,
+      "isCheck" : false
+    }, {
+      "id" : 8,
+      "name" : "test room 8",
+      "peopleLimit" : 4,
+      "bedRoomNum" : 2,
+      "bedNum" : 2,
+      "bathRoomNum" : 2,
+      "checkInTime" : "15:00:00",
+      "checkOutTime" : "12:00:00",
+      "isSmoking" : false,
+      "isParking" : false,
+      "roomType" : "Shared room",
+      "cost" : 40000.0,
+      "grade" : 4.5,
+      "latitude" : 37.0,
+      "longitude" : 138.0,
+      "commentCount" : 0,
+      "isCheck" : false
+    }, {
+      "id" : 9,
+      "name" : "test room 9",
+      "peopleLimit" : 4,
+      "bedRoomNum" : 2,
+      "bedNum" : 2,
+      "bathRoomNum" : 2,
+      "checkInTime" : "15:00:00",
+      "checkOutTime" : "12:00:00",
+      "isSmoking" : false,
+      "isParking" : false,
+      "roomType" : "Shared room",
+      "cost" : 45000.0,
+      "grade" : 4.5,
+      "latitude" : 37.0,
+      "longitude" : 138.0,
+      "commentCount" : 0,
+      "isCheck" : false
+    }, {
+      "id" : 10,
+      "name" : "test room 10",
+      "peopleLimit" : 4,
+      "bedRoomNum" : 2,
+      "bedNum" : 2,
+      "bathRoomNum" : 2,
+      "checkInTime" : "15:00:00",
+      "checkOutTime" : "12:00:00",
+      "isSmoking" : false,
+      "isParking" : false,
+      "roomType" : "Shared room",
+      "cost" : 50000.0,
+      "grade" : 4.5,
+      "latitude" : 37.0,
+      "longitude" : 138.0,
+      "commentCount" : 0,
+      "isCheck" : false
+    } ]
+  },
+  "_links" : {
+    "first" : {
+      "href" : "http://localhost:8080/room/list?page=0&amp;size=5"
+    },
+    "prev" : {
+      "href" : "http://localhost:8080/room/list?page=0&amp;size=5"
+    },
+    "self" : {
+      "href" : "http://localhost:8080/room/list?page=1&amp;size=5"
+    },
+    "next" : {
+      "href" : "http://localhost:8080/room/list?page=2&amp;size=5"
+    },
+    "last" : {
+      "href" : "http://localhost:8080/room/list?page=4&amp;size=5"
+    },
+    "profile" : {
+      "href" : "/docs/api.html#resource-room-get-list-by-condition"
+    }
+  },
+  "page" : {
+    "size" : 5,
+    "totalElements" : 25,
+    "totalPages" : 5,
+    "number" : 1
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resource-room-get-list-by-condition_response_fields"><a class="link" href="#resource-room-get-list-by-condition_response_fields">Response fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">숙소 리스트</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">숙소 식별자 값</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">숙소 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].peopleLimit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">게스트 제한 인원 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].bedRoomNum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">침실 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].bedNum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">침대 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].bathRoomNum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">욕실 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].checkInTime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">체크 인 시간</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].checkOutTime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">체크 아웃 시간</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].isSmoking</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">흡연 가능 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].isParking</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">주차 가능 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].roomType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">숙소 유형</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].cost</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">숙소 비용</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">숙소 평점</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].latitude</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">숙소 위치 위도 값</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].longitude</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">숙소 위치 경도 값</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].commentCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">댓글 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].isCheck</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">해당 숙소 좋아요 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_links.profile.href</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">해당 API 문서 URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_links.first.href</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">첫번째 페이지 URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_links.prev.href</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이전 페이지 URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_links.self.href</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_links.next.href</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이후 페이지 URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_links.last.href</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">마지막 페이지 URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page.size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">한 페이지 당 크기</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page.totalElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 숙소 개수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page.totalPages</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전체 페이지 개수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page.number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 번호</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="resource-room-get-list-by-condition_response_headers"><a class="link" href="#resource-room-get-list-by-condition_response_headers">Response headers</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Content-Type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HAL JSON 타입</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-02-01 19:31:59 +0900
+Last updated 2021-02-03 22:42:46 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/github.min.css">

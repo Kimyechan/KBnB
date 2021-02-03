@@ -53,7 +53,7 @@ class UserControllerTest {
     private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
-    private PasswordEncoder passwordEncode;
+    private PasswordEncoder passwordEncoder;
 
     @Test
     @DisplayName("유저 개인정보 확인")
@@ -93,7 +93,7 @@ class UserControllerTest {
                 .name("test")
                 .birth(LocalDate.of(1999, 7, 18))
                 .email("test@gmail.com")
-                .password(passwordEncode.encode("test"))
+                .password(passwordEncoder.encode("test"))
                 .imageUrl("Image URL")
                 .provider(AuthProvider.local)
                 .emailVerified(false)
