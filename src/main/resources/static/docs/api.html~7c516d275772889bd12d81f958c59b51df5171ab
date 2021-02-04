@@ -535,20 +535,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#resource-reservation-register_response_headers">Response headers</a></li>
 </ul>
 </li>
-<li><a href="#resource-reservation-lookupList">예약 리스트 조회</a>
-<ul class="sectlevel3">
-<li><a href="#resource-reservation-lookupList_curl_request">Example request</a></li>
-<li><a href="#resource-reservation-lookupList_http_request">HTTP request</a></li>
-<li><a href="#resource-reservation-lookupList_http_response">Example response</a></li>
-<li><a href="#resource-reservation-lookupList_httpie_request">HTTPie request</a></li>
-<li><a href="#resource-reservation-lookupList_request_body">Request body</a></li>
-<li><a href="#resource-reservation-lookupList_request_fields">Request fields</a></li>
-<li><a href="#resource-reservation-lookupList_request_headers">Request headers</a></li>
-<li><a href="#resource-reservation-lookupList_response_body">Response body</a></li>
-<li><a href="#resource-reservation-lookupList_response_fields">Response fields</a></li>
-<li><a href="#resource-reservation-lookupList_response_headers">Response headers</a></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -707,7 +693,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /auth/signup HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 105
+Content-Length: 100
 Host: localhost:8080
 
 {
@@ -735,10 +721,10 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 409
+Content-Length: 398
 
 {
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEyNDE3OTIyLCJleHAiOjE2MTMyODE5MjJ9.lQYKlO3RZT9Zu2AmYJLHwPsmAnv9I4reB1MIu3DsFiWoBWqkwWV4Ib0VHcel1tQ0RcTvFaptVYzdbw2BXKqcLg",
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEyNDE3MzI4LCJleHAiOjE2MTMyODEzMjh9.r6CD9HnG0qm31-wMsHt2eFnKI8C9RX_lk7IphT6yktE0J69jgx6X_sYffLH-_oUdcvrCgjMg0sge9_0cMMCyVg",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -844,7 +830,7 @@ Content-Length: 409
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code>{
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEyNDE3OTIyLCJleHAiOjE2MTMyODE5MjJ9.lQYKlO3RZT9Zu2AmYJLHwPsmAnv9I4reB1MIu3DsFiWoBWqkwWV4Ib0VHcel1tQ0RcTvFaptVYzdbw2BXKqcLg",
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEyNDE3MzI4LCJleHAiOjE2MTMyODEzMjh9.r6CD9HnG0qm31-wMsHt2eFnKI8C9RX_lk7IphT6yktE0J69jgx6X_sYffLH-_oUdcvrCgjMg0sge9_0cMMCyVg",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -940,7 +926,7 @@ Content-Length: 409
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /auth/login HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 58
+Content-Length: 55
 Host: localhost:8080
 
 {
@@ -965,10 +951,10 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 403
+Content-Length: 392
 
 {
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3OTIxLCJleHAiOjE2MTMyODE5MjF9.eL0wwvdwA99aw_o1cag9BdNgapILITRmdPxd-rRESEB0mIujp1_qpxuxVnZJ5MvzVb0qZ1WAhPk1Vvzkqneeaw",
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3MzI3LCJleHAiOjE2MTMyODEzMjd9.SVAJgAfqBbrtpJMWkN-gcpbLeZKQe6nqBrlEYpqMG4yyAaTBWcBs2qzMv6CpRWywa1KKmXNDiNcw2ihCxXuNFg",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -1060,7 +1046,7 @@ Content-Length: 403
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code>{
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3OTIxLCJleHAiOjE2MTMyODE5MjF9.eL0wwvdwA99aw_o1cag9BdNgapILITRmdPxd-rRESEB0mIujp1_qpxuxVnZJ5MvzVb0qZ1WAhPk1Vvzkqneeaw",
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3MzI3LCJleHAiOjE2MTMyODEzMjd9.SVAJgAfqBbrtpJMWkN-gcpbLeZKQe6nqBrlEYpqMG4yyAaTBWcBs2qzMv6CpRWywa1KKmXNDiNcw2ihCxXuNFg",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -1143,7 +1129,7 @@ Content-Length: 403
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/user/me' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3OTI4LCJleHAiOjE2MTMyODE5Mjh9.L4dhFBPajw-4YNtv2zM_sZTx9MBD2QiD7o7ogX4nbsyNI5UMmIkKNm0IxkU4jd0IMOhWuZQgSINFAd6zCBJKew'</code></pre>
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3MzIwLCJleHAiOjE2MTMyODEzMjB9.FoCZuTNpMER6of1tW35OMCAYOrr6t9_aVoQFMeYsu9ucb33i3fRWargl2E-IxNZUHVp2X77PDifRhmOE_nmTLw'</code></pre>
 </div>
 </div>
 </div>
@@ -1153,7 +1139,7 @@ Content-Length: 403
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /user/me HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3OTI4LCJleHAiOjE2MTMyODE5Mjh9.L4dhFBPajw-4YNtv2zM_sZTx9MBD2QiD7o7ogX4nbsyNI5UMmIkKNm0IxkU4jd0IMOhWuZQgSINFAd6zCBJKew
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3MzIwLCJleHAiOjE2MTMyODEzMjB9.FoCZuTNpMER6of1tW35OMCAYOrr6t9_aVoQFMeYsu9ucb33i3fRWargl2E-IxNZUHVp2X77PDifRhmOE_nmTLw
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1173,7 +1159,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 312
+Content-Length: 298
 
 {
   "name" : "test",
@@ -1199,7 +1185,7 @@ Content-Length: 312
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ http GET 'http://localhost:8080/user/me' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3OTI4LCJleHAiOjE2MTMyODE5Mjh9.L4dhFBPajw-4YNtv2zM_sZTx9MBD2QiD7o7ogX4nbsyNI5UMmIkKNm0IxkU4jd0IMOhWuZQgSINFAd6zCBJKew'</code></pre>
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3MzIwLCJleHAiOjE2MTMyODEzMjB9.FoCZuTNpMER6of1tW35OMCAYOrr6t9_aVoQFMeYsu9ucb33i3fRWargl2E-IxNZUHVp2X77PDifRhmOE_nmTLw'</code></pre>
 </div>
 </div>
 </div>
@@ -1350,7 +1336,7 @@ Content-Length: 312
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/room/list?page=1&amp;size=5' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3OTI2LCJleHAiOjE2MTMyODE5MjZ9.h7ZCLYtVQ1w19nroDCtW_HoEtP0DEax1CmvHTmV6_kguzc-CgbuWwBl0NAOymt2XmUaZ8qWLaWVQuk8Ny6EJBQ' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3MzMxLCJleHAiOjE2MTMyODEzMzF9.ff9fCWXp4flaIhEa7m-wX5OTloTWzgkLScDeI32fnOjIKzCnqlO_DHldgeq5YzWQZNqRl9fd-wmI3O0eJ5ihfA' \
     -d '{
   "locationSearch" : {
     "latitude" : 10.0,
@@ -1381,8 +1367,8 @@ Content-Length: 312
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /room/list?page=1&amp;size=5 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3OTI2LCJleHAiOjE2MTMyODE5MjZ9.h7ZCLYtVQ1w19nroDCtW_HoEtP0DEax1CmvHTmV6_kguzc-CgbuWwBl0NAOymt2XmUaZ8qWLaWVQuk8Ny6EJBQ
-Content-Length: 420
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3MzMxLCJleHAiOjE2MTMyODEzMzF9.ff9fCWXp4flaIhEa7m-wX5OTloTWzgkLScDeI32fnOjIKzCnqlO_DHldgeq5YzWQZNqRl9fd-wmI3O0eJ5ihfA
+Content-Length: 400
 Host: localhost:8080
 
 {
@@ -1424,7 +1410,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 3072
+Content-Length: 2952
 
 {
   "_embedded" : {
@@ -1576,7 +1562,7 @@ Content-Length: 3072
   "roomType" : "Shared room"
 }' | http POST 'http://localhost:8080/room/list?page=1&amp;size=5' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3OTI2LCJleHAiOjE2MTMyODE5MjZ9.h7ZCLYtVQ1w19nroDCtW_HoEtP0DEax1CmvHTmV6_kguzc-CgbuWwBl0NAOymt2XmUaZ8qWLaWVQuk8Ny6EJBQ'</code></pre>
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3MzMxLCJleHAiOjE2MTMyODEzMzF9.ff9fCWXp4flaIhEa7m-wX5OTloTWzgkLScDeI32fnOjIKzCnqlO_DHldgeq5YzWQZNqRl9fd-wmI3O0eJ5ihfA'</code></pre>
 </div>
 </div>
 </div>
@@ -2054,7 +2040,7 @@ Content-Length: 3072
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/reservation' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNjEyNDE3OTI0LCJleHAiOjE2MTMyODE5MjR9.gV4rv_utaQ0sYTvs4FI54Yvk5OoCKt-u5TJtrz8GX97sreZWRuhZnPrT4dGEcBT6vfKFwT3nPpgUvPMIUJyfyg' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3MzMwLCJleHAiOjE2MTMyODEzMzB9.POhL1ooiJerI_lzFIaZKygSBVDyQmKXWh2qsA4VGSYnodEG_hOwyjMXutf9wSun1o_VxKFkQbtk2iWUBBTGuXQ' \
     -d '{
   "roomId" : 1,
   "checkIn" : "2021-02-01",
@@ -2073,8 +2059,8 @@ Content-Length: 3072
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /reservation HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNjEyNDE3OTI0LCJleHAiOjE2MTMyODE5MjR9.gV4rv_utaQ0sYTvs4FI54Yvk5OoCKt-u5TJtrz8GX97sreZWRuhZnPrT4dGEcBT6vfKFwT3nPpgUvPMIUJyfyg
-Content-Length: 192
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3MzMwLCJleHAiOjE2MTMyODEzMzB9.POhL1ooiJerI_lzFIaZKygSBVDyQmKXWh2qsA4VGSYnodEG_hOwyjMXutf9wSun1o_VxKFkQbtk2iWUBBTGuXQ
+Content-Length: 184
 Host: localhost:8080
 
 {
@@ -2098,18 +2084,18 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Location: http://localhost:8080/reservation
-Content-Type: application/hal+json;charset=utf8
+Content-Type: application/hal+json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 239
+Content-Length: 227
 
 {
-  "reservationId" : 2,
-  "message" : "성공",
+  "reservationId" : null,
+  "message" : null,
   "_links" : {
     "profile" : {
       "href" : "/docs/api.html#resource-reservation-register"
@@ -2136,7 +2122,7 @@ Content-Length: 239
   "message" : "사장님 잘생겼어요"
 }' | http POST 'http://localhost:8080/reservation' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNjEyNDE3OTI0LCJleHAiOjE2MTMyODE5MjR9.gV4rv_utaQ0sYTvs4FI54Yvk5OoCKt-u5TJtrz8GX97sreZWRuhZnPrT4dGEcBT6vfKFwT3nPpgUvPMIUJyfyg'</code></pre>
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3MzMwLCJleHAiOjE2MTMyODEzMzB9.POhL1ooiJerI_lzFIaZKygSBVDyQmKXWh2qsA4VGSYnodEG_hOwyjMXutf9wSun1o_VxKFkQbtk2iWUBBTGuXQ'</code></pre>
 </div>
 </div>
 </div>
@@ -2236,8 +2222,8 @@ Content-Length: 239
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code>{
-  "reservationId" : 2,
-  "message" : "성공",
+  "reservationId" : null,
+  "message" : null,
   "_links" : {
     "profile" : {
       "href" : "/docs/api.html#resource-reservation-register"
@@ -2268,12 +2254,12 @@ Content-Length: 239
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>reservationId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">예약 식별자</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">예약 여부 메시지</p></td>
 </tr>
 <tr>
@@ -2311,306 +2297,12 @@ Content-Length: 239
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="resource-reservation-lookupList"><a class="link" href="#resource-reservation-lookupList">예약 리스트 조회</a></h3>
-<div class="sect3">
-<h4 id="resource-reservation-lookupList_curl_request"><a class="link" href="#resource-reservation-lookupList_curl_request">Example request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/reservation?page=0&amp;size=5' -i -X GET \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3OTI0LCJleHAiOjE2MTMyODE5MjR9.eW95P2hIraWx6BZx2bK-hL7RU1xiqKcUunWfo9drC0IEr3bVM5IaxW9ByFQHjs7NQQ65uII_r6g41TmG1hN1jw' \
-    -d '{
-  "size" : "페이지의 사이즈",
-  "page" : "페이지 번호"
-}'</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="resource-reservation-lookupList_http_request"><a class="link" href="#resource-reservation-lookupList_http_request">HTTP request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /reservation?page=0&amp;size=5 HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3OTI0LCJleHAiOjE2MTMyODE5MjR9.eW95P2hIraWx6BZx2bK-hL7RU1xiqKcUunWfo9drC0IEr3bVM5IaxW9ByFQHjs7NQQ65uII_r6g41TmG1hN1jw
-Content-Length: 73
-Host: localhost:8080
-
-{
-  "size" : "페이지의 사이즈",
-  "page" : "페이지 번호"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="resource-reservation-lookupList_http_response"><a class="link" href="#resource-reservation-lookupList_http_response">Example response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/hal+json;charset=utf8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 652
-
-{
-  "_embedded" : {
-    "reservation_ConfirmedResponseList" : [ {
-      "reservationId" : 1,
-      "status" : "예약 완료",
-      "roomName" : "빵꾸똥꾸야",
-      "roomLocation" : "스울시 동대문구 청량리동",
-      "hostName" : "host",
-      "checkIn" : "2021-02-02",
-      "checkOut" : "+20201-02-03"
-    } ]
-  },
-  "_links" : {
-    "self" : {
-      "href" : "http://localhost:8080/reservation?page=0&amp;size=5"
-    },
-    "profile" : {
-      "href" : "/docs/api.html#resource-reservation-lookupList"
-    }
-  },
-  "page" : {
-    "size" : 5,
-    "totalElements" : 1,
-    "totalPages" : 1,
-    "number" : 0
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="resource-reservation-lookupList_httpie_request"><a class="link" href="#resource-reservation-lookupList_httpie_request">HTTPie request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ echo '{
-  "size" : "페이지의 사이즈",
-  "page" : "페이지 번호"
-}' | http GET 'http://localhost:8080/reservation?page=0&amp;size=5' \
-    'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNDE3OTI0LCJleHAiOjE2MTMyODE5MjR9.eW95P2hIraWx6BZx2bK-hL7RU1xiqKcUunWfo9drC0IEr3bVM5IaxW9ByFQHjs7NQQ65uII_r6g41TmG1hN1jw'</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="resource-reservation-lookupList_request_body"><a class="link" href="#resource-reservation-lookupList_request_body">Request body</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code>{
-  "size" : "페이지의 사이즈",
-  "page" : "페이지 번호"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="resource-reservation-lookupList_request_fields"><a class="link" href="#resource-reservation-lookupList_request_fields">Request fields</a></h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Path</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 번호</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 요소 갯수</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="resource-reservation-lookupList_request_headers"><a class="link" href="#resource-reservation-lookupList_request_headers">Request headers</a></h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Content-Type</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">application/json 타입</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="resource-reservation-lookupList_response_body"><a class="link" href="#resource-reservation-lookupList_response_body">Response body</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code>{
-  "_embedded" : {
-    "reservation_ConfirmedResponseList" : [ {
-      "reservationId" : 1,
-      "status" : "예약 완료",
-      "roomName" : "빵꾸똥꾸야",
-      "roomLocation" : "스울시 동대문구 청량리동",
-      "hostName" : "host",
-      "checkIn" : "2021-02-02",
-      "checkOut" : "+20201-02-03"
-    } ]
-  },
-  "_links" : {
-    "self" : {
-      "href" : "http://localhost:8080/reservation?page=0&amp;size=5"
-    },
-    "profile" : {
-      "href" : "/docs/api.html#resource-reservation-lookupList"
-    }
-  },
-  "page" : {
-    "size" : 5,
-    "totalElements" : 1,
-    "totalPages" : 1,
-    "number" : 0
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="resource-reservation-lookupList_response_fields"><a class="link" href="#resource-reservation-lookupList_response_fields">Response fields</a></h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Path</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.reservation_ConfirmedResponseList[].reservationId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">예약 식별자</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.reservation_ConfirmedResponseList[].status</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">예약 상태</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.reservation_ConfirmedResponseList[].roomName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">방 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.reservation_ConfirmedResponseList[].roomLocation</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">방 위치</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.reservation_ConfirmedResponseList[].hostName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">호스트 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.reservation_ConfirmedResponseList[].checkIn</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">체크인 날짜</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.reservation_ConfirmedResponseList[].checkOut</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">체크아웃 날짜</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page.size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 사이즈</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page.totalElements</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">요소의 총 개수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page.totalPages</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">총 페이지 개수</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page.number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_links.self.href</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">해당 API URL</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_links.profile.href</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">해당 API문서 URL</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="resource-reservation-lookupList_response_headers"><a class="link" href="#resource-reservation-lookupList_response_headers">Response headers</a></h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Content-Type</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">HAL JSON 타입</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-02-04 11:38:36 +0900
+Last updated 2021-02-03 23:11:50 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/github.min.css">

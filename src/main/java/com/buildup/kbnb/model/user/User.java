@@ -1,4 +1,5 @@
 package com.buildup.kbnb.model.user;
+
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.UserRoom;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -8,7 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity

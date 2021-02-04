@@ -1,11 +1,8 @@
 package com.buildup.kbnb.service;
 
-import com.buildup.kbnb.dto.room.RoomDto;
 import com.buildup.kbnb.model.UserRoom;
-import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
-import com.buildup.kbnb.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,5 @@
 package com.buildup.kbnb.service;
 
-import com.buildup.kbnb.dto.room.RoomDto;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
@@ -10,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

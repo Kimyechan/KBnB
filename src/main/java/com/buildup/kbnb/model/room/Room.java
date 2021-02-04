@@ -2,13 +2,10 @@ package com.buildup.kbnb.model.room;
 
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
-import com.buildup.kbnb.model.UserRoom;
 import com.buildup.kbnb.model.user.User;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -48,7 +45,7 @@ public class Room {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Location location;
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
