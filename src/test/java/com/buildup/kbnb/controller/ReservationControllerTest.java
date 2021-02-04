@@ -212,7 +212,8 @@ public void filter() {
         reservationRepository.save(reservation);
 
         Map<String, String> map = new HashMap<>();
-        map.put("NONE", "NONE");
+        map.put("page", "페이지 번호");
+        map.put("size", "페이지의 사이즈");
         Pageable pageable = PageRequest.of(0, 5);
         mockMvc.perform(get("/reservation")
                 .param("page", String.valueOf(pageable.getPageNumber()))
@@ -227,7 +228,8 @@ public void filter() {
                         headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
                 ),
                 requestFields(
-                        fieldWithPath("NONE").description("NONE")
+                        fieldWithPath("page").description("페이지 번호"),
+                        fieldWithPath("size").description("페이지 요소 갯수")
                 ),
                 responseHeaders(
                         headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
