@@ -11,7 +11,7 @@ public class KbnbApplication {
 
     public static final String APPLICATION_LOCATIONS = "spring.config.location="
             + "classpath:application.yml,"
-            + "classpath:secret.yml";
+            + "optional:classpath:secret.yml";
 
     public static void main(String[] args) {
 //        SpringApplication.run(KbnbApplication.class, args);
