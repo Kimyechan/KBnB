@@ -49,6 +49,9 @@ public class Room {
     private Location location;
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
+    private List<RoomImg> roomImgList;
+
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<BathRoom> bathRoomList;
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
