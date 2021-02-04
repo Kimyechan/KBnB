@@ -14,6 +14,7 @@ import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.RoomService;
 import com.buildup.kbnb.service.UserService;
+import com.buildup.kbnb.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,7 +25,9 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +37,7 @@ import java.util.List;
 public class RoomController {
     private final RoomService roomService;
     private final UserService userService;
+    private final S3Uploader s3Uploader;
     private final RoomRepository roomRepository;
     private final BedRoomRepository bedRoomRepository;
     private final BathRoomRepository bathRoomRepository;
@@ -84,6 +88,11 @@ public class RoomController {
             roomDtoList.add(roomDto);
         }
         return roomDtoList;
+    }
+
+    @PostMapping("/upload")
+    public String upload(@CurrentUser UserPrincipal userPrincipal, @RequestParam("file") MultipartFile file) throws IOException {
+        return s3Uploader.upload(file, "kbnbRoom", userPrincipal.getName());
     }
 
     @GetMapping("/test")

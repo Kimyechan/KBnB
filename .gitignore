@@ -36,5 +36,4 @@ out/
 ### VS Code ###
 .vscode/
 
-./src/main/resources/static/docs/
-api.html
+secret.yml

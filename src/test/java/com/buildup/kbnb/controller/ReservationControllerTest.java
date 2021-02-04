@@ -253,4 +253,8 @@ public void filter() {
 
     }
 
+ /*   @Test
+    public void getConfirmedReservationDetail() throws Exception {
+        mockMvc.perform(get("/reservation/0")) //유저랑 연결된 예약이 있어야해
+    }*/
 }

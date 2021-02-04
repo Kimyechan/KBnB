@@ -25,6 +25,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -99,15 +100,14 @@ public class ReservationController {
         return ResponseEntity.created(location)
                 .body(model);
     }
-}
 
- /*   @GetMapping(value = "/{reservationId}",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    @GetMapping(value = "/{reservationId}",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getDetailReservationInfo(@CurrentUser @Valid  UserPrincipal userPrincipal, Long reservationId) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new ResourceNotFoundException("Reservation", "id", reservationId));
-// 해당 유저가 해당 예약 식별자를 갖고 있
-        for()
-
+// 해당 유저가 해당 예약 식별자를 갖고 있는지
+        List<Long> reservationId_user = reservationRepository.findByUserId(user.getId()).stream().map(s -> s.getId()).collect(Collectors.toList());
+        return null;
     }
 
-}*/
+}
