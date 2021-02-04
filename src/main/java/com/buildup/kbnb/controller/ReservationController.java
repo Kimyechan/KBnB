@@ -14,14 +14,9 @@ import com.buildup.kbnb.repository.room.RoomRepository;
 import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.MediaTypes;
+import org.springframework.data.domain.*;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,18 +41,14 @@ public class ReservationController {
 
 
     }*/
-    @GetMapping(value = "/{pageNumber}",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> getConfirmedReservationList(@CurrentUser UserPrincipal userPrincipal, @PathVariable int pageNumber) {
+    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> getConfirmedReservationList(@CurrentUser UserPrincipal userPrincipal, Pageable pageable, PagedResourcesAssembler<Reservation_ConfirmedResponse> assembler) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException("User","id", userPrincipal.getId()));
-        System.out.println(pageNumber);
-        Pageable paging = PageRequest.of(pageNumber, 20, Sort.Direction.DESC, "id");
-        System.out.println(reservationRepository.findAll());
-        Page<Reservation> pageInfo = reservationRepository.findByUser(user, paging);
-        List<Reservation> reservationList = pageInfo.getContent();
+        Page<Reservation> reservationPage = reservationRepository.findByUser(user, pageable);
+        List<Reservation> reservationList = reservationPage.getContent();//해당 페이지에만 있는 리스트
 
-        List<EntityModel<Reservation_ConfirmedResponse>> entityResponses = new ArrayList<>();
-
-        for(Reservation reservation : reservationList) {
+        List<Reservation_ConfirmedResponse> reservation_confirmedResponseList = new ArrayList<>();
+        for (Reservation reservation : reservationList) {
             Reservation_ConfirmedResponse reservation_confirmedResponse = new Reservation_ConfirmedResponse().builder()
                     .reservationId(reservation.getId())
                     .checkIn(reservation.getCheckIn())
@@ -66,18 +57,53 @@ public class ReservationController {
                     .hostName(reservation.getRoom().getUser().getName())
                     .roomName(reservation.getRoom().getName())
                     .status("예약 완료").build();
-
             if(LocalDate.now().isAfter(reservation.getCheckOut()))//현재 날짜가 체크아웃날짜보다 나중이라면
             {
                 reservation_confirmedResponse.setStatus("완료된 여정");
             }
-            EntityModel<Reservation_ConfirmedResponse> reservation_confirmedResponseEntityModel = EntityModel.of(reservation_confirmedResponse);
-            entityResponses.add(reservation_confirmedResponseEntityModel);
+            reservation_confirmedResponseList.add(reservation_confirmedResponse);
         }
-        CollectionModel model = CollectionModel.of(entityResponses);
-        model.add(linkTo(methodOn(ReservationController.class).getConfirmedReservationList(userPrincipal, pageNumber)).withSelfRel());
+
+        Page<Reservation_ConfirmedResponse> result = new PageImpl<>(reservation_confirmedResponseList, pageable, reservationPage.getTotalElements());
+        PagedModel<EntityModel<Reservation_ConfirmedResponse>> model = assembler.toModel(result);
         model.add(Link.of("/docs/api.html#resource-reservation-lookupList").withRel("profile"));
-//        model.add(Link.of())
+
+
+
+
+
+
+
+
+//        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException("User","id", userPrincipal.getId()));
+//        Pageable paging = PageRequest.of(pageNumber, 20, Sort.Direction.DESC, "id");
+//        System.out.println(reservationRepository.findAll());
+//        Page<Reservation> pageInfo = reservationRepository.findByUser(user, paging);
+//        List<Reservation> reservationList = pageInfo.getContent();
+//
+//        List<EntityModel<Reservation_ConfirmedResponse>> entityResponses = new ArrayList<>();
+//
+//        for(Reservation reservation : reservationList) {
+//            Reservation_ConfirmedResponse reservation_confirmedResponse = new Reservation_ConfirmedResponse().builder()
+//                    .reservationId(reservation.getId())
+//                    .checkIn(reservation.getCheckIn())
+//                    .checkOut(reservation.getCheckOut())
+//                    .roomLocation(reservation.getRoom().getLocation().getCity() + " " + reservation.getRoom().getLocation().getBorough() + " " + reservation.getRoom().getLocation().getNeighborhood())
+//                    .hostName(reservation.getRoom().getUser().getName())
+//                    .roomName(reservation.getRoom().getName())
+//                    .status("예약 완료").build();
+//
+//            if(LocalDate.now().isAfter(reservation.getCheckOut()))//현재 날짜가 체크아웃날짜보다 나중이라면
+//            {
+//                reservation_confirmedResponse.setStatus("완료된 여정");
+//            }
+//            EntityModel<Reservation_ConfirmedResponse> reservation_confirmedResponseEntityModel = EntityModel.of(reservation_confirmedResponse);
+//            entityResponses.add(reservation_confirmedResponseEntityModel);
+//        }
+//        CollectionModel model = CollectionModel.of(entityResponses);
+//        model.add(linkTo(methodOn(ReservationController.class).getConfirmedReservationList(userPrincipal, pageNumber)).withSelfRel());
+//        model.add(Link.of("/docs/api.html#resource-reservation-lookupList").withRel("profile"));
+////        model.add(Link.of())
         return ResponseEntity.ok(model);
 
     }

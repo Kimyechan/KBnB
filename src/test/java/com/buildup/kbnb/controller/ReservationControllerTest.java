@@ -20,6 +20,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -211,7 +213,10 @@ public void filter() {
 
         Map<String, String> map = new HashMap<>();
         map.put("NONE", "NONE");
-        mockMvc.perform(get("/reservation/0")
+        Pageable pageable = PageRequest.of(0, 5);
+        mockMvc.perform(get("/reservation")
+                .param("page", String.valueOf(pageable.getPageNumber()))
+                .param("size", String.valueOf(pageable.getPageSize()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + userToken)
                 .content(objectMapper.writeValueAsString(map))
@@ -235,6 +240,10 @@ public void filter() {
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].hostName").description("호스트 이름"),
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].checkIn").description("체크인 날짜"),
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].checkOut").description("체크아웃 날짜"),
+                        fieldWithPath("page.size").description("페이지 사이즈"),
+                        fieldWithPath("page.totalElements").description("요소의 총 개수"),
+                        fieldWithPath("page.totalPages").description("총 페이지 개수"),
+                        fieldWithPath("page.number").description("현재 페이지"),
                         fieldWithPath("_links.self.href").description("해당 API URL"),
                         fieldWithPath("_links.profile.href").description("해당 API문서 URL")
                 )

@@ -48,6 +48,7 @@ public class RoomController {
         List<RoomDto> roomList = getRoomDtoList(userPrincipal.getId(), roomPage.getContent());
 
         Page<RoomDto> result = new PageImpl<>(roomList, pageable, roomPage.getTotalElements());
+
         PagedModel<EntityModel<RoomDto>> model = assembler.toModel(result);
         model.add(Link.of("/docs/api.html#resource-room-get-list-by-condition").withRel("profile"));
 
