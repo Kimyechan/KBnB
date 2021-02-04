@@ -7,11 +7,13 @@ import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
+import com.buildup.kbnb.repository.LocationRepository;
 import com.buildup.kbnb.repository.ReservationRepository;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.repository.room.RoomRepository;
 import com.buildup.kbnb.security.TokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.catalina.Store;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +69,7 @@ class ReservationControllerTest {
     @Autowired
     UserRepository userRepository;
 
-    @MockBean
+    @Autowired
     RoomRepository roomRepository;
 
     @Autowired
@@ -83,6 +85,9 @@ class ReservationControllerTest {
     Room room;
     @Mock
     Reservation reservation;
+
+    @Autowired
+    private LocationRepository locationRepository;
 /*@Before("필터 추가")
 public void filter() {
     mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
@@ -154,7 +159,7 @@ public void filter() {
     public void getConfirmedReservationList() throws Exception {
         User host = User.builder()
                 .name("host")
-                .email("host@gmail.com")
+                .email("host1@gmail.com")
                 .password(passwordEncoder.encode("test"))
                 .provider(AuthProvider.local)
                 .emailVerified(false)
@@ -171,6 +176,7 @@ public void filter() {
                 .latitude(123.22)
                 .longitude(111.11)
                 .build();
+        locationRepository.save(location);
 
         Room room = Room.builder()
                 .checkInTime(LocalTime.of(14,0))
@@ -185,6 +191,8 @@ public void filter() {
                 .location(location)
                 .user(savedHost)
                 .build();
+        roomRepository.save(room);
+
         Reservation reservation = Reservation.builder()
                 .checkIn(LocalDate.of(2021,02,02))
                 .checkOut(LocalDate.of(20201,02,03))
