@@ -2,13 +2,13 @@ package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.dto.room.RoomDto;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
+import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
-import com.buildup.kbnb.repository.BathRoomRepository;
-import com.buildup.kbnb.repository.BedRoomRepository;
-import com.buildup.kbnb.repository.LocationRepository;
+import com.buildup.kbnb.model.user.User;
+import com.buildup.kbnb.repository.*;
 import com.buildup.kbnb.repository.room.RoomRepository;
 import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -30,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 @RestController
 @RequestMapping("/room")
@@ -42,6 +44,8 @@ public class RoomController {
     private final BedRoomRepository bedRoomRepository;
     private final BathRoomRepository bathRoomRepository;
     private final LocationRepository locationRepository;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     @PostMapping("/list")
     public ResponseEntity<?> getRoomList(@RequestBody RoomSearchCondition roomSearchCondition,
@@ -90,13 +94,21 @@ public class RoomController {
         return roomDtoList;
     }
 
+    @GetMapping("/detail")
+    public ResponseEntity<?> getRoomDetail(@RequestParam("roomId") Long roomId) {
+        Room room = roomService.getRoomDetailById(roomId);
+
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/upload")
     public String upload(@CurrentUser UserPrincipal userPrincipal, @RequestParam("file") MultipartFile file) throws IOException {
         return s3Uploader.upload(file, "kbnbRoom", userPrincipal.getName());
     }
 
     @GetMapping("/test")
-    public String getRoomListTest() {
+    public String getRoomListTest(@CurrentUser UserPrincipal userPrincipal) {
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow();
         Location location = Location.builder()
                 .latitude(13.0)
                 .longitude(13.0)
@@ -106,6 +118,7 @@ public class RoomController {
         Room room = Room.builder()
                 .name("test room name 2")
                 .roomType("Shared room")
+                .user(user)
                 .location(location)
                 .roomCost(10000.0)
                 .peopleLimit(4)
@@ -133,7 +146,19 @@ public class RoomController {
                 .build();
 
         bedRoomRepository.save(bedRoom2);
-
+        
+        Comment comment = Comment.builder()
+                .accuracy(3.0f)
+                .checkIn(3.0f)
+                .cleanliness(3.0f)
+                .communication(3.0f)
+                .location(3.0f)
+                .priceSatisfaction(3.0f)
+                .room(room)
+                .user(user)
+                .build();
+        
+        commentRepository.save(comment);
         return "ok";
     }
 }

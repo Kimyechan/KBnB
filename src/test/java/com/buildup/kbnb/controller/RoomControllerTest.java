@@ -47,6 +47,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -260,5 +261,19 @@ class RoomControllerTest {
             roomList.add(room);
         }
         return roomList;
+    }
+
+    @Test
+    @DisplayName("숙소 상세 검색")
+    public void getRoomDetail() throws Exception {
+        User user = createUser();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+
+        mockMvc.perform(get("/room/detail")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .param("roomId", "1"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }
