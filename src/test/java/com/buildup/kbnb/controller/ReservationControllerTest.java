@@ -7,11 +7,15 @@ import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
+import com.buildup.kbnb.repository.LocationRepository;
 import com.buildup.kbnb.repository.ReservationRepository;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.repository.room.RoomRepository;
 import com.buildup.kbnb.security.TokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.catalina.Store;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +31,10 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -67,7 +73,7 @@ class ReservationControllerTest {
     @Autowired
     UserRepository userRepository;
 
-    @MockBean
+    @Autowired
     RoomRepository roomRepository;
 
     @Autowired
@@ -79,44 +85,73 @@ class ReservationControllerTest {
     @Autowired
     WebApplicationContext webApplicationContext;
 
-    @Mock
-    Room room;
-    @Mock
-    Reservation reservation;
-/*@Before("필터 추가")
-public void filter() {
-    mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-            .addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
-            .alwaysDo(print())
-            .build();
-}*/
+
+
+    @Autowired
+    private LocationRepository locationRepository;
+
+    private String userToken;
+
 
     @Test
+    @Transactional
     public void register_Reservation() throws Exception {
-
-        User user = User.builder()
-                .name("test")
-                .email("test@gmail.com")
+        User host = User.builder()
+                .name("host")
+                .email("host1@gmail.com")
                 .password(passwordEncoder.encode("test"))
                 .provider(AuthProvider.local)
                 .emailVerified(false)
                 .build();
+        userRepository.save(host);
+        Location location = Location.builder()
+                .city("스울시")
+                .country("대한민국")
+                .borough("동대문구")
+                .neighborhood("청량리동")
+                .detailAddress("나무아비타불")
+                .latitude(123.22)
+                .longitude(111.11)
+                .build();
+        locationRepository.save(location);
+        Room room = Room.builder()
+                .checkInTime(LocalTime.of(14,0))
+                .checkOutTime(LocalTime.of(11,0))
+                .isParking(true)
+                .isSmoking(true)
+                .cleaningCost((double) 1000)
+                .name("빵꾸똥꾸야")
+                .tax((double) 100)
+                .peopleLimit(2)
+                .description("헤으응")
+                .location(location)
+                .user(host)
+                .build();
+        roomRepository.save(room);
 
-        given(roomRepository.findById(1L)).willReturn(java.util.Optional.of(room));
+        userToken = tokenProvider.createToken(host.getId().toString());
 
+        Reservation reservation = Reservation.builder()
+                .checkIn(LocalDate.of(2021,02,02))
+                .checkOut(LocalDate.of(20201,02,03))
+                .guestNum(2)
+                .room(room)
+                .totalCost(Double.valueOf(2000))
+                .user(host)
+                .build();
+        reservationRepository.save(reservation);
         String checkIn = "2021-02-01"; String checkOut = "2021-02-02";
         ReservationRequest reservationRequest = ReservationRequest.builder()
                 .totalCost(30000)
-                .roomId(1L)
+                .roomId(room.getId())
                 .message("사장님 잘생겼어요")
                 .infantNumber(2)
                 .guestNumber(2)
                 .checkIn(LocalDate.parse(checkIn,DateTimeFormatter.ISO_DATE))
                 .checkOut(LocalDate.parse(checkOut, DateTimeFormatter.ISO_DATE))
                 .build();
-        User savedUser = userRepository.save(user);
 
-        String userToken = tokenProvider.createToken(savedUser.getId().toString());
+        List<Room> roomList = roomRepository.findAll();
 
         mockMvc.perform(post("/reservation")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -147,21 +182,19 @@ public void filter() {
                                 fieldWithPath("_links.profile.href").description("해당 API문서 URL")
                         )
                         ));
-
     }
 
     @Test
+    @Transactional
     public void getConfirmedReservationList() throws Exception {
         User host = User.builder()
                 .name("host")
-                .email("host@gmail.com")
+                .email("host1@gmail.com")
                 .password(passwordEncoder.encode("test"))
                 .provider(AuthProvider.local)
                 .emailVerified(false)
                 .build();
-        User savedHost = userRepository.save(host);
-        List<Reservation> reservationList = new ArrayList<>();
-
+        userRepository.save(host);
         Location location = Location.builder()
                 .city("스울시")
                 .country("대한민국")
@@ -171,7 +204,7 @@ public void filter() {
                 .latitude(123.22)
                 .longitude(111.11)
                 .build();
-
+        locationRepository.save(location);
         Room room = Room.builder()
                 .checkInTime(LocalTime.of(14,0))
                 .checkOutTime(LocalTime.of(11,0))
@@ -183,8 +216,12 @@ public void filter() {
                 .peopleLimit(2)
                 .description("헤으응")
                 .location(location)
-                .user(savedHost)
+                .user(host)
                 .build();
+        roomRepository.save(room);
+
+        userToken = tokenProvider.createToken(host.getId().toString());
+
         Reservation reservation = Reservation.builder()
                 .checkIn(LocalDate.of(2021,02,02))
                 .checkOut(LocalDate.of(20201,02,03))
@@ -193,24 +230,7 @@ public void filter() {
                 .totalCost(Double.valueOf(2000))
                 .user(host)
                 .build();
-
-        reservationList.add(reservation);
-        User user = User.builder()
-                .name("test")
-                .email("test@gmail.com")
-                .password(passwordEncoder.encode("test"))
-                .provider(AuthProvider.local)
-                .emailVerified(false)
-                .reservationList(reservationList)
-                .build();
-
-        host.setReservationList(reservationList);
-
-        User savedUser = userRepository.save(user);
-        String userToken = tokenProvider.createToken(host.getId().toString());
-
         reservationRepository.save(reservation);
-
         Map<String, String> map = new HashMap<>();
         map.put("page", "페이지 번호");
         map.put("size", "페이지의 사이즈");
@@ -253,8 +273,4 @@ public void filter() {
 
     }
 
- /*   @Test
-    public void getConfirmedReservationDetail() throws Exception {
-        mockMvc.perform(get("/reservation/0")) //유저랑 연결된 예약이 있어야해
-    }*/
 }

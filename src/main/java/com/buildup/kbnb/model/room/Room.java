@@ -45,7 +45,7 @@ public class Room {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     private Location location;
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)

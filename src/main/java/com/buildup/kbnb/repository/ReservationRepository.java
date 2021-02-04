@@ -15,6 +15,4 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Page<Reservation> findAll(Pageable page);
     @Query("select r from Reservation r where r.user.id = :userId")
     List<Reservation> findByUserId(@Param("userId") Long userId);
-
-
 }
