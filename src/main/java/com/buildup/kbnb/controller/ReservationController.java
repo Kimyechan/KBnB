@@ -90,11 +90,11 @@ public class ReservationController {
 
     }
 
-    @PostMapping
+    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> registerReservation(@Valid @RequestBody ReservationRequest reservationRequest, @CurrentUser UserPrincipal userPrincipal) {
         Room room = roomRepository.findById(reservationRequest.getRoomId()).orElseThrow(() -> new BadRequestException("there is no room like that"));
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
-        Reservation newReservation = new Reservation().builder()
+        Reservation newReservation = Reservation.builder()
                 .checkIn(reservationRequest.getCheckIn())
                 .checkOut(reservationRequest.getCheckOut())
                 .guestNum(reservationRequest.getGuestNumber())
@@ -102,13 +102,12 @@ public class ReservationController {
                 .user(user)
                 .build();
 
-        ReservationResponse reservationResponse= new ReservationResponse();
-            reservationRepository.save(newReservation);
-            reservationResponse.builder()
-                    .reservationId(newReservation.getId())
-                    .message("성공적으로 예약되었습니다.")
-                    .build();
+        reservationRepository.save(newReservation);
 
+
+        ReservationResponse reservationResponse=  new ReservationResponse();
+        reservationResponse.setMessage("성공");
+        reservationResponse.setReservationId(newReservation.getId());
 
 
 
@@ -119,5 +118,4 @@ public class ReservationController {
         return ResponseEntity.created(location)
                 .body(model);
     }
-
 }

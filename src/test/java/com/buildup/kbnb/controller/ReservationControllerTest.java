@@ -109,7 +109,7 @@ public void filter() {
 }*/
 
     @Test
-    public void getReservationList() throws Exception {
+    public void register_Reservation() throws Exception {
 
         User user = User.builder()
                 .name("test")
@@ -169,8 +169,6 @@ public void filter() {
 
     @Test
     public void getConfirmedReservationList() throws Exception {
-        //유저 필요하고 유저 findBYid
-        //룸 필요하고 룸 findBYid
         User host = User.builder()
                 .name("host")
                 .email("host@gmail.com")
