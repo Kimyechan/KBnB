@@ -1,4 +1,5 @@
 package com.buildup.kbnb.model.user;
+
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.UserRoom;
 import com.fasterxml.jackson.annotation.JsonIgnore;

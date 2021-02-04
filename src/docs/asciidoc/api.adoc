@@ -109,8 +109,17 @@ operation::auth-login-email[]
 === 유저 정보 조회
 operation::user-get-me[]
 
+[[resource-room]]
+== 숙소
+
+숙소에 대한 상세조회, 리스트 조회, 등록, 삭제, 찜하기등을 할때 사용한다
+
+[[resource-room-get-list-by-condition]]
+=== 숙소 리스트 조건 검색
+operation::room-get-roomList-by-condition[]
+
 [[resource-reservation]]
-=== 예약
+== 예약
 
 [[resource-reservation-register]]
 === 예약 등록
@@ -119,5 +128,4 @@ operation::reservation-register[]
 [[resource-reservation-lookupList]]
 === 예약 리스트 조회
 operation::reservation-lookupList[]
-
 

@@ -5,39 +5,31 @@ import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
 import com.buildup.kbnb.dto.ReservationRequest;
 import com.buildup.kbnb.dto.ReservationResponse;
 import com.buildup.kbnb.dto.Reservation_ConfirmedResponse;
-import com.buildup.kbnb.dto.Reservation_Detail_Response;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.ReservationRepository;
-import com.buildup.kbnb.repository.RoomRepository;
 import com.buildup.kbnb.repository.UserRepository;
+import com.buildup.kbnb.repository.room.RoomRepository;
 import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.asm.IModelFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.Link;
-import org.hibernate.EntityMode;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.servlet.function.EntityResponse;
 
-import javax.swing.text.html.parser.Entity;
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -118,4 +110,14 @@ public class ReservationController {
         return ResponseEntity.created(location)
                 .body(model);
     }
+
+   /* @GetMapping(value = "/{reservationId}",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> getDetailReservationInfo(@CurrentUser @Valid  UserPrincipal userPrincipal, Long reservationId) {
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new ResourceNotFoundException("Reservation", "id", reservationId));
+// 해당 유저가 해당 예약 식별자를 갖고 있
+        for()
+
+    }*/
+
 }
