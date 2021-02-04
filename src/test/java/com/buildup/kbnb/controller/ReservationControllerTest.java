@@ -90,9 +90,6 @@ class ReservationControllerTest {
     @Autowired
     private LocationRepository locationRepository;
 
-    private String userToken;
-
-
     @Test
     @Transactional
     public void register_Reservation() throws Exception {
@@ -129,7 +126,7 @@ class ReservationControllerTest {
                 .build();
         roomRepository.save(room);
 
-        userToken = tokenProvider.createToken(host.getId().toString());
+        String userToken = tokenProvider.createToken(host.getId().toString());
 
         Reservation reservation = Reservation.builder()
                 .checkIn(LocalDate.of(2021,02,02))
@@ -220,7 +217,7 @@ class ReservationControllerTest {
                 .build();
         roomRepository.save(room);
 
-        userToken = tokenProvider.createToken(host.getId().toString());
+        String userToken = tokenProvider.createToken(host.getId().toString());
 
         Reservation reservation = Reservation.builder()
                 .checkIn(LocalDate.of(2021,02,02))
