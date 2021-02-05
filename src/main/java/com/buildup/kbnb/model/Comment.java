@@ -5,6 +5,7 @@ import com.buildup.kbnb.model.user.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -28,6 +29,10 @@ public class Comment {
     private Float checkIn;
 
     private Float priceSatisfaction;
+
+    private String description;
+
+    private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Room room;
