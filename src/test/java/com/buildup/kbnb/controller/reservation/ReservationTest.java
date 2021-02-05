@@ -129,7 +129,7 @@ public class ReservationTest {
         List<Long> list = new ArrayList<>();
         list.add(1L);
         given(userRepository.findById(any())).willReturn(java.util.Optional.of(user));
-        given(reservationRepository.findByUserId(user.getId()).stream().map(com.buildup.kbnb.model.Reservation::getId).collect(Collectors.toList()))
+        given(reservationRepository.findByUserId(user.getId()))
                 .willReturn(list);
 
 
@@ -142,5 +142,7 @@ public class ReservationTest {
                 .content(objectMapper.writeValueAsString(map)))
                 .andDo(print())
                 .andExpect(status().isOk());
+
+
     }
 }
