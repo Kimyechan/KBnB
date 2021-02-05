@@ -168,6 +168,7 @@ public int bedNum(List<BedRoom> bedRoomList) {
         bedNum += bedRoom.getSingleSize();
         bedNum += bedRoom.getSuperSingleSize();
     }
+
     return bedNum;
 }
 }
