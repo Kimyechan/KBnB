@@ -43,10 +43,13 @@ public class Room {
     private Double grade;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private User host;
 
     @OneToOne(fetch = FetchType.LAZY)
     private Location location;
+
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
+    private List<RoomImg> roomImgList;
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<BathRoom> bathRoomList;

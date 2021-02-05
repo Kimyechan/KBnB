@@ -1,4 +1,4 @@
-package com.buildup.kbnb.dto;
+package com.buildup.kbnb.dto.user;
 
 import lombok.*;
 

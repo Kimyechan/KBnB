@@ -27,4 +27,8 @@ public class RoomService {
         }
         return bedNum;
     }
+
+    public Room getRoomDetailById(Long roomId) {
+        return roomRepository.findByIdWithUserLocation(roomId).orElseThrow();
+    }
 }
