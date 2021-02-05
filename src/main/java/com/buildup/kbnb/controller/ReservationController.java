@@ -9,8 +9,10 @@ import com.buildup.kbnb.dto.reservation.Reservation_Detail_Response;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
+import com.buildup.kbnb.model.room.RoomImg;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.ReservationRepository;
+import com.buildup.kbnb.repository.RoomImgRepository;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.repository.room.RoomRepository;
 import com.buildup.kbnb.security.CurrentUser;
@@ -39,6 +41,7 @@ public class ReservationController {
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
+    private final RoomImgRepository roomImgRepository;
 
     /*@GetMapping("/reservation_id")
     public ResponseE<Reservation_Detail_Response> getDetailReservation(@CurrentUser UserPrincipal userPrincipal) {
@@ -60,11 +63,16 @@ public class ReservationController {
                     .roomLocation(reservation.getRoom().getLocation().getCity() + " " + reservation.getRoom().getLocation().getBorough() + " " + reservation.getRoom().getLocation().getNeighborhood())
                     .hostName(reservation.getRoom().getUser().getName())
                     .roomName(reservation.getRoom().getName())
+                    .roomId(reservation.getRoom().getId())
+                    .imgUrl(roomImgRepository.findByRoom(reservation.getRoom()).stream().map(RoomImg::getUrl).collect(Collectors.toList()))
                     .status("예약 완료").build();
+
             if (LocalDate.now().isAfter(reservation.getCheckOut()))//현재 날짜가 체크아웃날짜보다 나중이라면
             {
                 reservation_confirmedResponse.setStatus("완료된 여정");
             }
+            else
+                reservation_confirmedResponse.setStatus("예약 완료");
             reservation_confirmedResponseList.add(reservation_confirmedResponse);
         }
 
