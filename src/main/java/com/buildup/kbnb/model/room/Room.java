@@ -43,7 +43,7 @@ public class Room {
     private Double grade;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private User host;
 
     @OneToOne(fetch = FetchType.LAZY)
     private Location location;

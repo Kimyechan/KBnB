@@ -11,13 +11,7 @@ import java.time.LocalDate;
 @Builder
 public class CommentDetail {
     private Long id;
-    private Float cleanliness;
-    private Float accuracy;
-    private Float communication;
-    private Float location;
-    private Float checkIn;
-    private Float priceSatisfaction;
-
+    private String description;
     private String userName;
     private LocalDate date;
     private String userImgUrl;
