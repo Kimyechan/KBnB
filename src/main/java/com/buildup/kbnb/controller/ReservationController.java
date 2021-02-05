@@ -9,7 +9,6 @@ import com.buildup.kbnb.dto.reservation.Reservation_Detail_Response;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
-import com.buildup.kbnb.model.room.RoomImg;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.ReservationRepository;
 import com.buildup.kbnb.repository.RoomImgRepository;
@@ -17,10 +16,16 @@ import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.repository.room.RoomRepository;
 import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
+import com.buildup.kbnb.service.reservationService.ReservationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.*;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +47,7 @@ public class ReservationController {
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
     private final RoomImgRepository roomImgRepository;
+    private final ReservationService reservationService;
 
     /*@GetMapping("/reservation_id")
     public ResponseE<Reservation_Detail_Response> getDetailReservation(@CurrentUser UserPrincipal userPrincipal) {
@@ -64,7 +70,7 @@ public class ReservationController {
                     .hostName(reservation.getRoom().getHost().getName())
                     .roomName(reservation.getRoom().getName())
                     .roomId(reservation.getRoom().getId())
-                    .imgUrl(roomImgRepository.findByRoom(reservation.getRoom()).stream().map(RoomImg::getUrl).collect(Collectors.toList()))
+                    .imgUrl(roomImgRepository.findByRoom(reservation.getRoom()).get(0).getUrl())
                     .status("예약 완료").build();
 
             if (LocalDate.now().isAfter(reservation.getCheckOut()))//현재 날짜가 체크아웃날짜보다 나중이라면
@@ -124,16 +130,10 @@ public class ReservationController {
         return ResponseEntity.ok(model);
     }
     public Reservation_Detail_Response ifReservationIdExist(Long reservationId) {
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new BadRequestException("there is no reservation which reservationId = " + reservationId));
+        Reservation reservation = reservationService.findByUserId(reservationId);
         List<BedRoom> bedRoomList = reservation.getRoom().getBedRoomList();
         int bedRoomNum = bedRoomList.size();
-        int bedNum = 0;
-        for(BedRoom bedRoom : bedRoomList) {
-            bedNum += bedRoom.getDoubleSize();
-            bedNum += bedRoom.getQueenSize();
-            bedNum += bedRoom.getSingleSize();
-            bedNum += bedRoom.getSuperSingleSize();
-        }
+        int bedNum = bedNum(bedRoomList);
         Reservation_Detail_Response reservation_detail_response = Reservation_Detail_Response.builder()
                 .hostImage("this is demo host Image URL")
                 .roomImageList(new ArrayList<>(Arrays.asList("this", "is", "Sparta")))
@@ -160,5 +160,14 @@ public class ReservationController {
                 .build();
         return reservation_detail_response;
     }
-
+public int bedNum(List<BedRoom> bedRoomList) {
+        int bedNum = 0;
+    for(BedRoom bedRoom : bedRoomList) {
+        bedNum += bedRoom.getDoubleSize();
+        bedNum += bedRoom.getQueenSize();
+        bedNum += bedRoom.getSingleSize();
+        bedNum += bedRoom.getSuperSingleSize();
+    }
+    return bedNum;
+}
 }

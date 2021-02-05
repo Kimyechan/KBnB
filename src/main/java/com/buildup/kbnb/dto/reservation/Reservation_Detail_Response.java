@@ -3,7 +3,7 @@ package com.buildup.kbnb.dto.reservation;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 @Builder
 public class Reservation_Detail_Response {
     private Long roomId;
-    private ArrayList<String> roomImageList;
+    private List<String> roomImageList;
     private String hostName;
     private String hostImage;
     private Long totalCost;
