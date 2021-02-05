@@ -5,15 +5,18 @@ import com.buildup.kbnb.dto.room.search.CostSearch;
 import com.buildup.kbnb.dto.room.search.GuestSearch;
 import com.buildup.kbnb.dto.room.search.LocationSearch;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
+import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
+import com.buildup.kbnb.model.room.RoomImg;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.security.CustomUserDetailsService;
 import com.buildup.kbnb.security.TokenProvider;
 import com.buildup.kbnb.security.UserPrincipal;
+import com.buildup.kbnb.service.CommentService;
 import com.buildup.kbnb.service.RoomService;
 import com.buildup.kbnb.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,17 +39,22 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -79,6 +87,9 @@ class RoomControllerTest {
 
     @MockBean
     UserService userService;
+
+    @MockBean
+    CommentService commentService;
 
     public User createUser() {
         User user = User.builder()
@@ -269,11 +280,179 @@ class RoomControllerTest {
         User user = createUser();
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
 
+        User host = getHost();
+        Location location = getLocation();
+
+        List<RoomImg> roomImgList = getRoomImgList();
+        List<BathRoom> bathRoomList = getBathRoomList();
+        List<BedRoom> bedRoomList = getBedRoomList();
+
+        Room room = getRoom(host, location, roomImgList, bathRoomList, bedRoomList);
+
+        Pageable pageable = PageRequest.of(0, 6);
+        Page<Comment> commentPage = getCommentPages(pageable);
+
+        given(roomService.getBedNum(any())).willReturn(2);
+        given(userService.checkRoomByUser(any(), any())).willReturn(false);
+        given(roomService.getRoomDetailById(room.getId())).willReturn(room);
+        given(commentService.getListByRoomIdWithUser(room, pageable)).willReturn(commentPage);
+
         mockMvc.perform(get("/room/detail")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .param("roomId", "1"))
+                .param("roomId", String.valueOf(room.getId())))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("room-get-detail",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT 인증 토큰"),
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
+                        ),
+                        requestParameters(
+                                parameterWithName("roomId").description("숙소 식별자 값")
+                        ),
+                        responseHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("숙소 식별자 값"),
+                                fieldWithPath("name").description("숙소 이름"),
+                                fieldWithPath("roomType").description("숙소 유형"),
+                                fieldWithPath("roomCost").description("1일 숙박 비용"),
+                                fieldWithPath("cleaningCost").description("청소비"),
+                                fieldWithPath("tax").description("세금"),
+                                fieldWithPath("peopleLimit").description("제한 인원 수"),
+                                fieldWithPath("description").description("숙서 설명"),
+                                fieldWithPath("checkInTime").description("체크 인 시간"),
+                                fieldWithPath("checkOutTime").description("체크 아웃 시간"),
+                                fieldWithPath("isSmoking").description("흡연 가능 여부"),
+                                fieldWithPath("isParking").description("주차 가능 여부"),
+                                fieldWithPath("bedRoomNum").description("침실 수"),
+                                fieldWithPath("bedNum").description("침대 수"),
+                                fieldWithPath("bathRoomNum").description("욕실 수"),
+                                fieldWithPath("grade").description("숙소 평점"),
+                                fieldWithPath("commentCount").description("댓글 수"),
+                                fieldWithPath("locationDetail.country").description("지정 위치 국가 이름"),
+                                fieldWithPath("locationDetail.city").description("지정 위치 도시 이름"),
+                                fieldWithPath("locationDetail.borough").description("지정 위치 자치구 이름"),
+                                fieldWithPath("locationDetail.neighborhood").description("지정 위치 동"),
+                                fieldWithPath("locationDetail.detailAddress").description("지정 위치 세부 주소"),
+                                fieldWithPath("locationDetail.latitude").description("지정 위치 위도"),
+                                fieldWithPath("locationDetail.longitude").description("지정 위치 경도"),
+                                fieldWithPath("roomImgUrlList[]").description("숙소 이미지 리스트"),
+                                fieldWithPath("commentList[].id").description("댓글 식별자 값"),
+                                fieldWithPath("commentList[].description").description("댓글 상세 설명"),
+                                fieldWithPath("commentList[].userName").description("해당 댓글 유저"),
+                                fieldWithPath("commentList[].date").description("댓글 작성 날짜"),
+                                fieldWithPath("commentList[].userImgUrl").description("해당 댓글 유저 이미지 url"),
+                                fieldWithPath("isChecked").description("검색한 유저 숙소 체크 여부"),
+                                fieldWithPath("_links.self.href").description("해당 API URL"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
+                        )
+                ));
+    }
+
+    private Room getRoom(User host, Location location, List<RoomImg> roomImgList, List<BathRoom> bathRoomList, List<BedRoom> bedRoomList) {
+        return Room.builder()
+                .id(1L)
+                .name("test room name")
+                .roomType("Shared room")
+                .roomCost(30000.0)
+                .cleaningCost(5000.0)
+                .tax(3000.0)
+                .peopleLimit(3)
+                .description("test room description")
+                .checkInTime(LocalTime.of(15, 0))
+                .checkOutTime(LocalTime.of(12, 0))
+                .isSmoking(false)
+                .isParking(true)
+                .grade(4.6)
+                .host(host)
+                .location(location)
+                .roomImgList(roomImgList)
+                .bedRoomList(bedRoomList)
+                .bathRoomList(bathRoomList)
+                .build();
+    }
+
+    private Location getLocation() {
+        return Location.builder()
+                .country("Korea")
+                .city("Seoul")
+                .borough("성동구")
+                .neighborhood("성수동")
+                .detailAddress("성수2가3동 289-10 제강 빌딩 8층")
+                .latitude(37.0)
+                .longitude(137.0)
+                .build();
+    }
+
+    private User getHost() {
+        return User.builder()
+                .id(2L)
+                .name("test host")
+                .birth(LocalDate.of(1999, 7, 18))
+                .email("host@gmail.com")
+                .password(passwordEncoder.encode("host"))
+                .imageUrl("Image URL")
+                .provider(AuthProvider.local)
+                .emailVerified(false)
+                .build();
+    }
+
+    private Page<Comment> getCommentPages(Pageable pageable) {
+        List<Comment> comments = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            User user = User.builder()
+                    .name("comment user" + i)
+                    .imageUrl("user image url" + i)
+                    .build();
+
+            Comment comment = Comment.builder()
+                    .id((long) i)
+                    .user(user)
+                    .date(LocalDate.of(2021, 3, 12))
+                    .description("comment description" + i)
+                    .build();
+            comments.add(comment);
+        }
+        return new PageImpl<>(comments.subList((int) pageable.getOffset(), (int) pageable.getOffset() + pageable.getPageSize()),
+                pageable,
+                comments.size());
+    }
+
+    private List<BathRoom> getBathRoomList() {
+        List<BathRoom> bathRoomList = new ArrayList<>();
+
+        BathRoom bathRoom = BathRoom.builder()
+                .isPrivate(true)
+                .build();
+
+        bathRoomList.add(bathRoom);
+        return bathRoomList;
+    }
+
+    private List<BedRoom> getBedRoomList() {
+        List<BedRoom> bedRoomList = new ArrayList<>();
+
+        BedRoom bedRoom = BedRoom.builder()
+                .doubleSize(2)
+                .build();
+
+        bedRoomList.add(bedRoom);
+        return bedRoomList;
+    }
+
+    private List<RoomImg> getRoomImgList() {
+        List<RoomImg> roomImgList = new ArrayList<>();
+
+        for (int i = 1; i <= 3; i++) {
+            RoomImg roomImg = RoomImg.builder()
+                    .url("room img url" + i)
+                    .build();
+
+            roomImgList.add(roomImg);
+        }
+        return roomImgList;
     }
 }

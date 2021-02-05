@@ -122,7 +122,7 @@ class ReservationControllerTest {
                 .peopleLimit(2)
                 .description("헤으응")
                 .location(location)
-                .user(host)
+                .host(host)
                 .build();
         roomRepository.save(room);
 
@@ -213,7 +213,7 @@ class ReservationControllerTest {
                 .peopleLimit(2)
                 .description("헤으응")
                 .location(location)
-                .user(host)
+                .host(host)
                 .build();
         roomRepository.save(room);
 

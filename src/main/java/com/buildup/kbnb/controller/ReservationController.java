@@ -55,7 +55,7 @@ public class ReservationController {
                     .checkIn(reservation.getCheckIn())
                     .checkOut(reservation.getCheckOut())
                     .roomLocation(reservation.getRoom().getLocation().getCity() + " " + reservation.getRoom().getLocation().getBorough() + " " + reservation.getRoom().getLocation().getNeighborhood())
-                    .hostName(reservation.getRoom().getUser().getName())
+                    .hostName(reservation.getRoom().getHost().getName())
                     .roomName(reservation.getRoom().getName())
                     .status("예약 완료").build();
             if (LocalDate.now().isAfter(reservation.getCheckOut()))//현재 날짜가 체크아웃날짜보다 나중이라면

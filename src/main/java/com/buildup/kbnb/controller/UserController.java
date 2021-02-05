@@ -1,7 +1,7 @@
 package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
-import com.buildup.kbnb.dto.UserDto;
+import com.buildup.kbnb.dto.user.UserDto;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.CurrentUser;
