@@ -65,11 +65,14 @@
 
 에러 응답이 발생했을 때 (상태 코드 >= 400), 본문에 해당 문제를 기술한 JSON 객체가 담겨있다. 에러 객체는 다음의 구조를 따른다.
 
-
-
 예를 들어, 잘못된 요청으로 이벤트를 만들려고 했을 때 다음과 같은 `400 Bad Request` 응답을 받는다.
 
+[[errors-email-duplication]]
+=== 이메일 중복 예외
+operation::exception-emailDuplication[snippets='response-body,response-fields']
 
+=== 이메일 패스워드 틀림 예외
+operation::exception-emailOrPasswordWrong[snippets='response-body,response-fields']
 
 [[overview-hypermedia]]
 == 하이퍼미디어
