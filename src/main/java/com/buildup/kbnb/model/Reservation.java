@@ -22,7 +22,7 @@ public class Reservation {
 
     private Integer guestNum;
 
-    private Double totalCost;
+    private Long totalCost;
 
     @ManyToOne(fetch = FetchType.LAZY )
     private User user;

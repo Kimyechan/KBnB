@@ -2,10 +2,12 @@ package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.advice.exception.BadRequestException;
 import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
-import com.buildup.kbnb.dto.ReservationRequest;
-import com.buildup.kbnb.dto.ReservationResponse;
-import com.buildup.kbnb.dto.Reservation_ConfirmedResponse;
+import com.buildup.kbnb.dto.reservation.ReservationRequest;
+import com.buildup.kbnb.dto.reservation.ReservationResponse;
+import com.buildup.kbnb.dto.reservation.Reservation_ConfirmedResponse;
+import com.buildup.kbnb.dto.reservation.Reservation_Detail_Response;
 import com.buildup.kbnb.model.Reservation;
+import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.ReservationRepository;
@@ -24,6 +26,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,18 +103,54 @@ public class ReservationController {
         return ResponseEntity.created(location)
                 .body(model);
     }
-/*
 
     @GetMapping(value = "/detail",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getDetailReservationInfo(@CurrentUser UserPrincipal userPrincipal, Long reservationId) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new ResourceNotFoundException("Reservation", "id", reservationId));
-        reservationId
-// 해당 유저가 해당 예약 식별자를 갖고 있는지
         List<Long> reservationId_user = reservationRepository.findByUserId(user.getId()).stream().map(Reservation::getId).collect(Collectors.toList());
-
-        return null;
+        Reservation_Detail_Response reservation_detail_response = new Reservation_Detail_Response();
+        if(reservationId_user.contains(reservationId))
+          reservation_detail_response = ifReservationIdExist(reservationId);
+        EntityModel<Reservation_Detail_Response> model = EntityModel.of(reservation_detail_response);
+        model.add(linkTo(methodOn(ReservationController.class).getDetailReservationInfo(userPrincipal, reservationId)).withSelfRel());
+        return ResponseEntity.ok(model);
     }
-*/
+    public Reservation_Detail_Response ifReservationIdExist(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new BadRequestException("there is no reservation which reservationId = " + reservationId));
+        List<BedRoom> bedRoomList = reservation.getRoom().getBedRoomList();
+        int bedRoomNum = bedRoomList.size();
+        int bedNum = 0;
+        for(BedRoom bedRoom : bedRoomList) {
+            bedNum += bedRoom.getDoubleSize();
+            bedNum += bedRoom.getQueenSize();
+            bedNum += bedRoom.getSingleSize();
+            bedNum += bedRoom.getSuperSingleSize();
+        }
+        Reservation_Detail_Response reservation_detail_response = Reservation_Detail_Response.builder()
+                .hostImage("this is demo host Image URL")
+                .roomImageList(new ArrayList<>(Arrays.asList("this", "is", "Sparta")))
+                .bedRoomNum(bedRoomNum)
+                .bedNum(bedNum)
+                .bathRoomNum(reservation.getRoom().getBathRoomList().size())
+                .address(
+                        reservation.getRoom().getLocation().getCountry()
+                                +  reservation.getRoom().getLocation().getCity()
+                                +  reservation.getRoom().getLocation().getBorough()
+                                + reservation.getRoom().getLocation().getNeighborhood()
+                                + reservation.getRoom().getLocation().getDetailAddress() )
+                .latitude(reservation.getRoom().getLocation().getLatitude())
+                .longitude(reservation.getRoom().getLocation().getLongitude())
+                .checkIn(reservation.getCheckIn())
+                .checkOut(reservation.getCheckOut())
+                .guestNum(reservation.getGuestNum())
+                .hostName(reservation.getRoom().getUser().getName())
+                .roomName(reservation.getRoom().getName())
+                .isParking(reservation.getRoom().getIsParking())
+                .isSmoking(reservation.getRoom().getIsSmoking())
+                .roomId(reservation.getRoom().getId())
+                .totalCost(reservation.getTotalCost())
+                .build();
+        return reservation_detail_response;
+    }
 
 }

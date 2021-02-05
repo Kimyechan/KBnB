@@ -1,13 +1,21 @@
-package com.buildup.kbnb.dto;
+package com.buildup.kbnb.dto.reservation;
+
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Reservation_Detail_Response {
     private Long roomId;
-    private String[] roomImageList;
+    private ArrayList<String> roomImageList;
     private String hostName;
     private String hostImage;
-    private int totalCost;
+    private Long totalCost;
     private int guestNum;
     private String address;
     private double latitude;
