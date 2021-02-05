@@ -5,10 +5,12 @@ import com.buildup.kbnb.dto.reservation.ReservationRequest;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
+import com.buildup.kbnb.model.room.RoomImg;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.LocationRepository;
 import com.buildup.kbnb.repository.ReservationRepository;
+import com.buildup.kbnb.repository.RoomImgRepository;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.repository.room.RoomRepository;
 import com.buildup.kbnb.security.TokenProvider;
@@ -75,6 +77,9 @@ class ReservationControllerTest {
 
     @Autowired
     WebApplicationContext webApplicationContext;
+
+    @Autowired
+    RoomImgRepository roomImgRepository;
 
 
 
@@ -219,6 +224,9 @@ class ReservationControllerTest {
                 .user(host)
                 .build();
         reservationRepository.save(reservation);
+
+        roomImgRepository.save(RoomImg.builder().room(room).url("this is demo url").build());
+        roomImgRepository.save(RoomImg.builder().room(room).url("this is demo too").build());
         Map<String, String> map = new HashMap<>();
         map.put("page", "페이지 번호");
         map.put("size", "페이지의 사이즈");
@@ -251,6 +259,8 @@ class ReservationControllerTest {
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].checkIn").description("체크인 날짜"),
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].checkOut").description("체크아웃 날짜"),
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].roomId").description("방 식별자"),
+                        fieldWithPath("_embedded.reservation_ConfirmedResponseList[].imgUrl[]").description("방 imgUrl 리스트"),
+
                         fieldWithPath("page.size").description("페이지 사이즈"),
                         fieldWithPath("page.totalElements").description("요소의 총 개수"),
                         fieldWithPath("page.totalPages").description("총 페이지 개수"),
