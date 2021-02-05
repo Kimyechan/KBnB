@@ -279,32 +279,33 @@ class RoomControllerTest {
         User user = createUser();
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
 
-        User host = User.builder()
-                .id(2L)
-                .name("test host")
-                .birth(LocalDate.of(1999, 7, 18))
-                .email("host@gmail.com")
-                .password(passwordEncoder.encode("host"))
-                .imageUrl("Image URL")
-                .provider(AuthProvider.local)
-                .emailVerified(false)
-                .build();
-
-        Location location = Location.builder()
-                .country("Korea")
-                .city("Seoul")
-                .borough("성동구")
-                .neighborhood("성수동")
-                .detailAddress("성수2가3동 289-10 제강 빌딩 8층")
-                .latitude(37.0)
-                .longitude(137.0)
-                .build();
+        User host = getHost();
+        Location location = getLocation();
 
         List<RoomImg> roomImgList = getRoomImgList();
         List<BathRoom> bathRoomList = getBathRoomList();
         List<BedRoom> bedRoomList = getBedRoomList();
 
-        Room room = Room.builder()
+        Room room = getRoom(host, location, roomImgList, bathRoomList, bedRoomList);
+
+        Pageable pageable = PageRequest.of(0, 6);
+        Page<Comment> commentPage = getCommentPages(pageable);
+
+        given(roomService.getBedNum(any())).willReturn(2);
+        given(userService.checkRoomByUser(any(), any())).willReturn(false);
+        given(roomService.getRoomDetailById(room.getId())).willReturn(room);
+        given(commentService.getListByRoomIdWithUser(room, pageable)).willReturn(commentPage);
+
+        mockMvc.perform(get("/room/detail")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .param("roomId", String.valueOf(room.getId())))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    private Room getRoom(User host, Location location, List<RoomImg> roomImgList, List<BathRoom> bathRoomList, List<BedRoom> bedRoomList) {
+        return Room.builder()
                 .id(1L)
                 .name("test room name")
                 .roomType("Shared room")
@@ -324,23 +325,30 @@ class RoomControllerTest {
                 .bedRoomList(bedRoomList)
                 .bathRoomList(bathRoomList)
                 .build();
-
-        Pageable pageable = PageRequest.of(0, 6);
-        Page<Comment> commentPage = getCommentPages(pageable);
-
-        given(roomService.getBedNum(any())).willReturn(2);
-        given(userService.checkRoomByUser(any(), any())).willReturn(false);
-        given(roomService.getRoomDetailById(room.getId())).willReturn(room);
-        given(commentService.getListByRoomIdWithUser(room, pageable)).willReturn(commentPage);
-
-        mockMvc.perform(get("/room/detail")
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .param("roomId", String.valueOf(room.getId())))
-                .andDo(print())
-                .andExpect(status().isOk());
     }
-
+    private Location getLocation() {
+        return Location.builder()
+                .country("Korea")
+                .city("Seoul")
+                .borough("성동구")
+                .neighborhood("성수동")
+                .detailAddress("성수2가3동 289-10 제강 빌딩 8층")
+                .latitude(37.0)
+                .longitude(137.0)
+                .build();
+    }
+    private User getHost() {
+        return User.builder()
+                    .id(2L)
+                    .name("test host")
+                    .birth(LocalDate.of(1999, 7, 18))
+                    .email("host@gmail.com")
+                    .password(passwordEncoder.encode("host"))
+                    .imageUrl("Image URL")
+                    .provider(AuthProvider.local)
+                    .emailVerified(false)
+                    .build();
+    }
     private Page<Comment> getCommentPages(Pageable pageable) {
         List<Comment> comments = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
@@ -361,7 +369,6 @@ class RoomControllerTest {
                 pageable,
                 comments.size());
     }
-
     private List<BathRoom> getBathRoomList() {
         List<BathRoom> bathRoomList = new ArrayList<>();
 
