@@ -14,10 +14,8 @@ import java.util.Optional;
 import java.util.List;
 
 public interface RoomRepository extends JpaRepository<Room, Long>, RoomRepositoryCustom {
-<<<<<<< HEAD
 
-=======
     @Query("select r from Room r join fetch r.host join fetch r.location where r.id = :roomId")
     Optional<Room> findByIdWithUserLocation(@Param("roomId") Long roomId);
->>>>>>> c8089cb22f543deefb37c4c10fc6880c8309ed59
+
 }
