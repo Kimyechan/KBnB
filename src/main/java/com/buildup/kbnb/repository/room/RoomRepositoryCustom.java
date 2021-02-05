@@ -7,4 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface RoomRepositoryCustom {
     Page<Room> searchByCondition(RoomSearchCondition condition, Pageable pageable);
+
+
 }
