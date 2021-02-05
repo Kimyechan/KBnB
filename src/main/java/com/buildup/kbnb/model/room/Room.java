@@ -2,13 +2,10 @@ package com.buildup.kbnb.model.room;
 
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
-import com.buildup.kbnb.model.UserRoom;
 import com.buildup.kbnb.model.user.User;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
