@@ -60,11 +60,15 @@ public class ReservationController {
                     .roomLocation(reservation.getRoom().getLocation().getCity() + " " + reservation.getRoom().getLocation().getBorough() + " " + reservation.getRoom().getLocation().getNeighborhood())
                     .hostName(reservation.getRoom().getUser().getName())
                     .roomName(reservation.getRoom().getName())
+                    .roomId(reservation.getRoom().getId())
                     .status("예약 완료").build();
+            LocalDate localDate = LocalDate.now();
             if (LocalDate.now().isAfter(reservation.getCheckOut()))//현재 날짜가 체크아웃날짜보다 나중이라면
             {
                 reservation_confirmedResponse.setStatus("완료된 여정");
             }
+            else
+                reservation_confirmedResponse.setStatus("예약 완료");
             reservation_confirmedResponseList.add(reservation_confirmedResponse);
         }
 

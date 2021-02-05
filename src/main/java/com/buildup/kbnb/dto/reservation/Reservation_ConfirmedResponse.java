@@ -11,11 +11,11 @@ import java.time.LocalDate;
 @Builder
 public class Reservation_ConfirmedResponse {
     private Long reservationId;
+    private Long roomId;
     private String status;
     private String roomName;
     private String roomLocation;
     private String hostName;
     private LocalDate checkIn;
     private LocalDate checkOut;
-
 }

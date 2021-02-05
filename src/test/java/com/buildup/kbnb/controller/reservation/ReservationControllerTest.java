@@ -174,7 +174,7 @@ class ReservationControllerTest {
 
     @Test
     @Transactional
-    public void getConfirmedReservationList() throws Exception {
+    public void getConfirmedReservationList() throws Exception  {
         User host = User.builder()
                 .name("host")
                 .email("host1@gmail.com")
@@ -250,6 +250,7 @@ class ReservationControllerTest {
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].hostName").description("호스트 이름"),
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].checkIn").description("체크인 날짜"),
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].checkOut").description("체크아웃 날짜"),
+                        fieldWithPath("_embedded.reservation_ConfirmedResponseList[].roomId").description("방 식별자"),
                         fieldWithPath("page.size").description("페이지 사이즈"),
                         fieldWithPath("page.totalElements").description("요소의 총 개수"),
                         fieldWithPath("page.totalPages").description("총 페이지 개수"),
