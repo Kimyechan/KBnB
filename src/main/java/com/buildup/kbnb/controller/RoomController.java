@@ -119,6 +119,7 @@ public class RoomController {
 
         EntityModel<RoomDetail> model = EntityModel.of(roomDetail);
         model.add(linkTo(methodOn(RoomController.class).getRoomDetail(roomId, userPrincipal)).withSelfRel());
+        model.add(Link.of("/docs/api.html#resource-room-get-detail").withRel("profile"));
         return ResponseEntity.ok().body(model);
     }
 

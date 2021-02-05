@@ -48,12 +48,13 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -301,7 +302,54 @@ class RoomControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .param("roomId", String.valueOf(room.getId())))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("room-get-detail",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT 인증 토큰"),
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
+                        ),
+                        requestParameters(
+                                parameterWithName("roomId").description("숙소 식별자 값")
+                        ),
+                        responseHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("숙소 식별자 값"),
+                                fieldWithPath("name").description("숙소 이름"),
+                                fieldWithPath("roomType").description("숙소 유형"),
+                                fieldWithPath("roomCost").description("1일 숙박 비용"),
+                                fieldWithPath("cleaningCost").description("청소비"),
+                                fieldWithPath("tax").description("세금"),
+                                fieldWithPath("peopleLimit").description("제한 인원 수"),
+                                fieldWithPath("description").description("숙서 설명"),
+                                fieldWithPath("checkInTime").description("체크 인 시간"),
+                                fieldWithPath("checkOutTime").description("체크 아웃 시간"),
+                                fieldWithPath("isSmoking").description("흡연 가능 여부"),
+                                fieldWithPath("isParking").description("주차 가능 여부"),
+                                fieldWithPath("bedRoomNum").description("침실 수"),
+                                fieldWithPath("bedNum").description("침대 수"),
+                                fieldWithPath("bathRoomNum").description("욕실 수"),
+                                fieldWithPath("grade").description("숙소 평점"),
+                                fieldWithPath("commentCount").description("댓글 수"),
+                                fieldWithPath("locationDetail.country").description("지정 위치 국가 이름"),
+                                fieldWithPath("locationDetail.city").description("지정 위치 도시 이름"),
+                                fieldWithPath("locationDetail.borough").description("지정 위치 자치구 이름"),
+                                fieldWithPath("locationDetail.neighborhood").description("지정 위치 동"),
+                                fieldWithPath("locationDetail.detailAddress").description("지정 위치 세부 주소"),
+                                fieldWithPath("locationDetail.latitude").description("지정 위치 위도"),
+                                fieldWithPath("locationDetail.longitude").description("지정 위치 경도"),
+                                fieldWithPath("roomImgUrlList[]").description("숙소 이미지 리스트"),
+                                fieldWithPath("commentList[].id").description("댓글 식별자 값"),
+                                fieldWithPath("commentList[].description").description("댓글 상세 설명"),
+                                fieldWithPath("commentList[].userName").description("해당 댓글 유저"),
+                                fieldWithPath("commentList[].date").description("댓글 작성 날짜"),
+                                fieldWithPath("commentList[].userImgUrl").description("해당 댓글 유저 이미지 url"),
+                                fieldWithPath("isChecked").description("검색한 유저 숙소 체크 여부"),
+                                fieldWithPath("_links.self.href").description("해당 API URL"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
+                        )
+                ));
     }
 
     private Room getRoom(User host, Location location, List<RoomImg> roomImgList, List<BathRoom> bathRoomList, List<BedRoom> bedRoomList) {
@@ -326,6 +374,7 @@ class RoomControllerTest {
                 .bathRoomList(bathRoomList)
                 .build();
     }
+
     private Location getLocation() {
         return Location.builder()
                 .country("Korea")
@@ -337,18 +386,20 @@ class RoomControllerTest {
                 .longitude(137.0)
                 .build();
     }
+
     private User getHost() {
         return User.builder()
-                    .id(2L)
-                    .name("test host")
-                    .birth(LocalDate.of(1999, 7, 18))
-                    .email("host@gmail.com")
-                    .password(passwordEncoder.encode("host"))
-                    .imageUrl("Image URL")
-                    .provider(AuthProvider.local)
-                    .emailVerified(false)
-                    .build();
+                .id(2L)
+                .name("test host")
+                .birth(LocalDate.of(1999, 7, 18))
+                .email("host@gmail.com")
+                .password(passwordEncoder.encode("host"))
+                .imageUrl("Image URL")
+                .provider(AuthProvider.local)
+                .emailVerified(false)
+                .build();
     }
+
     private Page<Comment> getCommentPages(Pageable pageable) {
         List<Comment> comments = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
@@ -369,6 +420,7 @@ class RoomControllerTest {
                 pageable,
                 comments.size());
     }
+
     private List<BathRoom> getBathRoomList() {
         List<BathRoom> bathRoomList = new ArrayList<>();
 
@@ -379,6 +431,7 @@ class RoomControllerTest {
         bathRoomList.add(bathRoom);
         return bathRoomList;
     }
+
     private List<BedRoom> getBedRoomList() {
         List<BedRoom> bedRoomList = new ArrayList<>();
 
@@ -389,6 +442,7 @@ class RoomControllerTest {
         bedRoomList.add(bedRoom);
         return bedRoomList;
     }
+
     private List<RoomImg> getRoomImgList() {
         List<RoomImg> roomImgList = new ArrayList<>();
 
@@ -401,6 +455,4 @@ class RoomControllerTest {
         }
         return roomImgList;
     }
-
-
 }
