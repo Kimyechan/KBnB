@@ -103,6 +103,30 @@ class AuthControllerTest {
     }
 
     @Test
+    @DisplayName("로그인 - 이메일 or 비밀번호 불일치")
+    public void loginFail() throws Exception {
+        LoginRequest loginRequest = LoginRequest.builder()
+                .email("test@gmail.com")
+                .password("test")
+                .build();
+
+        given(userRepository.findByEmail(loginRequest.getEmail())).willThrow(EmailOrPassWrongException.class);
+
+        mockMvc.perform(post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginRequest)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andDo(document("exception-emailOrPasswordWrong",
+                        responseFields(
+                                fieldWithPath("success").description("성공 실패 여부"),
+                                fieldWithPath("code").description("exception 코드 번호"),
+                                fieldWithPath("msg").description("exception 메세지")
+                        )
+                ));
+    }
+
+    @Test
     @DisplayName("이메일 회원가입 성공")
     public void signupEmail() throws Exception {
         SignUpRequest signUpRequest = SignUpRequest.builder()
@@ -148,6 +172,32 @@ class AuthControllerTest {
                                 fieldWithPath("tokenType").description("Access Token 타입"),
                                 fieldWithPath("_links.self.href").description("해당 API URL"),
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("회원가입 실패- 이메일 중복")
+    public void signupFail() throws Exception{
+        SignUpRequest signUpRequest = SignUpRequest.builder()
+                .name("test")
+                .birth(LocalDate.of(1999, 7, 18))
+                .email("test@gmail.com")
+                .password("test")
+                .build();
+
+        given(userRepository.existsByEmail(signUpRequest.getEmail())).willReturn(true);
+
+        mockMvc.perform(post("/auth/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(signUpRequest)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andDo(document("exception-emailDuplication",
+                        responseFields(
+                                fieldWithPath("success").description("성공 실패 여부"),
+                                fieldWithPath("code").description("exception 코드 번호"),
+                                fieldWithPath("msg").description("exception 메세지")
                         )
                 ));
     }
