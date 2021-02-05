@@ -1,6 +1,8 @@
 package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.advice.exception.BadRequestException;
+import com.buildup.kbnb.advice.exception.EmailDuplicationException;
+import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
 import com.buildup.kbnb.dto.AuthResponse;
 import com.buildup.kbnb.dto.user.LoginRequest;
 import com.buildup.kbnb.dto.user.SignUpRequest;
@@ -38,9 +40,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new BadRequestException("email or password wrong"));
+        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(EmailOrPassWrongException::new);
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new BadRequestException("email or password wrong");
+            throw new EmailOrPassWrongException();
         }
 
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
@@ -54,7 +56,7 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new BadRequestException("Email address already in use.");
+            throw new EmailDuplicationException();
         }
 
         User user = new User();
@@ -81,5 +83,4 @@ public class AuthController {
         return ResponseEntity.created(location)
                 .body(model);
     }
-
 }
