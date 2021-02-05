@@ -180,6 +180,7 @@ class RoomControllerTest {
                                 fieldWithPath("_embedded.roomDtoList[].longitude").description("숙소 위치 경도 값"),
                                 fieldWithPath("_embedded.roomDtoList[].commentCount").description("댓글 수"),
                                 fieldWithPath("_embedded.roomDtoList[].isCheck").description("해당 숙소 좋아요 여부"),
+                                fieldWithPath("_embedded.roomDtoList[].roomImgUrlList[]").description("숙소 사진 리스트"),
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 URL"),
                                 fieldWithPath("_links.first.href").description("첫번째 페이지 URL"),
                                 fieldWithPath("_links.prev.href").description("이전 페이지 URL"),
@@ -246,6 +247,14 @@ class RoomControllerTest {
                 bedRooms.add(bedRoom);
             }
 
+            List<RoomImg> roomImgList = new ArrayList<>();
+            for (int j = 0; j < 10; j++) {
+                RoomImg roomImg = RoomImg.builder()
+                        .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png")
+                        .build();
+                roomImgList.add(roomImg);
+            }
+
             Location location = Location.builder()
                     .latitude(37.0)
                     .longitude(138.0)
@@ -266,6 +275,7 @@ class RoomControllerTest {
                     .location(location)
                     .bathRoomList(bathRooms)
                     .bedRoomList(bedRooms)
+                    .roomImgList(roomImgList)
                     .commentList(List.of())
                     .build();
 

@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -54,6 +55,7 @@ public class RoomController {
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final RoomImgRepository roomImgRepository;
 
     @PostMapping("/list")
     public ResponseEntity<?> getRoomList(@RequestBody RoomSearchCondition roomSearchCondition,
@@ -85,9 +87,9 @@ public class RoomController {
 
     private List<RoomDto> getRoomDtoList(Long userId, List<Room> roomList) {
         List<RoomDto> roomDtoList = new ArrayList<>();
-
         for (Room room : roomList) {
             int bedNum = roomService.getBedNum(room.getBedRoomList());
+            List<String> roomImgUrlList = getRoomImgUrlList(room);
 
             RoomDto roomDto = RoomDto.builder()
                     .id(room.getId())
@@ -107,11 +109,20 @@ public class RoomController {
                     .longitude(room.getLocation().getLongitude())
                     .commentCount(room.getCommentList().size())
                     .isCheck(userService.checkRoomByUser(userId, room.getId()))
+                    .roomImgUrlList(roomImgUrlList)
                     .build();
 
             roomDtoList.add(roomDto);
         }
         return roomDtoList;
+    }
+
+    private List<String> getRoomImgUrlList(Room room) {
+        List<String> roomImgUrlList = new ArrayList<>();
+        for (RoomImg roomImg : room.getRoomImgList().subList(0, 5)) {
+            roomImgUrlList.add(roomImg.getUrl());
+        }
+        return roomImgUrlList;
     }
 
     @GetMapping("/detail")
@@ -214,8 +225,8 @@ public class RoomController {
                 .latitude(13.0)
                 .longitude(13.0)
                 .build();
-
         locationRepository.save(location);
+
         Room room = Room.builder()
                 .name("test room name 2")
                 .roomType("Shared room")
@@ -224,28 +235,31 @@ public class RoomController {
                 .roomCost(10000.0)
                 .peopleLimit(4)
                 .build();
-
         roomRepository.save(room);
+        for (int i = 0; i <5; i++) {
+            RoomImg roomImg = RoomImg.builder()
+                    .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png")
+                    .room(room)
+                    .build();
+            roomImgRepository.save(roomImg);
+        }
 
         BathRoom bathRoom = BathRoom.builder()
                 .isPrivate(true)
                 .room(room)
                 .build();
-
         bathRoomRepository.save(bathRoom);
 
         BedRoom bedRoom1 = BedRoom.builder()
                 .doubleSize(2)
                 .room(room)
                 .build();
-
         bedRoomRepository.save(bedRoom1);
 
         BedRoom bedRoom2 = BedRoom.builder()
                 .doubleSize(2)
                 .room(room)
                 .build();
-
         bedRoomRepository.save(bedRoom2);
 
         Comment comment = Comment.builder()
@@ -258,8 +272,8 @@ public class RoomController {
                 .room(room)
                 .user(user)
                 .build();
-
         commentRepository.save(comment);
+
         return "ok";
     }
 }
