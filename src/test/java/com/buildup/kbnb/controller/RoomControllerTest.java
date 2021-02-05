@@ -137,7 +137,7 @@ class RoomControllerTest {
                 .andExpect(status().isOk())
                 .andDo(document("room-get-roomList-by-condition",
                         requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT 인증 토큰"),
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT 인증 토큰 | 없어도 가능").optional(),
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
                         ),
                         requestFields(
@@ -305,7 +305,7 @@ class RoomControllerTest {
                 .andExpect(status().isOk())
                 .andDo(document("room-get-detail",
                         requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT 인증 토큰"),
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT 인증 토큰 | 없어도 가능").optional(),
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
                         ),
                         requestParameters(

@@ -26,6 +26,9 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
 
     @Override
     public Page<Room> searchByCondition(RoomSearchCondition condition, Pageable pageable) {
+        // ToDo: 침대수, 침실수, 욕실수 필터링
+        // ToDo: Sorting 기준??
+
         List<Room> content = queryFactory
                 .selectFrom(room).distinct()
                 .join(room.location, location).fetchJoin()

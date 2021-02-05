@@ -27,4 +27,5 @@ public class RoomDto {
     private Double longitude;
     private Integer commentCount;
     private Boolean isCheck;
+    // ToDo: RoomImg List 5개
 }

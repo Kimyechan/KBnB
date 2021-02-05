@@ -61,7 +61,9 @@ public class RoomController {
                                          PagedResourcesAssembler<RoomDto> assembler,
                                          @CurrentUser UserPrincipal userPrincipal) {
         Page<Room> roomPage = roomService.searchListByCondition(roomSearchCondition, pageable);
-        List<RoomDto> roomList = getRoomDtoList(userPrincipal.getId(), roomPage.getContent());
+        Long userId = getUserIdAndCheckNull(userPrincipal);
+
+        List<RoomDto> roomList = getRoomDtoList(userId, roomPage.getContent());
 
         Page<RoomDto> result = new PageImpl<>(roomList, pageable, roomPage.getTotalElements());
 
@@ -69,6 +71,16 @@ public class RoomController {
         model.add(Link.of("/docs/api.html#resource-room-get-list-by-condition").withRel("profile"));
 
         return ResponseEntity.ok().body(model);
+    }
+
+    private Long getUserIdAndCheckNull(UserPrincipal userPrincipal) {
+        Long userId;
+        if (userPrincipal == null){
+            userId = null;
+        } else {
+            userId = userPrincipal.getId();
+        }
+        return userId;
     }
 
     private List<RoomDto> getRoomDtoList(Long userId, List<Room> roomList) {
@@ -114,8 +126,9 @@ public class RoomController {
 
         List<String> roomImgUrlList = getRoomImgUrls(room.getRoomImgList());
 
+        Long userId = getUserIdAndCheckNull(userPrincipal);
         int bedNum = roomService.getBedNum(room.getBedRoomList());
-        RoomDetail roomDetail = getRoomDetail(userPrincipal, room, locationDetail, commentPage, commentDetails, roomImgUrlList, bedNum);
+        RoomDetail roomDetail = getRoomDetail(userId, room, locationDetail, commentPage, commentDetails, roomImgUrlList, bedNum);
 
         EntityModel<RoomDetail> model = EntityModel.of(roomDetail);
         model.add(linkTo(methodOn(RoomController.class).getRoomDetail(roomId, userPrincipal)).withSelfRel());
@@ -123,7 +136,7 @@ public class RoomController {
         return ResponseEntity.ok().body(model);
     }
 
-    private RoomDetail getRoomDetail(UserPrincipal userPrincipal,
+    private RoomDetail getRoomDetail(Long userId,
                                      Room room,
                                      LocationDetail locationDetail,
                                      Page<Comment> commentPage,
@@ -149,7 +162,7 @@ public class RoomController {
                 .roomImgUrlList(roomImgUrlList)
                 .commentCount(commentPage.getTotalElements())
                 .commentList(commentDetails)
-                .isChecked(userService.checkRoomByUser(userPrincipal.getId(), room.getId()))
+                .isChecked(userService.checkRoomByUser(userId, room.getId()))
                 .build();
     }
 
