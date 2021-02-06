@@ -1,28 +1,25 @@
-package com.buildup.kbnb.controller;
+package com.buildup.kbnb.controller.reservation;
 
 import com.buildup.kbnb.config.RestDocsConfiguration;
-import com.buildup.kbnb.dto.ReservationRequest;
+import com.buildup.kbnb.dto.reservation.ReservationRequest;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
+import com.buildup.kbnb.model.room.RoomImg;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.LocationRepository;
 import com.buildup.kbnb.repository.ReservationRepository;
+import com.buildup.kbnb.repository.RoomImgRepository;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.repository.room.RoomRepository;
 import com.buildup.kbnb.security.TokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.catalina.Store;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,20 +28,16 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -84,6 +77,9 @@ class ReservationControllerTest {
 
     @Autowired
     WebApplicationContext webApplicationContext;
+
+    @Autowired
+    RoomImgRepository roomImgRepository;
 
 
 
@@ -133,7 +129,7 @@ class ReservationControllerTest {
                 .checkOut(LocalDate.of(20201,02,03))
                 .guestNum(2)
                 .room(room)
-                .totalCost(Double.valueOf(2000))
+                .totalCost(2000L)
                 .user(host)
                 .build();
         reservationRepository.save(reservation);
@@ -183,7 +179,7 @@ class ReservationControllerTest {
 
     @Test
     @Transactional
-    public void getConfirmedReservationList() throws Exception {
+    public void getConfirmedReservationList() throws Exception  {
         User host = User.builder()
                 .name("host")
                 .email("host1@gmail.com")
@@ -224,10 +220,13 @@ class ReservationControllerTest {
                 .checkOut(LocalDate.of(20201,02,03))
                 .guestNum(2)
                 .room(room)
-                .totalCost(Double.valueOf(2000))
+                .totalCost(2000L)
                 .user(host)
                 .build();
         reservationRepository.save(reservation);
+
+        roomImgRepository.save(RoomImg.builder().room(room).url("this is demo url").build());
+        roomImgRepository.save(RoomImg.builder().room(room).url("this is demo too").build());
         Map<String, String> map = new HashMap<>();
         map.put("page", "페이지 번호");
         map.put("size", "페이지의 사이즈");
@@ -259,6 +258,9 @@ class ReservationControllerTest {
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].hostName").description("호스트 이름"),
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].checkIn").description("체크인 날짜"),
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].checkOut").description("체크아웃 날짜"),
+                        fieldWithPath("_embedded.reservation_ConfirmedResponseList[].roomId").description("방 식별자"),
+                        fieldWithPath("_embedded.reservation_ConfirmedResponseList[].imgUrl").description("방 imgUrl"),
+
                         fieldWithPath("page.size").description("페이지 사이즈"),
                         fieldWithPath("page.totalElements").description("요소의 총 개수"),
                         fieldWithPath("page.totalPages").description("총 페이지 개수"),
