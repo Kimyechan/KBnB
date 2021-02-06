@@ -236,7 +236,10 @@ public class RoomController {
                 .isChecked(isChecked)
                 .build();
 
-        return ResponseEntity.ok().body(res);
+        EntityModel<CheckRoomRes> model = EntityModel.of(res);
+        model.add(linkTo(methodOn(RoomController.class).checkRoom(checkRoomReq, userPrincipal)).withSelfRel());
+        model.add(Link.of("/docs/api.html#resource-room-check").withRel("profile"));
+        return ResponseEntity.ok().body(model);
     }
 
 

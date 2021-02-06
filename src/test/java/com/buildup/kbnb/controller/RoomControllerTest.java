@@ -501,7 +501,24 @@ class RoomControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .content(objectMapper.writeValueAsString(req)))
                 .andDo(print())
-                .andExpect(status().isOk());
-
+                .andExpect(status().isOk())
+                .andDo(document("room-check",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT 인증 토큰").optional(),
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
+                        ),
+                        requestFields(
+                                fieldWithPath("roomId").description("찜하거나 찜 취소할 숙소 식별자 값")
+                        ),
+                        responseHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
+                        ),
+                        responseFields(
+                                fieldWithPath("roomId").description("찜하거나 찜 취소한 숙소 식별자 값"),
+                                fieldWithPath("isChecked").description("찜하기 여부"),
+                                fieldWithPath("_links.self.href").description("해당 API URL"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
+                        )
+                ));
     }
 }

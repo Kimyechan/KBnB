@@ -125,6 +125,10 @@ operation::room-get-roomList-by-condition[]
 === 숙소 상세 검색
 operation::room-get-detail[]
 
+[[resource-room-check]]
+=== 찜하기 찜하기 취소
+operation::room-check[]
+
 [[resource-reservation]]
 == 예약
 
