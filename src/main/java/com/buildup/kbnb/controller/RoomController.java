@@ -1,12 +1,15 @@
 package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.dto.room.RoomDto;
+import com.buildup.kbnb.dto.room.check.CheckRoomReq;
+import com.buildup.kbnb.dto.room.check.CheckRoomRes;
 import com.buildup.kbnb.dto.room.detail.CommentDetail;
 import com.buildup.kbnb.dto.room.detail.LocationDetail;
 import com.buildup.kbnb.dto.room.detail.RoomDetail;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
+import com.buildup.kbnb.model.UserRoom;
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
@@ -18,13 +21,16 @@ import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.CommentService;
 import com.buildup.kbnb.service.RoomService;
+import com.buildup.kbnb.service.UserRoomService;
 import com.buildup.kbnb.service.UserService;
 import com.buildup.kbnb.util.S3Uploader;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -50,6 +56,7 @@ public class RoomController {
     private final RoomService roomService;
     private final UserService userService;
     private final CommentService commentService;
+    private final UserRoomService userRoomService;
     private final S3Uploader s3Uploader;
     private final RoomRepository roomRepository;
     private final BedRoomRepository bedRoomRepository;
@@ -216,6 +223,22 @@ public class RoomController {
                 .longitude(location.getLongitude())
                 .build();
     }
+
+    @PatchMapping("/check")
+    public  ResponseEntity<?> checkRoom(@RequestBody CheckRoomReq checkRoomReq,
+                                        @CurrentUser UserPrincipal userPrincipal) {
+        Long userId = userPrincipal.getId();
+        User user = userRepository.findByIdWithCheckRoom(userId).orElseThrow();
+        Boolean isChecked = userRoomService.checkRoomForUser(checkRoomReq.getRoomId(), user);
+
+        CheckRoomRes res = CheckRoomRes.builder()
+                .roomId(checkRoomReq.getRoomId())
+                .isChecked(isChecked)
+                .build();
+
+        return ResponseEntity.ok().body(res);
+    }
+
 
     @PostMapping("/upload")
     public String upload(@CurrentUser UserPrincipal userPrincipal, @RequestParam("file") MultipartFile file) throws IOException {

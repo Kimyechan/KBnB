@@ -1,6 +1,7 @@
 package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.config.RestDocsConfiguration;
+import com.buildup.kbnb.dto.room.check.CheckRoomReq;
 import com.buildup.kbnb.dto.room.search.*;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
@@ -10,11 +11,13 @@ import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.room.RoomImg;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
+import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.CustomUserDetailsService;
 import com.buildup.kbnb.security.TokenProvider;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.CommentService;
 import com.buildup.kbnb.service.RoomService;
+import com.buildup.kbnb.service.UserRoomService;
 import com.buildup.kbnb.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.jni.Local;
@@ -50,8 +53,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -85,6 +87,12 @@ class RoomControllerTest {
 
     @MockBean
     CommentService commentService;
+
+    @MockBean
+    UserRoomService userRoomService;
+
+    @MockBean
+    UserRepository userRepository;
 
     public User createUser() {
         User user = User.builder()
@@ -473,5 +481,27 @@ class RoomControllerTest {
             roomImgList.add(roomImg);
         }
         return roomImgList;
+    }
+
+    @Test
+    @DisplayName("숙소 찜하기")
+    public void setRoomChecked() throws Exception {
+        User user = createUser();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+
+        CheckRoomReq req = CheckRoomReq.builder()
+                .roomId(1L)
+                .build();
+
+        given(userRepository.findByIdWithCheckRoom(user.getId())).willReturn(java.util.Optional.of(user));
+        given(userRoomService.checkRoomForUser(req.getRoomId(), user)).willReturn(true);
+
+        mockMvc.perform(patch("/room/check")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .content(objectMapper.writeValueAsString(req)))
+                .andDo(print())
+                .andExpect(status().isOk());
+
     }
 }
