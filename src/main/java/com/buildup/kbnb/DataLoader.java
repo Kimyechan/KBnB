@@ -1,25 +1,6 @@
 package com.buildup.kbnb;
 
-import com.buildup.kbnb.model.Location;
-import com.buildup.kbnb.model.Reservation;
-import com.buildup.kbnb.model.room.Room;
-import com.buildup.kbnb.model.user.AuthProvider;
-import com.buildup.kbnb.model.user.User;
-import com.buildup.kbnb.repository.LocationRepository;
-import com.buildup.kbnb.repository.ReservationRepository;
-
-import com.buildup.kbnb.repository.UserRepository;
-import com.buildup.kbnb.repository.room.RoomRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Pre-load some data using a Spring Boot {@link CommandLineRunner}.

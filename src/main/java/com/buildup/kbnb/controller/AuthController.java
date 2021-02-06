@@ -1,6 +1,5 @@
 package com.buildup.kbnb.controller;
 
-import com.buildup.kbnb.advice.exception.BadRequestException;
 import com.buildup.kbnb.advice.exception.EmailDuplicationException;
 import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
 import com.buildup.kbnb.dto.AuthResponse;
