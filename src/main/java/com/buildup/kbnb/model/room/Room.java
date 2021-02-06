@@ -42,6 +42,8 @@ public class Room {
 
     private Double grade;
 
+    private Integer bedNum;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private User host;
 

@@ -834,7 +834,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /auth/signup HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 105
+Content-Length: 100
 Host: localhost:8080
 
 {
@@ -862,10 +862,10 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 409
+Content-Length: 398
 
 {
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEyNTEzNTgzLCJleHAiOjE2MTMzNzc1ODN9.dLUMb1vjHS0iFSd9jIAbnzeYlO_XzYRcOePOBxm3UAVaFbSTPYQjM9Ujtmw2sAJrEVWCu9xF4MmODebbiwF0Mw",
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEyNTgxNDcxLCJleHAiOjE2MTM0NDU0NzF9.aR2it_BCB2QpMu3lCPt6izakibNldZ0CyunhWPptoQ0uplot4rRKTuUlUMJJmW70T0cEPkmPNoO7llVGLS2D3w",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -971,7 +971,7 @@ Content-Length: 409
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code>{
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEyNTEzNTgzLCJleHAiOjE2MTMzNzc1ODN9.dLUMb1vjHS0iFSd9jIAbnzeYlO_XzYRcOePOBxm3UAVaFbSTPYQjM9Ujtmw2sAJrEVWCu9xF4MmODebbiwF0Mw",
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEyNTgxNDcxLCJleHAiOjE2MTM0NDU0NzF9.aR2it_BCB2QpMu3lCPt6izakibNldZ0CyunhWPptoQ0uplot4rRKTuUlUMJJmW70T0cEPkmPNoO7llVGLS2D3w",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -1067,7 +1067,7 @@ Content-Length: 409
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /auth/login HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 58
+Content-Length: 55
 Host: localhost:8080
 
 {
@@ -1092,10 +1092,10 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 403
+Content-Length: 392
 
 {
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTEzNTgzLCJleHAiOjE2MTMzNzc1ODN9.ugZ-IUrQfUXUUnjdywc0dy-CERFPiOsHzDsMNIkWop-8tlk2E7SH4InXeRke-5WIErrb4irqvNDolRfdenyQzQ",
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTgxNDcwLCJleHAiOjE2MTM0NDU0NzB9.yeBZnlSYtrp_Otush7XGGU9Xr2fX-DJi6cbiQkXC0b6LgC9tGSHow3evxMXHHGH1BtTIBl1YaxwztKwJQ2lPkQ",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -1187,7 +1187,7 @@ Content-Length: 403
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code>{
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTEzNTgzLCJleHAiOjE2MTMzNzc1ODN9.ugZ-IUrQfUXUUnjdywc0dy-CERFPiOsHzDsMNIkWop-8tlk2E7SH4InXeRke-5WIErrb4irqvNDolRfdenyQzQ",
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTgxNDcwLCJleHAiOjE2MTM0NDU0NzB9.yeBZnlSYtrp_Otush7XGGU9Xr2fX-DJi6cbiQkXC0b6LgC9tGSHow3evxMXHHGH1BtTIBl1YaxwztKwJQ2lPkQ",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -1270,7 +1270,7 @@ Content-Length: 403
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/user/me' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTEzNTg5LCJleHAiOjE2MTMzNzc1ODl9.K6fQvok9niVXSUDyPo3Op2tp1A7OoBb8qzd-s01AA8K7KH0cNhRcMUW-hUsWwaO-zH-ldhYycoAyA0Z1up7H-A'</code></pre>
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTgxNDY1LCJleHAiOjE2MTM0NDU0NjV9.uLspbpZWnKxAZCdPES9tP52HEmuWsVHrsMrfHRuq9IYlOYdZqIp3KJW9sp5Yp35YAfGpIs7kBDZImJBxe18GDA'</code></pre>
 </div>
 </div>
 </div>
@@ -1280,7 +1280,7 @@ Content-Length: 403
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /user/me HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTEzNTg5LCJleHAiOjE2MTMzNzc1ODl9.K6fQvok9niVXSUDyPo3Op2tp1A7OoBb8qzd-s01AA8K7KH0cNhRcMUW-hUsWwaO-zH-ldhYycoAyA0Z1up7H-A
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTgxNDY1LCJleHAiOjE2MTM0NDU0NjV9.uLspbpZWnKxAZCdPES9tP52HEmuWsVHrsMrfHRuq9IYlOYdZqIp3KJW9sp5Yp35YAfGpIs7kBDZImJBxe18GDA
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1300,7 +1300,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 312
+Content-Length: 298
 
 {
   "name" : "test",
@@ -1326,7 +1326,7 @@ Content-Length: 312
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ http GET 'http://localhost:8080/user/me' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTEzNTg5LCJleHAiOjE2MTMzNzc1ODl9.K6fQvok9niVXSUDyPo3Op2tp1A7OoBb8qzd-s01AA8K7KH0cNhRcMUW-hUsWwaO-zH-ldhYycoAyA0Z1up7H-A'</code></pre>
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTgxNDY1LCJleHAiOjE2MTM0NDU0NjV9.uLspbpZWnKxAZCdPES9tP52HEmuWsVHrsMrfHRuq9IYlOYdZqIp3KJW9sp5Yp35YAfGpIs7kBDZImJBxe18GDA'</code></pre>
 </div>
 </div>
 </div>
@@ -1477,7 +1477,7 @@ Content-Length: 312
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/room/list?page=1&amp;size=5' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTEzNTg4LCJleHAiOjE2MTMzNzc1ODh9.Nu4ahcXjYG_D1ltwoWbNGJAslnNDDpEyQY1UYQ2DnUjF0D7QGOaAOOIGLpSdech6QA1KHKXDlwUpvtru3kuo3A' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTgxNDczLCJleHAiOjE2MTM0NDU0NzN9.DemUNGdJB4AGirMxk8NG7wtAbXaw2lM599WOFcrJoNsF3-cBRZzVYODZv5heo4vVlllkCmbkU6_n_jpLhoeWnA' \
     -d '{
   "locationSearch" : {
     "latitude" : 10.0,
@@ -1487,7 +1487,10 @@ Content-Length: 312
     "longitudeMax" : 12.0,
     "longitudeMin" : 8.0
   },
-  "checkDateSearch" : null,
+  "checkDateSearch" : {
+    "startDate" : "2021-02-10",
+    "endDate" : "2021-02-13"
+  },
   "guestSearch" : {
     "numOfAdult" : 2,
     "numOfKid" : 1,
@@ -1497,7 +1500,10 @@ Content-Length: 312
     "minCost" : 1000.0,
     "maxCost" : 100000.0
   },
-  "roomType" : "Shared room"
+  "roomType" : "Shared room",
+  "bedNum" : 4,
+  "bedRoomNum" : 2,
+  "bathRoomNum" : 1
 }'</code></pre>
 </div>
 </div>
@@ -1508,8 +1514,8 @@ Content-Length: 312
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /room/list?page=1&amp;size=5 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTEzNTg4LCJleHAiOjE2MTMzNzc1ODh9.Nu4ahcXjYG_D1ltwoWbNGJAslnNDDpEyQY1UYQ2DnUjF0D7QGOaAOOIGLpSdech6QA1KHKXDlwUpvtru3kuo3A
-Content-Length: 420
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTgxNDczLCJleHAiOjE2MTM0NDU0NzN9.DemUNGdJB4AGirMxk8NG7wtAbXaw2lM599WOFcrJoNsF3-cBRZzVYODZv5heo4vVlllkCmbkU6_n_jpLhoeWnA
+Content-Length: 519
 Host: localhost:8080
 
 {
@@ -1521,7 +1527,10 @@ Host: localhost:8080
     "longitudeMax" : 12.0,
     "longitudeMin" : 8.0
   },
-  "checkDateSearch" : null,
+  "checkDateSearch" : {
+    "startDate" : "2021-02-10",
+    "endDate" : "2021-02-13"
+  },
   "guestSearch" : {
     "numOfAdult" : 2,
     "numOfKid" : 1,
@@ -1531,7 +1540,10 @@ Host: localhost:8080
     "minCost" : 1000.0,
     "maxCost" : 100000.0
   },
-  "roomType" : "Shared room"
+  "roomType" : "Shared room",
+  "bedNum" : 4,
+  "bedRoomNum" : 2,
+  "bathRoomNum" : 1
 }</code></pre>
 </div>
 </div>
@@ -1551,7 +1563,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 3072
+Content-Length: 5522
 
 {
   "_embedded" : {
@@ -1572,7 +1584,8 @@ Content-Length: 3072
       "latitude" : 37.0,
       "longitude" : 138.0,
       "commentCount" : 0,
-      "isCheck" : false
+      "isCheck" : false,
+      "roomImgUrlList" : [ "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png" ]
     }, {
       "id" : 7,
       "name" : "test room 7",
@@ -1590,7 +1603,8 @@ Content-Length: 3072
       "latitude" : 37.0,
       "longitude" : 138.0,
       "commentCount" : 0,
-      "isCheck" : false
+      "isCheck" : false,
+      "roomImgUrlList" : [ "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png" ]
     }, {
       "id" : 8,
       "name" : "test room 8",
@@ -1608,7 +1622,8 @@ Content-Length: 3072
       "latitude" : 37.0,
       "longitude" : 138.0,
       "commentCount" : 0,
-      "isCheck" : false
+      "isCheck" : false,
+      "roomImgUrlList" : [ "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png" ]
     }, {
       "id" : 9,
       "name" : "test room 9",
@@ -1626,7 +1641,8 @@ Content-Length: 3072
       "latitude" : 37.0,
       "longitude" : 138.0,
       "commentCount" : 0,
-      "isCheck" : false
+      "isCheck" : false,
+      "roomImgUrlList" : [ "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png" ]
     }, {
       "id" : 10,
       "name" : "test room 10",
@@ -1644,7 +1660,8 @@ Content-Length: 3072
       "latitude" : 37.0,
       "longitude" : 138.0,
       "commentCount" : 0,
-      "isCheck" : false
+      "isCheck" : false,
+      "roomImgUrlList" : [ "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png" ]
     } ]
   },
   "_links" : {
@@ -1690,7 +1707,10 @@ Content-Length: 3072
     "longitudeMax" : 12.0,
     "longitudeMin" : 8.0
   },
-  "checkDateSearch" : null,
+  "checkDateSearch" : {
+    "startDate" : "2021-02-10",
+    "endDate" : "2021-02-13"
+  },
   "guestSearch" : {
     "numOfAdult" : 2,
     "numOfKid" : 1,
@@ -1700,10 +1720,13 @@ Content-Length: 3072
     "minCost" : 1000.0,
     "maxCost" : 100000.0
   },
-  "roomType" : "Shared room"
+  "roomType" : "Shared room",
+  "bedNum" : 4,
+  "bedRoomNum" : 2,
+  "bathRoomNum" : 1
 }' | http POST 'http://localhost:8080/room/list?page=1&amp;size=5' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTEzNTg4LCJleHAiOjE2MTMzNzc1ODh9.Nu4ahcXjYG_D1ltwoWbNGJAslnNDDpEyQY1UYQ2DnUjF0D7QGOaAOOIGLpSdech6QA1KHKXDlwUpvtru3kuo3A'</code></pre>
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTgxNDczLCJleHAiOjE2MTM0NDU0NzN9.DemUNGdJB4AGirMxk8NG7wtAbXaw2lM599WOFcrJoNsF3-cBRZzVYODZv5heo4vVlllkCmbkU6_n_jpLhoeWnA'</code></pre>
 </div>
 </div>
 </div>
@@ -1720,7 +1743,10 @@ Content-Length: 3072
     "longitudeMax" : 12.0,
     "longitudeMin" : 8.0
   },
-  "checkDateSearch" : null,
+  "checkDateSearch" : {
+    "startDate" : "2021-02-10",
+    "endDate" : "2021-02-13"
+  },
   "guestSearch" : {
     "numOfAdult" : 2,
     "numOfKid" : 1,
@@ -1730,7 +1756,10 @@ Content-Length: 3072
     "minCost" : 1000.0,
     "maxCost" : 100000.0
   },
-  "roomType" : "Shared room"
+  "roomType" : "Shared room",
+  "bedNum" : 4,
+  "bedRoomNum" : 2,
+  "bathRoomNum" : 1
 }</code></pre>
 </div>
 </div>
@@ -1788,8 +1817,18 @@ Content-Length: 3072
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>checkDateSearch</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">날짜 검색 조건</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>checkDateSearch.startDate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">체크 인 날짜</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>checkDateSearch.endDate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">체크 아웃 날짜</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>guestSearch</code></p></td>
@@ -1831,6 +1870,21 @@ Content-Length: 3072
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">숙소 유형 검색</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bedNum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">침대 수 조건</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bedRoomNum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">침실 수 조건</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bathRoomNum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">욕실 수 조건</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1850,7 +1904,7 @@ Content-Length: 3072
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JWT 인증 토큰</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT 인증 토큰 | 없어도 가능</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Content-Type</code></p></td>
@@ -1882,7 +1936,8 @@ Content-Length: 3072
       "latitude" : 37.0,
       "longitude" : 138.0,
       "commentCount" : 0,
-      "isCheck" : false
+      "isCheck" : false,
+      "roomImgUrlList" : [ "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png" ]
     }, {
       "id" : 7,
       "name" : "test room 7",
@@ -1900,7 +1955,8 @@ Content-Length: 3072
       "latitude" : 37.0,
       "longitude" : 138.0,
       "commentCount" : 0,
-      "isCheck" : false
+      "isCheck" : false,
+      "roomImgUrlList" : [ "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png" ]
     }, {
       "id" : 8,
       "name" : "test room 8",
@@ -1918,7 +1974,8 @@ Content-Length: 3072
       "latitude" : 37.0,
       "longitude" : 138.0,
       "commentCount" : 0,
-      "isCheck" : false
+      "isCheck" : false,
+      "roomImgUrlList" : [ "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png" ]
     }, {
       "id" : 9,
       "name" : "test room 9",
@@ -1936,7 +1993,8 @@ Content-Length: 3072
       "latitude" : 37.0,
       "longitude" : 138.0,
       "commentCount" : 0,
-      "isCheck" : false
+      "isCheck" : false,
+      "roomImgUrlList" : [ "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png" ]
     }, {
       "id" : 10,
       "name" : "test room 10",
@@ -1954,7 +2012,8 @@ Content-Length: 3072
       "latitude" : 37.0,
       "longitude" : 138.0,
       "commentCount" : 0,
-      "isCheck" : false
+      "isCheck" : false,
+      "roomImgUrlList" : [ "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png", "https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png" ]
     } ]
   },
   "_links" : {
@@ -2094,6 +2153,11 @@ Content-Length: 3072
 <td class="tableblock halign-left valign-top"><p class="tableblock">해당 숙소 좋아요 여부</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.roomDtoList[].roomImgUrlList[]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">숙소 사진 리스트</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>_links.profile.href</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">해당 API 문서 URL</p></td>
@@ -2176,7 +2240,7 @@ Content-Length: 3072
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/room/detail?roomId=1' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTEzNTg3LCJleHAiOjE2MTMzNzc1ODd9.TaZLDpCPNRuoX2AnIeY0Vt25ia7_RKOAkJKUuMiAD7s655ncZ_F4dDGK3m_9Ms-x62kDlaVfxkvl8srCqIpDXg'</code></pre>
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTgxNDczLCJleHAiOjE2MTM0NDU0NzN9.DemUNGdJB4AGirMxk8NG7wtAbXaw2lM599WOFcrJoNsF3-cBRZzVYODZv5heo4vVlllkCmbkU6_n_jpLhoeWnA'</code></pre>
 </div>
 </div>
 </div>
@@ -2186,7 +2250,7 @@ Content-Length: 3072
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /room/detail?roomId=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTEzNTg3LCJleHAiOjE2MTMzNzc1ODd9.TaZLDpCPNRuoX2AnIeY0Vt25ia7_RKOAkJKUuMiAD7s655ncZ_F4dDGK3m_9Ms-x62kDlaVfxkvl8srCqIpDXg
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTgxNDczLCJleHAiOjE2MTM0NDU0NzN9.DemUNGdJB4AGirMxk8NG7wtAbXaw2lM599WOFcrJoNsF3-cBRZzVYODZv5heo4vVlllkCmbkU6_n_jpLhoeWnA
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2206,7 +2270,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 2016
+Content-Length: 1942
 
 {
   "id" : 1,
@@ -2292,7 +2356,7 @@ Content-Length: 2016
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ http GET 'http://localhost:8080/room/detail?roomId=1' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTEzNTg3LCJleHAiOjE2MTMzNzc1ODd9.TaZLDpCPNRuoX2AnIeY0Vt25ia7_RKOAkJKUuMiAD7s655ncZ_F4dDGK3m_9Ms-x62kDlaVfxkvl8srCqIpDXg'</code></pre>
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTgxNDczLCJleHAiOjE2MTM0NDU0NzN9.DemUNGdJB4AGirMxk8NG7wtAbXaw2lM599WOFcrJoNsF3-cBRZzVYODZv5heo4vVlllkCmbkU6_n_jpLhoeWnA'</code></pre>
 </div>
 </div>
 </div>
@@ -2320,7 +2384,7 @@ Content-Length: 2016
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JWT 인증 토큰</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT 인증 토큰 | 없어도 가능</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Content-Type</code></p></td>
@@ -2651,7 +2715,7 @@ Content-Length: 2016
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/reservation' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNjEyNTEzNTg2LCJleHAiOjE2MTMzNzc1ODZ9.0LgYfNniyOF67Y4tIepkx6QAvtNaWJwonjjMJKFd7ibrbuJqrAgZEEM65WQjB63SdTcCEkzuXcnuQ0_z-GIoRg' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNjEyNTgxNDY4LCJleHAiOjE2MTM0NDU0Njh9.QZw0nxhqT4NmnQ6MV5pAbL99VUT2VYSf7trGXV1ewgkkMclkf8-8V9S7Rls6YnIutBQxJ6gf2DSxgAYHN-5SBA' \
     -d '{
   "roomId" : 2,
   "checkIn" : "2021-02-01",
@@ -2670,8 +2734,8 @@ Content-Length: 2016
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /reservation HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNjEyNTEzNTg2LCJleHAiOjE2MTMzNzc1ODZ9.0LgYfNniyOF67Y4tIepkx6QAvtNaWJwonjjMJKFd7ibrbuJqrAgZEEM65WQjB63SdTcCEkzuXcnuQ0_z-GIoRg
-Content-Length: 192
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNjEyNTgxNDY4LCJleHAiOjE2MTM0NDU0Njh9.QZw0nxhqT4NmnQ6MV5pAbL99VUT2VYSf7trGXV1ewgkkMclkf8-8V9S7Rls6YnIutBQxJ6gf2DSxgAYHN-5SBA
+Content-Length: 184
 Host: localhost:8080
 
 {
@@ -2702,7 +2766,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 239
+Content-Length: 228
 
 {
   "reservationId" : 3,
@@ -2733,7 +2797,7 @@ Content-Length: 239
   "message" : "사장님 잘생겼어요"
 }' | http POST 'http://localhost:8080/reservation' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNjEyNTEzNTg2LCJleHAiOjE2MTMzNzc1ODZ9.0LgYfNniyOF67Y4tIepkx6QAvtNaWJwonjjMJKFd7ibrbuJqrAgZEEM65WQjB63SdTcCEkzuXcnuQ0_z-GIoRg'</code></pre>
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNjEyNTgxNDY4LCJleHAiOjE2MTM0NDU0Njh9.QZw0nxhqT4NmnQ6MV5pAbL99VUT2VYSf7trGXV1ewgkkMclkf8-8V9S7Rls6YnIutBQxJ6gf2DSxgAYHN-5SBA'</code></pre>
 </div>
 </div>
 </div>
@@ -2916,7 +2980,7 @@ Content-Length: 239
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/reservation?page=0&amp;size=5' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTEzNTg1LCJleHAiOjE2MTMzNzc1ODV9.7jEd0ICRm5PvO0TwFT1Kb1LBH5Mn_FNOpNStZWgskk52wGg6RJu95xKLaByQ6g2C2PDVeD8KaZSpddfl8RLxtA' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTgxNDY4LCJleHAiOjE2MTM0NDU0Njh9.aywrGDM6BX7a7QhaqdsGRvBgTN1nIZj90x7dCtM7vlEgZh0KFMCiI-xE0QhOCcZvaL8YvcrXKOsWavA1mUO7_g' \
     -d '{
   "size" : "페이지의 사이즈",
   "page" : "페이지 번호"
@@ -2930,8 +2994,8 @@ Content-Length: 239
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /reservation?page=0&amp;size=5 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTEzNTg1LCJleHAiOjE2MTMzNzc1ODV9.7jEd0ICRm5PvO0TwFT1Kb1LBH5Mn_FNOpNStZWgskk52wGg6RJu95xKLaByQ6g2C2PDVeD8KaZSpddfl8RLxtA
-Content-Length: 73
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTgxNDY4LCJleHAiOjE2MTM0NDU0Njh9.aywrGDM6BX7a7QhaqdsGRvBgTN1nIZj90x7dCtM7vlEgZh0KFMCiI-xE0QhOCcZvaL8YvcrXKOsWavA1mUO7_g
+Content-Length: 70
 Host: localhost:8080
 
 {
@@ -2956,14 +3020,14 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 735
+Content-Length: 683
 
 {
   "_embedded" : {
     "reservation_ConfirmedResponseList" : [ {
       "reservationId" : 1,
       "roomId" : 1,
-      "imgUrl" : [ "this is demo url", "this is demo too" ],
+      "imgUrl" : "this is demo url",
       "status" : "예약 완료",
       "roomName" : "빵꾸똥꾸야",
       "roomLocation" : "스울시 동대문구 청량리동",
@@ -2999,7 +3063,7 @@ Content-Length: 735
   "page" : "페이지 번호"
 }' | http GET 'http://localhost:8080/reservation?page=0&amp;size=5' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTEzNTg1LCJleHAiOjE2MTMzNzc1ODV9.7jEd0ICRm5PvO0TwFT1Kb1LBH5Mn_FNOpNStZWgskk52wGg6RJu95xKLaByQ6g2C2PDVeD8KaZSpddfl8RLxtA'</code></pre>
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEyNTgxNDY4LCJleHAiOjE2MTM0NDU0Njh9.aywrGDM6BX7a7QhaqdsGRvBgTN1nIZj90x7dCtM7vlEgZh0KFMCiI-xE0QhOCcZvaL8YvcrXKOsWavA1mUO7_g'</code></pre>
 </div>
 </div>
 </div>
@@ -3073,7 +3137,7 @@ Content-Length: 735
     "reservation_ConfirmedResponseList" : [ {
       "reservationId" : 1,
       "roomId" : 1,
-      "imgUrl" : [ "this is demo url", "this is demo too" ],
+      "imgUrl" : "this is demo url",
       "status" : "예약 완료",
       "roomName" : "빵꾸똥꾸야",
       "roomLocation" : "스울시 동대문구 청량리동",
@@ -3157,9 +3221,9 @@ Content-Length: 735
 <td class="tableblock halign-left valign-top"><p class="tableblock">방 식별자</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.reservation_ConfirmedResponseList[].imgUrl[]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">방 imgUrl 리스트</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.reservation_ConfirmedResponseList[].imgUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">방 imgUrl</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>page.size</code></p></td>
@@ -3221,7 +3285,7 @@ Content-Length: 735
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-02-05 17:05:35 +0900
+Last updated 2021-02-05 16:58:21 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/github.min.css">
