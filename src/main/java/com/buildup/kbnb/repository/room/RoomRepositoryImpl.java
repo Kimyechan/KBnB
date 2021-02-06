@@ -4,7 +4,9 @@ import com.buildup.kbnb.dto.room.search.CostSearch;
 import com.buildup.kbnb.dto.room.search.GuestSearch;
 import com.buildup.kbnb.dto.room.search.LocationSearch;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
+import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,8 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
 
     @Override
     public Page<Room> searchByCondition(RoomSearchCondition condition, Pageable pageable) {
+        // ToDo: 침대수, 침실수, 욕실수 필터링
+        // ToDo: Sorting 기준??
         List<Room> content = queryFactory
                 .selectFrom(room).distinct()
                 .join(room.location, location).fetchJoin()
@@ -33,7 +37,10 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
                         costBetween(condition.getCostSearch()),
                         latitudeBetween(condition.getLocationSearch()),
                         longitudeBetween(condition.getLocationSearch()),
-                        guestNumCheck(condition.getGuestSearch()))
+                        guestNumCheck(condition.getGuestSearch()),
+                        bedRoomNumGreaterThan(condition.getBedRoomNum()),
+                        bathRoomNumGreaterThan(condition.getBathRoomNum()),
+                        bedNumGreaterThan(condition.getBedNum()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -44,10 +51,25 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
                         costBetween(condition.getCostSearch()),
                         latitudeBetween(condition.getLocationSearch()),
                         longitudeBetween(condition.getLocationSearch()),
-                        guestNumCheck(condition.getGuestSearch()))
+                        guestNumCheck(condition.getGuestSearch()),
+                        bedRoomNumGreaterThan(condition.getBedRoomNum()),
+                        bathRoomNumGreaterThan(condition.getBathRoomNum()),
+                        bedNumGreaterThan(condition.getBedNum()))
                 .fetchCount();
 
         return new PageImpl<>(content, pageable, total);
+    }
+
+    private BooleanExpression bathRoomNumGreaterThan(Integer bathRoomNum) {
+        return bathRoomNum == null ? null : room.bathRoomList.size().goe(bathRoomNum);
+    }
+
+    private BooleanExpression bedRoomNumGreaterThan(Integer bedRoomNum) {
+        return bedRoomNum == null ? null : room.bedRoomList.size().goe(bedRoomNum);
+    }
+
+    private BooleanExpression bedNumGreaterThan(Integer bedNum) {
+        return bedNum == null ? null : room.bedNum.goe(bedNum);
     }
 
     private BooleanExpression roomTypeEq(String roomType) {

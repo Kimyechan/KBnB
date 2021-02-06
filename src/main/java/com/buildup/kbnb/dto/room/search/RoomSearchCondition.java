@@ -14,4 +14,7 @@ public class RoomSearchCondition {
     private GuestSearch guestSearch;
     private CostSearch costSearch;
     private String roomType;
+    private Integer bedNum;
+    private Integer bedRoomNum;
+    private Integer bathRoomNum;
 }
