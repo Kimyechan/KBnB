@@ -119,7 +119,9 @@ public class RoomController {
 
     private List<String> getRoomImgUrlList(Room room) {
         List<String> roomImgUrlList = new ArrayList<>();
-        for (RoomImg roomImg : room.getRoomImgList().subList(0, 5)) {
+        int endIdx = Math.min(room.getRoomImgList().size(), 5);
+
+        for (RoomImg roomImg : room.getRoomImgList().subList(0, endIdx)) {
             roomImgUrlList.add(roomImg.getUrl());
         }
         return roomImgUrlList;

@@ -1,10 +1,7 @@
 package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.config.RestDocsConfiguration;
-import com.buildup.kbnb.dto.room.search.CostSearch;
-import com.buildup.kbnb.dto.room.search.GuestSearch;
-import com.buildup.kbnb.dto.room.search.LocationSearch;
-import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
+import com.buildup.kbnb.dto.room.search.*;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.room.BathRoom;
@@ -20,6 +17,7 @@ import com.buildup.kbnb.service.CommentService;
 import com.buildup.kbnb.service.RoomService;
 import com.buildup.kbnb.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,22 +139,27 @@ class RoomControllerTest {
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
                         ),
                         requestFields(
-                                fieldWithPath("locationSearch").description("위치 검색 조건").optional(),
-                                fieldWithPath("locationSearch.latitude").description("설정한 위도 값").optional(),
-                                fieldWithPath("locationSearch.latitudeMin").description("설정한 위도 최소 값").optional(),
-                                fieldWithPath("locationSearch.latitudeMax").description("설정한 위도 최대 값").optional(),
-                                fieldWithPath("locationSearch.longitude").description("설정한 경도 값").optional(),
-                                fieldWithPath("locationSearch.longitudeMin").description("설정한 경도 최소 값").optional(),
-                                fieldWithPath("locationSearch.longitudeMax").description("설정한 경도 최대 값").optional(),
+                                fieldWithPath("locationSearch").description("위치 검색 조건"),
+                                fieldWithPath("locationSearch.latitude").description("설정한 위도 값"),
+                                fieldWithPath("locationSearch.latitudeMin").description("설정한 위도 최소 값"),
+                                fieldWithPath("locationSearch.latitudeMax").description("설정한 위도 최대 값"),
+                                fieldWithPath("locationSearch.longitude").description("설정한 경도 값"),
+                                fieldWithPath("locationSearch.longitudeMin").description("설정한 경도 최소 값"),
+                                fieldWithPath("locationSearch.longitudeMax").description("설정한 경도 최대 값"),
                                 fieldWithPath("checkDateSearch").description("날짜 검색 조건").optional(),
+                                fieldWithPath("checkDateSearch.startDate").description("체크 인 날짜"),
+                                fieldWithPath("checkDateSearch.endDate").description("체크 아웃 날짜"),
                                 fieldWithPath("guestSearch").description("게스트 수 검색 조건").optional(),
-                                fieldWithPath("guestSearch.numOfAdult").description("성인 수").optional(),
-                                fieldWithPath("guestSearch.numOfKid").description("어린이 수").optional(),
-                                fieldWithPath("guestSearch.numOfInfant").description("유아 수").optional(),
+                                fieldWithPath("guestSearch.numOfAdult").description("성인 수"),
+                                fieldWithPath("guestSearch.numOfKid").description("어린이 수"),
+                                fieldWithPath("guestSearch.numOfInfant").description("유아 수"),
                                 fieldWithPath("costSearch").description("비용 검색 조건").optional(),
-                                fieldWithPath("costSearch.minCost").description("최소 비용").optional(),
-                                fieldWithPath("costSearch.maxCost").description("최대 비용").optional(),
-                                fieldWithPath("roomType").description("숙소 유형 검색").optional()
+                                fieldWithPath("costSearch.minCost").description("최소 비용"),
+                                fieldWithPath("costSearch.maxCost").description("최대 비용"),
+                                fieldWithPath("roomType").description("숙소 유형 검색").optional(),
+                                fieldWithPath("bedNum").description("침대 수 조건").optional(),
+                                fieldWithPath("bedRoomNum").description("침실 수 조건").optional(),
+                                fieldWithPath("bathRoomNum").description("욕실 수 조건").optional()
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
@@ -216,11 +219,20 @@ class RoomControllerTest {
                 .maxCost(100000.0)
                 .build();
 
+        CheckDateSearch checkDateSearch = CheckDateSearch.builder()
+                .startDate(LocalDate.of(2021, 2, 10))
+                .endDate(LocalDate.of(2021, 2, 13))
+                .build();
+
         return RoomSearchCondition.builder()
                 .locationSearch(locationSearch)
                 .guestSearch(guestSearch)
                 .costSearch(costSearch)
+                .checkDateSearch(checkDateSearch)
                 .roomType("Shared room")
+                .bedNum(4)
+                .bedRoomNum(2)
+                .bathRoomNum(1)
                 .build();
     }
 
