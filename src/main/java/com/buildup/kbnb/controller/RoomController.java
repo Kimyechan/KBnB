@@ -34,6 +34,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -221,60 +223,69 @@ public class RoomController {
     }
 
     @GetMapping("/test")
-    public String getRoomListTest(@CurrentUser UserPrincipal userPrincipal) {
+    public String getRoomListTest(@CurrentUser UserPrincipal userPrincipal,
+                                  @RequestParam Integer numberOfRoom) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow();
-        Location location = Location.builder()
-                .latitude(13.0)
-                .longitude(13.0)
-                .build();
-        locationRepository.save(location);
+        for (int i = 0; i < numberOfRoom; i++) {
+            Location location = Location.builder()
+                    .latitude(37.55559028863329 + 0.001 * i)
+                    .longitude(126.76740548073847 + 0.002 * i)
+                    .build();
+            locationRepository.save(location);
 
-        Room room = Room.builder()
-                .name("test room name 2")
-                .roomType("Shared room")
-                .host(user)
-                .location(location)
-                .roomCost(10000.0)
-                .peopleLimit(4)
-                .build();
-        roomRepository.save(room);
-        for (int i = 0; i <5; i++) {
-            RoomImg roomImg = RoomImg.builder()
-                    .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png")
+            Room room = Room.builder()
+                    .name("test room name 2")
+                    .roomType("Shared room")
+                    .host(user)
+                    .location(location)
+                    .roomCost(10000.0)
+                    .peopleLimit(4)
+                    .checkInTime(LocalTime.of(15, 0))
+                    .checkOutTime(LocalTime.of(13, 0))
+                    .isSmoking(false)
+                    .isParking(false)
+                    .grade(0.0)
+                    .bedNum(4)
+                    .build();
+            roomRepository.save(room);
+            for (int j = 0; j < 5; j++) {
+                RoomImg roomImg = RoomImg.builder()
+                        .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png")
+                        .room(room)
+                        .build();
+                roomImgRepository.save(roomImg);
+            }
+
+            BathRoom bathRoom = BathRoom.builder()
+                    .isPrivate(true)
                     .room(room)
                     .build();
-            roomImgRepository.save(roomImg);
+            bathRoomRepository.save(bathRoom);
+
+            BedRoom bedRoom1 = BedRoom.builder()
+                    .doubleSize(2)
+                    .room(room)
+                    .build();
+            bedRoomRepository.save(bedRoom1);
+
+            BedRoom bedRoom2 = BedRoom.builder()
+                    .doubleSize(2)
+                    .room(room)
+                    .build();
+            bedRoomRepository.save(bedRoom2);
+
+            Comment comment = Comment.builder()
+                    .accuracy(3.0f)
+                    .checkIn(3.0f)
+                    .cleanliness(3.0f)
+                    .communication(3.0f)
+                    .location(3.0f)
+                    .priceSatisfaction(3.0f)
+                    .room(room)
+                    .user(user)
+                    .build();
+            commentRepository.save(comment);
         }
-
-        BathRoom bathRoom = BathRoom.builder()
-                .isPrivate(true)
-                .room(room)
-                .build();
-        bathRoomRepository.save(bathRoom);
-
-        BedRoom bedRoom1 = BedRoom.builder()
-                .doubleSize(2)
-                .room(room)
-                .build();
-        bedRoomRepository.save(bedRoom1);
-
-        BedRoom bedRoom2 = BedRoom.builder()
-                .doubleSize(2)
-                .room(room)
-                .build();
-        bedRoomRepository.save(bedRoom2);
-
-        Comment comment = Comment.builder()
-                .accuracy(3.0f)
-                .checkIn(3.0f)
-                .cleanliness(3.0f)
-                .communication(3.0f)
-                .location(3.0f)
-                .priceSatisfaction(3.0f)
-                .room(room)
-                .user(user)
-                .build();
-        commentRepository.save(comment);
 
         return "ok";
     }
