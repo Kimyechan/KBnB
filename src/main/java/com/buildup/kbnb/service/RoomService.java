@@ -1,5 +1,6 @@
 package com.buildup.kbnb.service;
 
+import com.buildup.kbnb.dto.comment.GradeDto;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
@@ -30,5 +31,17 @@ public class RoomService {
 
     public Room getRoomDetailById(Long roomId) {
         return roomRepository.findByIdWithUserLocation(roomId).orElseThrow();
+    }
+
+    public Room updateRoomGrade(Room room, GradeDto gradeDto) {
+        room.setCleanliness(gradeDto.getCleanliness());
+        room.setAccuracy(gradeDto.getAccuracy());
+        room.setCommunication(gradeDto.getCommunication());
+        room.setLocationRate(gradeDto.getLocationRate());
+        room.setCheckIn(gradeDto.getCheckIn());
+        room.setPriceSatisfaction(gradeDto.getPriceSatisfaction());
+        room.setGrade(gradeDto.getTotalGrade());
+
+        return roomRepository.save(room);
     }
 }
