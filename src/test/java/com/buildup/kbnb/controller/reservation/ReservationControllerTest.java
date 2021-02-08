@@ -9,7 +9,7 @@ import com.buildup.kbnb.model.room.RoomImg;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.LocationRepository;
-import com.buildup.kbnb.repository.reservation.ReservationRepository;
+import com.buildup.kbnb.repository.ReservationRepository;
 import com.buildup.kbnb.repository.RoomImgRepository;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.repository.room.RoomRepository;
@@ -259,6 +259,7 @@ class ReservationControllerTest {
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].checkIn").description("체크인 날짜"),
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].checkOut").description("체크아웃 날짜"),
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].roomId").description("방 식별자"),
+                        fieldWithPath("_embedded.reservation_ConfirmedResponseList[].imgUrl").description("방 imgUrl 리스트"),
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].imgUrl").description("방 imgUrl"),
 
 
