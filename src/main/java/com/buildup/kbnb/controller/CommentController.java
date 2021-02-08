@@ -10,6 +10,7 @@ import com.buildup.kbnb.service.CommentService;
 import com.buildup.kbnb.service.reservationService.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +44,7 @@ public class CommentController {
         EntityModel<CommentCreateRes> model = EntityModel.of(res);
         WebMvcLinkBuilder selfLink = linkTo(methodOn(CommentController.class).create(req));
         model.add(selfLink.withSelfRel());
+        model.add(Link.of("/docs/api.html#resource-comment-create").withRel("profile"));
 
         return ResponseEntity.created(selfLink.toUri()).body(model);
     }
