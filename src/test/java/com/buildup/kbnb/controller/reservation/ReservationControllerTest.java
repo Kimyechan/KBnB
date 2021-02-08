@@ -260,6 +260,8 @@ class ReservationControllerTest {
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].checkOut").description("체크아웃 날짜"),
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].roomId").description("방 식별자"),
                         fieldWithPath("_embedded.reservation_ConfirmedResponseList[].imgUrl").description("방 imgUrl 리스트"),
+                        fieldWithPath("_embedded.reservation_ConfirmedResponseList[].imgUrl").description("방 imgUrl"),
+
 
                         fieldWithPath("page.size").description("페이지 사이즈"),
                         fieldWithPath("page.totalElements").description("요소의 총 개수"),

@@ -1,12 +1,15 @@
 package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.dto.room.RoomDto;
+import com.buildup.kbnb.dto.room.check.CheckRoomReq;
+import com.buildup.kbnb.dto.room.check.CheckRoomRes;
 import com.buildup.kbnb.dto.room.detail.CommentDetail;
 import com.buildup.kbnb.dto.room.detail.LocationDetail;
 import com.buildup.kbnb.dto.room.detail.RoomDetail;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
+import com.buildup.kbnb.model.UserRoom;
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
@@ -18,13 +21,16 @@ import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.CommentService;
 import com.buildup.kbnb.service.RoomService;
+import com.buildup.kbnb.service.UserRoomService;
 import com.buildup.kbnb.service.UserService;
 import com.buildup.kbnb.util.S3Uploader;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -34,8 +40,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -47,6 +56,7 @@ public class RoomController {
     private final RoomService roomService;
     private final UserService userService;
     private final CommentService commentService;
+    private final UserRoomService userRoomService;
     private final S3Uploader s3Uploader;
     private final RoomRepository roomRepository;
     private final BedRoomRepository bedRoomRepository;
@@ -54,6 +64,7 @@ public class RoomController {
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final RoomImgRepository roomImgRepository;
 
     @PostMapping("/list")
     public ResponseEntity<?> getRoomList(@RequestBody RoomSearchCondition roomSearchCondition,
@@ -61,7 +72,9 @@ public class RoomController {
                                          PagedResourcesAssembler<RoomDto> assembler,
                                          @CurrentUser UserPrincipal userPrincipal) {
         Page<Room> roomPage = roomService.searchListByCondition(roomSearchCondition, pageable);
-        List<RoomDto> roomList = getRoomDtoList(userPrincipal.getId(), roomPage.getContent());
+        Long userId = getUserIdAndCheckNull(userPrincipal);
+
+        List<RoomDto> roomList = getRoomDtoList(userId, roomPage.getContent());
 
         Page<RoomDto> result = new PageImpl<>(roomList, pageable, roomPage.getTotalElements());
 
@@ -71,11 +84,21 @@ public class RoomController {
         return ResponseEntity.ok().body(model);
     }
 
+    private Long getUserIdAndCheckNull(UserPrincipal userPrincipal) {
+        Long userId;
+        if (userPrincipal == null){
+            userId = null;
+        } else {
+            userId = userPrincipal.getId();
+        }
+        return userId;
+    }
+
     private List<RoomDto> getRoomDtoList(Long userId, List<Room> roomList) {
         List<RoomDto> roomDtoList = new ArrayList<>();
-
         for (Room room : roomList) {
             int bedNum = roomService.getBedNum(room.getBedRoomList());
+            List<String> roomImgUrlList = getRoomImgUrlList(room);
 
             RoomDto roomDto = RoomDto.builder()
                     .id(room.getId())
@@ -95,11 +118,22 @@ public class RoomController {
                     .longitude(room.getLocation().getLongitude())
                     .commentCount(room.getCommentList().size())
                     .isCheck(userService.checkRoomByUser(userId, room.getId()))
+                    .roomImgUrlList(roomImgUrlList)
                     .build();
 
             roomDtoList.add(roomDto);
         }
         return roomDtoList;
+    }
+
+    private List<String> getRoomImgUrlList(Room room) {
+        List<String> roomImgUrlList = new ArrayList<>();
+        int endIdx = Math.min(room.getRoomImgList().size(), 5);
+
+        for (RoomImg roomImg : room.getRoomImgList().subList(0, endIdx)) {
+            roomImgUrlList.add(roomImg.getUrl());
+        }
+        return roomImgUrlList;
     }
 
     @GetMapping("/detail")
@@ -114,8 +148,9 @@ public class RoomController {
 
         List<String> roomImgUrlList = getRoomImgUrls(room.getRoomImgList());
 
+        Long userId = getUserIdAndCheckNull(userPrincipal);
         int bedNum = roomService.getBedNum(room.getBedRoomList());
-        RoomDetail roomDetail = getRoomDetail(userPrincipal, room, locationDetail, commentPage, commentDetails, roomImgUrlList, bedNum);
+        RoomDetail roomDetail = getRoomDetail(userId, room, locationDetail, commentPage, commentDetails, roomImgUrlList, bedNum);
 
         EntityModel<RoomDetail> model = EntityModel.of(roomDetail);
         model.add(linkTo(methodOn(RoomController.class).getRoomDetail(roomId, userPrincipal)).withSelfRel());
@@ -123,7 +158,7 @@ public class RoomController {
         return ResponseEntity.ok().body(model);
     }
 
-    private RoomDetail getRoomDetail(UserPrincipal userPrincipal,
+    private RoomDetail getRoomDetail(Long userId,
                                      Room room,
                                      LocationDetail locationDetail,
                                      Page<Comment> commentPage,
@@ -149,7 +184,7 @@ public class RoomController {
                 .roomImgUrlList(roomImgUrlList)
                 .commentCount(commentPage.getTotalElements())
                 .commentList(commentDetails)
-                .isChecked(userService.checkRoomByUser(userPrincipal.getId(), room.getId()))
+                .isChecked(userService.checkRoomByUser(userId, room.getId()))
                 .build();
     }
 
@@ -189,64 +224,95 @@ public class RoomController {
                 .build();
     }
 
+    @PatchMapping("/check")
+    public  ResponseEntity<?> checkRoom(@RequestBody CheckRoomReq checkRoomReq,
+                                        @CurrentUser UserPrincipal userPrincipal) {
+        Long userId = userPrincipal.getId();
+        User user = userRepository.findByIdWithCheckRoom(userId).orElseThrow();
+        Boolean isChecked = userRoomService.checkRoomForUser(checkRoomReq.getRoomId(), user);
+
+        CheckRoomRes res = CheckRoomRes.builder()
+                .roomId(checkRoomReq.getRoomId())
+                .isChecked(isChecked)
+                .build();
+
+        EntityModel<CheckRoomRes> model = EntityModel.of(res);
+        model.add(linkTo(methodOn(RoomController.class).checkRoom(checkRoomReq, userPrincipal)).withSelfRel());
+        model.add(Link.of("/docs/api.html#resource-room-check").withRel("profile"));
+        return ResponseEntity.ok().body(model);
+    }
+
+
     @PostMapping("/upload")
     public String upload(@CurrentUser UserPrincipal userPrincipal, @RequestParam("file") MultipartFile file) throws IOException {
         return s3Uploader.upload(file, "kbnbRoom", userPrincipal.getName());
     }
 
     @GetMapping("/test")
-    public String getRoomListTest(@CurrentUser UserPrincipal userPrincipal) {
+    public String getRoomListTest(@CurrentUser UserPrincipal userPrincipal,
+                                  @RequestParam Integer numberOfRoom) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow();
-        Location location = Location.builder()
-                .latitude(13.0)
-                .longitude(13.0)
-                .build();
+        for (int i = 0; i < numberOfRoom; i++) {
+            Location location = Location.builder()
+                    .latitude(37.55559028863329 + 0.001 * i)
+                    .longitude(126.76740548073847 + 0.002 * i)
+                    .build();
+            locationRepository.save(location);
 
-        locationRepository.save(location);
-        Room room = Room.builder()
-                .name("test room name 2")
-                .roomType("Shared room")
-                .host(user)
-                .location(location)
-                .roomCost(10000.0)
-                .peopleLimit(4)
-                .build();
+            Room room = Room.builder()
+                    .name("test room name 2")
+                    .roomType("Shared room")
+                    .host(user)
+                    .location(location)
+                    .roomCost(10000.0)
+                    .peopleLimit(4)
+                    .checkInTime(LocalTime.of(15, 0))
+                    .checkOutTime(LocalTime.of(13, 0))
+                    .isSmoking(false)
+                    .isParking(false)
+                    .grade(0.0)
+                    .bedNum(4)
+                    .build();
+            roomRepository.save(room);
+            for (int j = 0; j < 5; j++) {
+                RoomImg roomImg = RoomImg.builder()
+                        .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png")
+                        .room(room)
+                        .build();
+                roomImgRepository.save(roomImg);
+            }
 
-        roomRepository.save(room);
+            BathRoom bathRoom = BathRoom.builder()
+                    .isPrivate(true)
+                    .room(room)
+                    .build();
+            bathRoomRepository.save(bathRoom);
 
-        BathRoom bathRoom = BathRoom.builder()
-                .isPrivate(true)
-                .room(room)
-                .build();
+            BedRoom bedRoom1 = BedRoom.builder()
+                    .doubleSize(2)
+                    .room(room)
+                    .build();
+            bedRoomRepository.save(bedRoom1);
 
-        bathRoomRepository.save(bathRoom);
+            BedRoom bedRoom2 = BedRoom.builder()
+                    .doubleSize(2)
+                    .room(room)
+                    .build();
+            bedRoomRepository.save(bedRoom2);
 
-        BedRoom bedRoom1 = BedRoom.builder()
-                .doubleSize(2)
-                .room(room)
-                .build();
+            Comment comment = Comment.builder()
+                    .accuracy(3.0f)
+                    .checkIn(3.0f)
+                    .cleanliness(3.0f)
+                    .communication(3.0f)
+                    .location(3.0f)
+                    .priceSatisfaction(3.0f)
+                    .room(room)
+                    .user(user)
+                    .build();
+            commentRepository.save(comment);
+        }
 
-        bedRoomRepository.save(bedRoom1);
-
-        BedRoom bedRoom2 = BedRoom.builder()
-                .doubleSize(2)
-                .room(room)
-                .build();
-
-        bedRoomRepository.save(bedRoom2);
-
-        Comment comment = Comment.builder()
-                .accuracy(3.0f)
-                .checkIn(3.0f)
-                .cleanliness(3.0f)
-                .communication(3.0f)
-                .location(3.0f)
-                .priceSatisfaction(3.0f)
-                .room(room)
-                .user(user)
-                .build();
-
-        commentRepository.save(comment);
         return "ok";
     }
 }

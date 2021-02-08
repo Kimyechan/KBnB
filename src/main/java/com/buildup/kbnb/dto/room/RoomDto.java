@@ -3,6 +3,7 @@ package com.buildup.kbnb.dto.room;
 import lombok.*;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,4 +28,6 @@ public class RoomDto {
     private Double longitude;
     private Integer commentCount;
     private Boolean isCheck;
+    private List<String> roomImgUrlList;
+    // ToDo: RoomImg List 5개
 }

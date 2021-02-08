@@ -14,6 +14,10 @@ public class UserService {
     private final UserRepository userRepository;
 
     public Boolean checkRoomByUser(Long userId, Long roomId) {
+        if (userId == null) {
+            return false;
+        }
+
         User user = userRepository.findByIdWithCheckRoom(userId).orElseThrow();
         List<UserRoom> userRooms = user.getCheckRoomList();
         for (UserRoom userRoom : userRooms) {
