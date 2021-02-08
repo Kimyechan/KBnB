@@ -140,3 +140,9 @@ operation::reservation-register[]
 === 예약 리스트 조회
 operation::reservation-lookupList[]
 
+[[resource-comment]]
+== 댓글
+
+[[resource-comment-create]]
+=== 댓글 생성
+operation::create-comment[]

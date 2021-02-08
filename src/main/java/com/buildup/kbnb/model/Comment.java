@@ -18,17 +18,17 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Float cleanliness;
+    private Double cleanliness;
 
-    private Float accuracy;
+    private Double accuracy;
 
-    private Float communication;
+    private Double communication;
 
-    private Float location;
+    private Double locationRate;
 
-    private Float checkIn;
+    private Double checkIn;
 
-    private Float priceSatisfaction;
+    private Double priceSatisfaction;
 
     private String description;
 
