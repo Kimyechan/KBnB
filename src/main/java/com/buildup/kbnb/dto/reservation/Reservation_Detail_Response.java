@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 public class Reservation_Detail_Response {
     private Long roomId;
-    private List<String> roomImageList;
+    private String roomImage;
     private String hostName;
     private String hostImage;
     private Long totalCost;
