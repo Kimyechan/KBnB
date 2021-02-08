@@ -140,6 +140,14 @@ operation::reservation-register[]
 === 예약 리스트 조회
 operation::reservation-lookupList[]
 
+[[resource-reservation-delete]]
+=== 예약 취소
+operation::reservation-delete[]
+
+[[resource-reservation-detail]]
+=== 예약 상세
+operation::reservation-detail[]
+
 [[resource-comment]]
 == 댓글
 
