@@ -1,7 +1,6 @@
 package com.buildup.kbnb.controller;
 
-import com.buildup.kbnb.advice.exception.BadRequestException;
-import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
+import com.buildup.kbnb.advice.exception.*;
 import com.buildup.kbnb.dto.reservation.ReservationRequest;
 import com.buildup.kbnb.dto.reservation.ReservationResponse;
 import com.buildup.kbnb.dto.reservation.Reservation_ConfirmedResponse;
@@ -32,9 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -56,7 +53,8 @@ public class ReservationController {
     }*/
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getConfirmedReservationList(@CurrentUser UserPrincipal userPrincipal, Pageable pageable, PagedResourcesAssembler<Reservation_ConfirmedResponse> assembler) {
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ReservationException("there is no user"));
+
         Page<Reservation> reservationPage = reservationRepository.findByUser(user, pageable);
         List<Reservation> reservationList = reservationPage.getContent();//해당 페이지에만 있는 리스트
 
@@ -92,8 +90,8 @@ public class ReservationController {
 
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> registerReservation(@Valid @RequestBody ReservationRequest reservationRequest, @CurrentUser UserPrincipal userPrincipal) {
-        Room room = roomRepository.findById(reservationRequest.getRoomId()).orElseThrow(() -> new BadRequestException("there is no room like that"));
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
+        Room room = roomRepository.findById(reservationRequest.getRoomId()).orElseThrow(() -> new ReservationException("there is no room"));
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ReservationException("there is no user"));
         Reservation newReservation = Reservation.builder()
                 .checkIn(reservationRequest.getCheckIn())
                 .checkOut(reservationRequest.getCheckOut())
@@ -120,31 +118,52 @@ public class ReservationController {
 
     @GetMapping(value = "/detail",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getDetailReservationInfo(@CurrentUser UserPrincipal userPrincipal, Long reservationId) {
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ReservationException("there is no user"));
         List<Long> reservationId_user = reservationRepository.findByUserId(user.getId()).stream().map(Reservation::getId).collect(Collectors.toList());
         Reservation_Detail_Response reservation_detail_response = new Reservation_Detail_Response();
         if(reservationId_user.contains(reservationId))
           reservation_detail_response = ifReservationIdExist(reservationId);
         EntityModel<Reservation_Detail_Response> model = EntityModel.of(reservation_detail_response);
         model.add(linkTo(methodOn(ReservationController.class).getDetailReservationInfo(userPrincipal, reservationId)).withSelfRel());
+        model.add(Link.of("/docs/api.html#resource-reservation-detail").withRel("profile"));
         return ResponseEntity.ok(model);
     }
+
+
+    @DeleteMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> deleteReservation(@CurrentUser UserPrincipal userPrincipal, Long reservationId) {
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ReservationException("there is no user"));
+        List<Reservation> reservationList = reservationRepository.findByUserId(user.getId());
+        if(!reservationList.stream().map(s -> s.getId()).collect(Collectors.toList()).contains(reservationId))
+            throw new ReservationException("there is no reservation that you asked");
+        reservationRepository.deleteById(reservationId);
+        Map<String, String> map = new HashMap<>();
+        EntityModel<Map> model = EntityModel.of(map);
+        model.add(linkTo(methodOn(ReservationController.class).deleteReservation(userPrincipal, reservationId)).withSelfRel());
+        model.add(Link.of("/docs/api.html#resource-reservation-delete").withRel("profile"));
+        return ResponseEntity.ok(model);
+    }
+    @GetMapping(value = "/test",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public void test(@CurrentUser UserPrincipal userPrincipal) {
+        System.out.println(userPrincipal.getId());
+        System.out.println("=============================================");
+    }
     public Reservation_Detail_Response ifReservationIdExist(Long reservationId) {
-        Reservation reservation = reservationService.findByUserId(reservationId);
+        Reservation reservation = reservationService.findById(reservationId);
         List<BedRoom> bedRoomList = reservation.getRoom().getBedRoomList();
         int bedRoomNum = bedRoomList.size();
         int bedNum = bedNum(bedRoomList);
         Reservation_Detail_Response reservation_detail_response = Reservation_Detail_Response.builder()
                 .hostImage("this is demo host Image URL")
-                .roomImageList(new ArrayList<>(Arrays.asList("this", "is", "Sparta")))
+                .roomImage("this is demo room Image URL")
                 .bedRoomNum(bedRoomNum)
                 .bedNum(bedNum)
                 .bathRoomNum(reservation.getRoom().getBathRoomList().size())
                 .address(
-                        reservation.getRoom().getLocation().getCountry()
-                                +  reservation.getRoom().getLocation().getCity()
-                                +  reservation.getRoom().getLocation().getBorough()
-                                + reservation.getRoom().getLocation().getNeighborhood()
+                        reservation.getRoom().getLocation().getCountry() + " "
+                                +  reservation.getRoom().getLocation().getCity() + " "
+                                +  reservation.getRoom().getLocation().getBorough() + " "
+                                + reservation.getRoom().getLocation().getNeighborhood() + " "
                                 + reservation.getRoom().getLocation().getDetailAddress() )
                 .latitude(reservation.getRoom().getLocation().getLatitude())
                 .longitude(reservation.getRoom().getLocation().getLongitude())
