@@ -1,5 +1,6 @@
 package com.buildup.kbnb.service;
 
+import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.model.UserRoom;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
@@ -27,4 +28,8 @@ public class UserService {
         }
         return false;
     }
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new ReservationException("해당 유저가 없습니다."));
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.buildup.kbnb.controller;
 
-import com.buildup.kbnb.advice.exception.*;
+import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.dto.reservation.ReservationRequest;
 import com.buildup.kbnb.dto.reservation.ReservationResponse;
 import com.buildup.kbnb.dto.reservation.Reservation_ConfirmedResponse;
@@ -9,13 +9,15 @@ import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.User;
-import com.buildup.kbnb.repository.ReservationRepository;
+import com.buildup.kbnb.repository.reservation.ReservationRepository;
 import com.buildup.kbnb.repository.RoomImgRepository;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.repository.room.RoomRepository;
 import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
+import com.buildup.kbnb.service.UserService;
 import com.buildup.kbnb.service.reservationService.ReservationService;
+import com.buildup.kbnb.service.reservationService.UserService_Reservation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,25 +33,32 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/reservation")
 @RequiredArgsConstructor
 public class ReservationController {
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
+    private final UserService_Reservation userService;
     private final ReservationRepository reservationRepository;
     private final RoomImgRepository roomImgRepository;
     private final ReservationService reservationService;
+//    private final UserService userService;
 
-    /*@GetMapping("/reservation_id")
-    public ResponseE<Reservation_Detail_Response> getDetailReservation(@CurrentUser UserPrincipal userPrincipal) {
+/*    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> getConfirmedReservationList(@CurrentUser UserPrincipal userPrincipal, Pageable pageable, PagedResourcesAssembler<Reservation_ConfirmedResponse> assembler) {
+        User user = userService.findById(userPrincipal.getId());
 
-
+        Page<Reservation> reservationPage =
     }*/
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getConfirmedReservationList(@CurrentUser UserPrincipal userPrincipal, Pageable pageable, PagedResourcesAssembler<Reservation_ConfirmedResponse> assembler) {
@@ -143,6 +152,8 @@ public class ReservationController {
         model.add(Link.of("/docs/api.html#resource-reservation-delete").withRel("profile"));
         return ResponseEntity.ok(model);
     }
+
+
     @GetMapping(value = "/test",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public void test(@CurrentUser UserPrincipal userPrincipal) {
         System.out.println(userPrincipal.getId());

@@ -32,7 +32,7 @@ public class ExceptionAdvice {
 
     @ExceptionHandler(ReservationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ExceptionResponse emailOrPassWrong(ReservationException e) {
+    protected ExceptionResponse reservationException(ReservationException e) {
         return ExceptionResponse.builder()
                 .code(-2001)
                 .msg(e.getMessage())
