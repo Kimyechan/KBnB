@@ -1,20 +1,18 @@
 package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.advice.exception.*;
-import com.buildup.kbnb.dto.reservation.ReservationRequest;
-import com.buildup.kbnb.dto.reservation.ReservationResponse;
+import com.buildup.kbnb.dto.reservation.Reservation_RegisterRequest;
+import com.buildup.kbnb.dto.reservation.Reservation_RegisterResponse;
 import com.buildup.kbnb.dto.reservation.Reservation_ConfirmedResponse;
 import com.buildup.kbnb.dto.reservation.Reservation_Detail_Response;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.User;
-import com.buildup.kbnb.repository.ReservationRepository;
-import com.buildup.kbnb.repository.RoomImgRepository;
-import com.buildup.kbnb.repository.UserRepository;
-import com.buildup.kbnb.repository.room.RoomRepository;
 import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
+import com.buildup.kbnb.service.RoomService;
+import com.buildup.kbnb.service.UserService;
 import com.buildup.kbnb.service.reservationService.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,18 +38,54 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/reservation")
 @RequiredArgsConstructor
 public class ReservationController {
-    private final RoomRepository roomRepository;
+   /* private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
     private final RoomImgRepository roomImgRepository;
+    private final ReservationService reservationService;*/
+    private final UserService userService;
+    private final RoomService roomService;
     private final ReservationService reservationService;
 
-    /*@GetMapping("/reservation_id")
-    public ResponseE<Reservation_Detail_Response> getDetailReservation(@CurrentUser UserPrincipal userPrincipal) {
+    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> registerReservation(@Valid @RequestBody Reservation_RegisterRequest reservationRegisterRequest, @CurrentUser UserPrincipal userPrincipal) {
+        User user = userService.findById(userPrincipal.getId());
+        //request 에서 받은 방 번호가 존재하지 않을 때 해당 방 번호가 없다는 예외처리 날림
+        Room room = roomService.findById(reservationRegisterRequest.getRoomId());
+        //해당 룸으로 예약된 모든 예약날짜를 비교함
+        List<Reservation> reservationList = reservationService.findByRoomId(room.getId());
+        LocalDate checkIn = reservationRegisterRequest.getCheckIn(); LocalDate checkOut = reservationRegisterRequest.getCheckOut();
+        for(Reservation reservation : reservationList) {
+            if((checkIn.isAfter(reservation.getCheckIn()) && checkIn.isBefore(reservation.getCheckOut()))
+            || (checkIn.isBefore(reservation.getCheckIn()) && checkOut.isAfter(reservation.getCheckOut()))
+            || (checkOut.isAfter(reservation.getCheckIn()) && checkOut.isBefore(reservation.getCheckOut())))
+                throw new ReservationException("예약이 불가능한 날짜입니다.");
+        }
+        //모든 예외가 성립하지 않는다면
+        Reservation reservation = createAndSaveReservation(room, reservationRegisterRequest, user);
+        Reservation_RegisterResponse reservationResponse = Reservation_RegisterResponse.builder()
+                .message("예약 성공").reservationId(reservation.getId()).build();
 
+        EntityModel<Reservation_RegisterResponse> model = EntityModel.of(reservationResponse);
+        URI location = linkTo(methodOn(ReservationController.class).registerReservation(reservationRegisterRequest, userPrincipal)).withSelfRel().toUri();
+        model.add(Link.of("/docs/api.html#resource-reservation-register").withRel("profile"));
+        model.add(linkTo(methodOn(ReservationController.class).registerReservation(reservationRegisterRequest, userPrincipal)).withSelfRel());
+        return ResponseEntity.created(location)
+                .body(model);
+    }
+    public Reservation createAndSaveReservation(Room room, Reservation_RegisterRequest reservationRegisterRequest, User user) {
+        Reservation reservation = Reservation.builder()
+                .room(room)
+                .guestNum(reservationRegisterRequest.getGuestNumber())
+                .checkOut(reservationRegisterRequest.getCheckOut())
+                .checkIn(reservationRegisterRequest.getCheckIn())
+                .totalCost(reservationRegisterRequest.getTotalCost())
+                .user(user)
+                .build();
+                return reservationService.save(reservation);
+    }
 
-    }*/
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    /*@GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getConfirmedReservationList(@CurrentUser UserPrincipal userPrincipal, Pageable pageable, PagedResourcesAssembler<Reservation_ConfirmedResponse> assembler) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ReservationException("there is no user"));
 
@@ -86,37 +120,8 @@ public class ReservationController {
 
         return ResponseEntity.ok(model);
 
-    }
-
-    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> registerReservation(@Valid @RequestBody ReservationRequest reservationRequest, @CurrentUser UserPrincipal userPrincipal) {
-        Room room = roomRepository.findById(reservationRequest.getRoomId()).orElseThrow(() -> new ReservationException("there is no room"));
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ReservationException("there is no user"));
-        Reservation newReservation = Reservation.builder()
-                .checkIn(reservationRequest.getCheckIn())
-                .checkOut(reservationRequest.getCheckOut())
-                .guestNum(reservationRequest.getGuestNumber())
-                .room(room)
-                .user(user)
-                .build();
-
-        reservationRepository.save(newReservation);
-
-
-        ReservationResponse reservationResponse = new ReservationResponse();
-        reservationResponse.setMessage("성공");
-        reservationResponse.setReservationId(newReservation.getId());
-
-
-        EntityModel<ReservationResponse> model = EntityModel.of(reservationResponse);
-        URI location = linkTo(methodOn(ReservationController.class).registerReservation(reservationRequest, userPrincipal)).withSelfRel().toUri();
-        model.add(Link.of("/docs/api.html#resource-reservation-register").withRel("profile"));
-        model.add(linkTo(methodOn(ReservationController.class).registerReservation(reservationRequest, userPrincipal)).withSelfRel());
-        return ResponseEntity.created(location)
-                .body(model);
-    }
-
-    @GetMapping(value = "/detail",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    }*/
+    /*@GetMapping(value = "/detail",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getDetailReservationInfo(@CurrentUser UserPrincipal userPrincipal, Long reservationId) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ReservationException("there is no user"));
         List<Long> reservationId_user = reservationRepository.findByUserId(user.getId()).stream().map(Reservation::getId).collect(Collectors.toList());
@@ -127,10 +132,10 @@ public class ReservationController {
         model.add(linkTo(methodOn(ReservationController.class).getDetailReservationInfo(userPrincipal, reservationId)).withSelfRel());
         model.add(Link.of("/docs/api.html#resource-reservation-detail").withRel("profile"));
         return ResponseEntity.ok(model);
-    }
+    }*/
 
 
-    @DeleteMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+   /* @DeleteMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> deleteReservation(@CurrentUser UserPrincipal userPrincipal, Long reservationId) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ReservationException("there is no user"));
         List<Reservation> reservationList = reservationRepository.findByUserId(user.getId());
@@ -142,8 +147,8 @@ public class ReservationController {
         model.add(linkTo(methodOn(ReservationController.class).deleteReservation(userPrincipal, reservationId)).withSelfRel());
         model.add(Link.of("/docs/api.html#resource-reservation-delete").withRel("profile"));
         return ResponseEntity.ok(model);
-    }
-    @GetMapping(value = "/test",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    }*/
+  /*  @GetMapping(value = "/test",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public void test(@CurrentUser UserPrincipal userPrincipal) {
         System.out.println(userPrincipal.getId());
         System.out.println("=============================================");
@@ -178,8 +183,8 @@ public class ReservationController {
                 .totalCost(reservation.getTotalCost())
                 .build();
         return reservation_detail_response;
-    }
-public int bedNum(List<BedRoom> bedRoomList) {
+    }*/
+/*public int bedNum(List<BedRoom> bedRoomList) {
         int bedNum = 0;
     for(BedRoom bedRoom : bedRoomList) {
         bedNum += bedRoom.getDoubleSize();
@@ -189,5 +194,5 @@ public int bedNum(List<BedRoom> bedRoomList) {
     }
 
     return bedNum;
-}
+}*/
 }

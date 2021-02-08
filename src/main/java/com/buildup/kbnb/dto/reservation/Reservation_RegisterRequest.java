@@ -9,12 +9,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReservationRequest {
+public class Reservation_RegisterRequest {
     private Long roomId;
     private LocalDate checkIn;
     private LocalDate checkOut;
     private int guestNumber;
     private int infantNumber;
-    private int totalCost;
+    private Long totalCost;
     private String message;
 }

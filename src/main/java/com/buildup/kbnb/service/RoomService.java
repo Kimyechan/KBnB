@@ -1,5 +1,6 @@
 package com.buildup.kbnb.service;
 
+import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
@@ -30,5 +31,12 @@ public class RoomService {
 
     public Room getRoomDetailById(Long roomId) {
         return roomRepository.findByIdWithUserLocation(roomId).orElseThrow();
+    }
+
+    public Room findById(Long id) {
+        return roomRepository.findById(id).orElseThrow(() -> new ReservationException("해당 방이 존재하지 않습니다."));
+    }
+    public Room save(Room room) {
+        return roomRepository.save(room);
     }
 }

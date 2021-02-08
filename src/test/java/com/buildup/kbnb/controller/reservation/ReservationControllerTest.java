@@ -1,7 +1,7 @@
 package com.buildup.kbnb.controller.reservation;
 
 import com.buildup.kbnb.config.RestDocsConfiguration;
-import com.buildup.kbnb.dto.reservation.ReservationRequest;
+import com.buildup.kbnb.dto.reservation.Reservation_RegisterRequest;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
@@ -9,17 +9,24 @@ import com.buildup.kbnb.model.room.RoomImg;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.LocationRepository;
-import com.buildup.kbnb.repository.ReservationRepository;
+import com.buildup.kbnb.repository.reservation.ReservationRepository;
 import com.buildup.kbnb.repository.RoomImgRepository;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.repository.room.RoomRepository;
+import com.buildup.kbnb.security.CustomUserDetailsService;
 import com.buildup.kbnb.security.TokenProvider;
+import com.buildup.kbnb.security.UserPrincipal;
+import com.buildup.kbnb.service.RoomService;
+import com.buildup.kbnb.service.UserService;
+import com.buildup.kbnb.service.reservationService.ReservationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,10 +41,13 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -56,36 +66,111 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ReservationControllerTest {
     @Autowired
     MockMvc mockMvc;
-
     @Autowired
     ObjectMapper objectMapper;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    RoomRepository roomRepository;
-
     @Autowired
     TokenProvider tokenProvider;
+    @MockBean
+    UserService userService;
+    @MockBean
+    RoomService roomService;
+    @MockBean
+    ReservationService reservationService;
+    @MockBean
+    CustomUserDetailsService customUserDetailsService;
+    public User createUser() {
+        User user = User.builder()
+                .id(1L)
+                .email("test@google.com").name("정한솔")
+                .password("111").build();
+        given(customUserDetailsService.loadUserById(user.getId()))
+                .willReturn(UserPrincipal.create(user));//스프링 시큐리티에서 user객체를 다루기위해 변환 시킨 것일 뿐이고
+        //해당 서비스는 토큰값을 통해서 유저를 로드할 때 필터로 사용되기 때문에 정의 해줘야 함
+        return user;
+    }
+    public Room createRoom() {
+        Room room = new Room();
+        room.setId(1L);
+        given(roomService.findById(any())).willReturn(room);
 
-    @Autowired
-    ReservationRepository reservationRepository;
+        return room;
+    }
 
-    @Autowired
-    WebApplicationContext webApplicationContext;
+    public Reservation_RegisterRequest createReservation_RegisterRequest(Room room) {
+        String checkIn = "2021-02-01"; String checkOut = "2021-02-02";
+        return Reservation_RegisterRequest.builder()
+                .totalCost(30000L)
+                .roomId(room.getId())
+                .message("사장님 잘생겼어요")
+                .infantNumber(2)
+                .guestNumber(2)
+                .checkIn(LocalDate.parse(checkIn,DateTimeFormatter.ISO_DATE))
+                .checkOut(LocalDate.parse(checkOut, DateTimeFormatter.ISO_DATE))
+                .build();
+    }
+    public Reservation createReservation(Room room, Reservation_RegisterRequest reservationRegisterRequest, User user) {
+        Reservation reservation = Reservation.builder()
+                .room(room)
+                .guestNum(reservationRegisterRequest.getGuestNumber())
+                .checkOut(reservationRegisterRequest.getCheckOut())
+                .checkIn(reservationRegisterRequest.getCheckIn())
+                .totalCost(reservationRegisterRequest.getTotalCost())
+                .user(user)
+                .build();
+        return reservation;
+    }
+    @Test
+    @DisplayName("예약 등록 테스트")
+    public void registerReservation() throws Exception {
+        User user = createUser();
+        Room room = createRoom();
+        Reservation_RegisterRequest reservation_registerRequest = createReservation_RegisterRequest(room);
+        Reservation reservation = createReservation(room, reservation_registerRequest, user);
+        String userToken = tokenProvider.createToken(String.valueOf(user.getId()));
+        given(userService.findById(any())).willReturn(user);
+        given(reservationService.save(any())).willReturn(reservation);
+        createReservation_RegisterRequest(room);
+        mockMvc.perform(post("/reservation")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + userToken)
+                        .content(objectMapper.writeValueAsString(createReservation_RegisterRequest(room))))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andDo(document("reservation-register",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
+                        ),
+                        requestFields(
+                                fieldWithPath("roomId").description("방 식별자"),
+                                fieldWithPath("checkIn").description("체크인 날짜"),
+                                fieldWithPath("checkOut").description("체크 아웃 날짜"),
+                                fieldWithPath("guestNumber").description("게스트 수"),
+                                fieldWithPath("infantNumber").description("유아 수"),
+                                fieldWithPath("totalCost").description("총 금액"),
+                                fieldWithPath("message").description("호스트에게 보내는 메시지")
+                        ),
+                        responseHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
+                        ),
+                        responseFields(
+                                fieldWithPath("reservationId").description("예약 식별자"),
+                                fieldWithPath("message").description("예약 여부 메시지"),
+                                fieldWithPath("_links.self.href").description("해당 API URL"),
+                                fieldWithPath("_links.profile.href").description("해당 API문서 URL")
+                        )
+                ));
 
-    @Autowired
-    RoomImgRepository roomImgRepository;
-
-
-
-    @Autowired
-    private LocationRepository locationRepository;
-
+    }
+/*    public List<Reservation> createReservationList(User user) {
+        List<Reservation> reservationList = new ArrayList<>();
+        for(int i = 0; i< 2; i++) {
+            Reservation reservation = new Reservation();
+            reservation.setUser(user);
+            reservationService.save(reservation);
+            reservationList.add(reservation);
+        }
+        return reservationList;
+    }
     @Test
     @Transactional
     public void register_Reservation() throws Exception {
@@ -134,7 +219,7 @@ class ReservationControllerTest {
                 .build();
         reservationRepository.save(reservation);
         String checkIn = "2021-02-01"; String checkOut = "2021-02-02";
-        ReservationRequest reservationRequest = ReservationRequest.builder()
+        Reservation_RegisterRequest reservationRegisterRequest = Reservation_RegisterRequest.builder()
                 .totalCost(30000)
                 .roomId(room.getId())
                 .message("사장님 잘생겼어요")
@@ -149,7 +234,7 @@ class ReservationControllerTest {
         mockMvc.perform(post("/reservation")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + userToken)
-                .content(objectMapper.writeValueAsString(reservationRequest)))
+                .content(objectMapper.writeValueAsString(reservationRegisterRequest)))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andDo(document("reservation-register",
@@ -175,9 +260,9 @@ class ReservationControllerTest {
                                 fieldWithPath("_links.profile.href").description("해당 API문서 URL")
                         )
                         ));
-    }
+    }*/
 
-    @Test
+  /*  @Test
     @Transactional
     public void getConfirmedReservationList() throws Exception  {
         User host = User.builder()
@@ -272,6 +357,6 @@ class ReservationControllerTest {
                 )
         ));
 
-    }
+    }*/
 
 }
