@@ -29,5 +29,4 @@ public class RoomDto {
     private Integer commentCount;
     private Boolean isCheck;
     private List<String> roomImgUrlList;
-    // ToDo: RoomImg List 5개
 }

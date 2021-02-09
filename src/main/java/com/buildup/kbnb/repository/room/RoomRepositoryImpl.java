@@ -1,13 +1,15 @@
 package com.buildup.kbnb.repository.room;
 
-import com.buildup.kbnb.dto.room.search.CostSearch;
-import com.buildup.kbnb.dto.room.search.GuestSearch;
-import com.buildup.kbnb.dto.room.search.LocationSearch;
-import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
+import com.buildup.kbnb.dto.room.search.*;
+import com.buildup.kbnb.model.QReservationDate;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,6 +20,7 @@ import java.util.List;
 
 import static com.buildup.kbnb.model.QLocation.location;
 import static com.buildup.kbnb.model.room.QRoom.room;
+import static com.buildup.kbnb.model.QReservationDate.reservationDate;
 
 public class RoomRepositoryImpl implements RoomRepositoryCustom {
     private final JPAQueryFactory queryFactory;
@@ -28,8 +31,6 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
 
     @Override
     public Page<Room> searchByCondition(RoomSearchCondition condition, Pageable pageable) {
-        // ToDo: 침대수, 침실수, 욕실수 필터링
-        // ToDo: Sorting 기준??
         List<Room> content = queryFactory
                 .selectFrom(room).distinct()
                 .join(room.location, location).fetchJoin()
@@ -40,7 +41,8 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
                         guestNumCheck(condition.getGuestSearch()),
                         bedRoomNumGreaterThan(condition.getBedRoomNum()),
                         bathRoomNumGreaterThan(condition.getBathRoomNum()),
-                        bedNumGreaterThan(condition.getBedNum()))
+                        bedNumGreaterThan(condition.getBedNum()),
+                        dateBetween(condition.getCheckDateSearch(), room.id))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -77,18 +79,38 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
     }
 
     private BooleanExpression costBetween(CostSearch costSearch) {
-        return costSearch == null ? null : room.roomCost.between(costSearch.getMinCost(), costSearch.getMaxCost());
+//        return costSearch.equals(new CostSearch())? null : room.roomCost.between(costSearch.getMinCost(), costSearch.getMaxCost());
+        return costSearch == null || costSearch.equals(new CostSearch())
+                ? null : room.roomCost.between(costSearch.getMinCost(), costSearch.getMaxCost());
     }
 
     private BooleanExpression latitudeBetween(LocationSearch locationSearch) {
-        return locationSearch == null ? null : room.location.latitude.between(locationSearch.getLatitudeMin(), locationSearch.getLatitudeMax());
+        return locationSearch == null || locationSearch.equals(new LocationSearch())
+                ? null : room.location.latitude.between(locationSearch.getLatitudeMin(), locationSearch.getLatitudeMax());
     }
 
     private BooleanExpression longitudeBetween(LocationSearch locationSearch) {
-        return locationSearch == null ? null : room.location.longitude.between(locationSearch.getLongitudeMin(), locationSearch.getLongitudeMax());
+        return locationSearch == null || locationSearch.equals(new LocationSearch())
+                ? null : room.location.longitude.between(locationSearch.getLongitudeMin(), locationSearch.getLongitudeMax());
     }
 
     private BooleanExpression guestNumCheck(GuestSearch guestSearch) {
-        return guestSearch == null ? null : room.peopleLimit.goe(guestSearch.getNumOfAdult() + guestSearch.getNumOfKid());
+        return guestSearch == null || guestSearch.equals(new GuestSearch())
+                ? null : room.peopleLimit.goe(guestSearch.getNumOfAdult() + guestSearch.getNumOfKid());
+    }
+
+    private BooleanExpression dateBetween(CheckDateSearch checkDateSearch, NumberPath<Long> id) {
+        return checkDateSearch.equals(new CheckDateSearch()) || checkDateSearch.equals(new CheckDateSearch())
+                ? null :
+                Expressions.asDate(checkDateSearch.getStartDate()).notIn(
+                        JPAExpressions.select(reservationDate.date)
+                                .from(reservationDate)
+                                .where(reservationDate.room.id.eq(id)))
+                        .and(
+                                Expressions.asDate(checkDateSearch.getStartDate()).notIn(
+                                        JPAExpressions.select(reservationDate.date)
+                                                .from(reservationDate)
+                                                .where(reservationDate.room.id.eq(id)))
+                        );
     }
 }

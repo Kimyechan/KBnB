@@ -1,9 +1,6 @@
 package com.buildup.kbnb.dto.room.search;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -11,6 +8,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class CheckDateSearch {
     private LocalDate startDate;
     private LocalDate endDate;
