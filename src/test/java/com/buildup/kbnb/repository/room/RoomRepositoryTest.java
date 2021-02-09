@@ -3,12 +3,10 @@ package com.buildup.kbnb.repository.room;
 import com.buildup.kbnb.dto.room.search.*;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.Reservation;
-import com.buildup.kbnb.model.ReservationDate;
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.repository.*;
-import org.apache.catalina.Store;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,9 +38,6 @@ class RoomRepositoryTest {
 
     @Autowired
     ReservationRepository reservationRepository;
-
-    @Autowired
-    ReservationDateRepo reservationDateRepo;
 
     @BeforeEach
     public void setUpRoomList() {
@@ -86,25 +81,12 @@ class RoomRepositoryTest {
                     .room(room)
                     .build();
             reservationRepository.save(reservation);
-            ReservationDate reservationDateIn = ReservationDate.builder()
-                    .date(reservation.getCheckIn())
-                    .type("checkIn")
+            Reservation reservation1 = Reservation.builder()
+                    .checkIn(LocalDate.of(2021, 2, 5))
+                    .checkOut(LocalDate.of(2021, 2, 8))
                     .room(room)
                     .build();
-            reservationDateRepo.save(reservationDateIn);
-            for (LocalDate date = reservation.getCheckIn().plusDays(1);  date.isBefore(reservation.getCheckOut()); date = date.plusDays(1)) {
-                ReservationDate reservationDate = ReservationDate.builder()
-                        .date(date)
-                        .room(room)
-                        .build();
-                reservationDateRepo.save(reservationDate);
-            }
-            ReservationDate reservationDateOut = ReservationDate.builder()
-                    .date(reservation.getCheckOut())
-                    .type("checkOut")
-                    .room(room)
-                    .build();
-            reservationDateRepo.save(reservationDateOut);
+            reservationRepository.save(reservation1);
         }
     }
 

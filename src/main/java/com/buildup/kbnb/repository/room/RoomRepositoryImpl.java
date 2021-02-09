@@ -98,32 +98,15 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
 
     private BooleanExpression dateBetween(CheckDateSearch checkDateSearch, NumberPath<Long> id) {
         return checkDateSearch == null || checkDateSearch.equals(new CheckDateSearch())
-                ? null :
-                JPAExpressions.select(reservationDate.date)
-                        .from(reservationDate)
-                        .where(reservationDate.room.id.eq(id)
-                                .and(reservationDate.date.gt(Expressions.asDate(checkDateSearch.getStartDate())))
-                                .and(reservationDate.date.lt(Expressions.asDate(checkDateSearch.getEndDate()))))
-                        .notExists()
-                        .and(
-                                Expressions.asDate(checkDateSearch.getStartDate()).notIn(
-                                        JPAExpressions.select(reservationDate.date)
-                                                .from(reservationDate)
-                                                .where(reservationDate.room.id.eq(id)))
-                                        .or(Expressions.asDate(checkDateSearch.getStartDate()).in(
-                                                        JPAExpressions.select(reservationDate.date)
-                                                                .from(reservationDate)
-                                                                .where(reservationDate.room.id.eq(id).and(reservationDate.type.eq("checkOut")))))
-                        )
-                        .and(
-                                Expressions.asDate(checkDateSearch.getEndDate()).notIn(
-                                        JPAExpressions.select(reservationDate.date)
-                                                .from(reservationDate)
-                                                .where(reservationDate.room.id.eq(id)))
-                                        .or(Expressions.asDate(checkDateSearch.getEndDate()).in(
-                                                JPAExpressions.select(reservationDate.date)
-                                                        .from(reservationDate)
-                                                        .where(reservationDate.room.id.eq(id).and(reservationDate.type.eq("checkIn")))))
-                        );
+                ? null : dateCondition(checkDateSearch, id);
+    }
+    public BooleanExpression dateCondition(CheckDateSearch checkDateSearch, NumberPath<Long> id) {
+        return JPAExpressions.select(reservation.count())
+                .from(reservation)
+                .where(
+                        reservation.room.id.eq(id)
+                                .and(reservation.checkIn.goe(Expressions.asDate(checkDateSearch.getEndDate()))
+                                        .or(reservation.checkOut.loe(Expressions.asDate(checkDateSearch.getStartDate()))))
+                ).eq(JPAExpressions.select(reservation.count()).from(reservation).where(reservation.room.id.eq(id)));
     }
 }
