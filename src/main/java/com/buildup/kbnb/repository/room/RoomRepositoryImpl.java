@@ -95,7 +95,7 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
     }
 
     private BooleanExpression dateBetween(CheckDateSearch checkDateSearch, NumberPath<Long> id) {
-        return checkDateSearch.equals(new CheckDateSearch()) || checkDateSearch.equals(new CheckDateSearch())
+        return checkDateSearch == null || checkDateSearch.equals(new CheckDateSearch())
                 ? null :
                 JPAExpressions.select(reservationDate.date)
                         .from(reservationDate)
