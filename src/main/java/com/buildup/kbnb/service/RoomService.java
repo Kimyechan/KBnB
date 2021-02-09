@@ -1,5 +1,6 @@
 package com.buildup.kbnb.service;
 
+import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
 import com.buildup.kbnb.model.room.BedRoom;
@@ -39,4 +40,5 @@ public class RoomService {
     public Room save(Room room) {
         return roomRepository.save(room);
     }
+
 }

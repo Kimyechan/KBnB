@@ -1,5 +1,6 @@
 package com.buildup.kbnb.model.user;
 
+import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.UserRoom;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -51,4 +52,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Reservation> reservationList;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Comment> commentList;
 }

@@ -2,8 +2,11 @@ package com.buildup.kbnb.service.reservationService;
 
 import com.buildup.kbnb.advice.exception.BadRequestException;
 import com.buildup.kbnb.model.Reservation;
+import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.reservation.ReservationRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +24,22 @@ public class ReservationService {
     }
     public Reservation save(Reservation reservation) {
         return reservationRepository.save(reservation);
+    }
+
+    public Page<Reservation> findPageByUser(User user, Pageable pageable) {
+        return reservationRepository.findByUser(user, pageable);
+    }
+
+    public String getHostName(Reservation reservation) {
+        return reservation.getRoom().getHost().getName();
+    }
+
+    public List<Reservation> findByUser(User user) {
+        return reservationRepository.findByUser(user);
+    }
+
+    public void deleteById(Long id) {
+        reservationRepository.deleteById(id);
     }
 
 }
