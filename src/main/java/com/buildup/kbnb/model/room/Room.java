@@ -2,6 +2,7 @@ package com.buildup.kbnb.model.room;
 
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
+import com.buildup.kbnb.model.ReservationDate;
 import com.buildup.kbnb.model.user.User;
 import lombok.*;
 
@@ -73,6 +74,9 @@ public class Room {
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<Comment> commentList;
+
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
+    private List<ReservationDate> reservationDates;
 
     @PrePersist
     public void prePersist() {

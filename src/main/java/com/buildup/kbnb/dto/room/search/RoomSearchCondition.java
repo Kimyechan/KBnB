@@ -1,13 +1,12 @@
 package com.buildup.kbnb.dto.room.search;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class RoomSearchCondition {
     private LocationSearch locationSearch;
     private CheckDateSearch checkDateSearch;

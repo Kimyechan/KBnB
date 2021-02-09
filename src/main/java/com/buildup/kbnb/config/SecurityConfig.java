@@ -80,7 +80,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    //ToDo: 숙소 상세 리스트 검색 필터 제외
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http

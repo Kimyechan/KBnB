@@ -2,8 +2,6 @@ package com.buildup.kbnb.dto.comment;
 
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 @NoArgsConstructor
