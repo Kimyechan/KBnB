@@ -86,13 +86,25 @@ class RoomRepositoryTest {
                     .room(room)
                     .build();
             reservationRepository.save(reservation);
-            for (LocalDate date = reservation.getCheckIn();  date.isBefore(reservation.getCheckOut()); date = date.plusDays(1)) {
+            ReservationDate reservationDateIn = ReservationDate.builder()
+                    .date(reservation.getCheckIn())
+                    .type("checkIn")
+                    .room(room)
+                    .build();
+            reservationDateRepo.save(reservationDateIn);
+            for (LocalDate date = reservation.getCheckIn().plusDays(1);  date.isBefore(reservation.getCheckOut()); date = date.plusDays(1)) {
                 ReservationDate reservationDate = ReservationDate.builder()
                         .date(date)
                         .room(room)
                         .build();
                 reservationDateRepo.save(reservationDate);
             }
+            ReservationDate reservationDateOut = ReservationDate.builder()
+                    .date(reservation.getCheckOut())
+                    .type("checkOut")
+                    .room(room)
+                    .build();
+            reservationDateRepo.save(reservationDateOut);
         }
     }
 

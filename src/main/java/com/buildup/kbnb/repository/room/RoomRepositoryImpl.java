@@ -17,6 +17,8 @@ import java.util.List;
 import static com.buildup.kbnb.model.QLocation.location;
 import static com.buildup.kbnb.model.QReservationDate.reservationDate;
 import static com.buildup.kbnb.model.room.QRoom.room;
+import static com.buildup.kbnb.model.QReservation.reservation;
+import static com.querydsl.core.types.ExpressionUtils.count;
 
 public class RoomRepositoryImpl implements RoomRepositoryCustom {
     private final JPAQueryFactory queryFactory;
@@ -100,7 +102,28 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
                 JPAExpressions.select(reservationDate.date)
                         .from(reservationDate)
                         .where(reservationDate.room.id.eq(id)
-                                .and(reservationDate.date.between(Expressions.asDate(checkDateSearch.getStartDate())
-                                        , Expressions.asDate(checkDateSearch.getEndDate())))).notExists();
+                                .and(reservationDate.date.gt(Expressions.asDate(checkDateSearch.getStartDate())))
+                                .and(reservationDate.date.lt(Expressions.asDate(checkDateSearch.getEndDate()))))
+                        .notExists()
+                        .and(
+                                Expressions.asDate(checkDateSearch.getStartDate()).notIn(
+                                        JPAExpressions.select(reservationDate.date)
+                                                .from(reservationDate)
+                                                .where(reservationDate.room.id.eq(id)))
+                                        .or(Expressions.asDate(checkDateSearch.getStartDate()).in(
+                                                        JPAExpressions.select(reservationDate.date)
+                                                                .from(reservationDate)
+                                                                .where(reservationDate.room.id.eq(id).and(reservationDate.type.eq("checkOut")))))
+                        )
+                        .and(
+                                Expressions.asDate(checkDateSearch.getEndDate()).notIn(
+                                        JPAExpressions.select(reservationDate.date)
+                                                .from(reservationDate)
+                                                .where(reservationDate.room.id.eq(id)))
+                                        .or(Expressions.asDate(checkDateSearch.getEndDate()).in(
+                                                JPAExpressions.select(reservationDate.date)
+                                                        .from(reservationDate)
+                                                        .where(reservationDate.room.id.eq(id).and(reservationDate.type.eq("checkIn")))))
+                        );
     }
 }

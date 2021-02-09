@@ -19,6 +19,8 @@ public class ReservationDate {
 
     private LocalDate date;
 
+    private String type;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Room room;
 }
