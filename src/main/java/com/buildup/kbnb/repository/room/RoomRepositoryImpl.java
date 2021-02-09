@@ -102,15 +102,20 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
     private BooleanExpression dateBetween(CheckDateSearch checkDateSearch, NumberPath<Long> id) {
         return checkDateSearch.equals(new CheckDateSearch()) || checkDateSearch.equals(new CheckDateSearch())
                 ? null :
-                Expressions.asDate(checkDateSearch.getStartDate()).notIn(
-                        JPAExpressions.select(reservationDate.date)
-                                .from(reservationDate)
-                                .where(reservationDate.room.id.eq(id)))
-                        .and(
-                                Expressions.asDate(checkDateSearch.getStartDate()).notIn(
-                                        JPAExpressions.select(reservationDate.date)
-                                                .from(reservationDate)
-                                                .where(reservationDate.room.id.eq(id)))
-                        );
+                JPAExpressions.select(reservationDate.date)
+                        .from(reservationDate)
+                        .where(reservationDate.room.id.eq(id)
+                                .and(reservationDate.date.between(Expressions.asDate(checkDateSearch.getStartDate())
+                                        , Expressions.asDate(checkDateSearch.getEndDate())))).notExists();
+//                Expressions.asDate(checkDateSearch.getStartDate()).notIn(
+//                        JPAExpressions.select(reservationDate.date)
+//                                .from(reservationDate)
+//                                .where(reservationDate.room.id.eq(id)))
+//                        .and(
+//                                Expressions.asDate(checkDateSearch.getEndDate()).goeAny(
+//                                        JPAExpressions.select(reservationDate.date)
+//                                                .from(reservationDate)
+//                                                .where(reservationDate.room.id.eq(id)))
+//                        );
     }
 }
