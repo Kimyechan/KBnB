@@ -1,11 +1,7 @@
 package com.buildup.kbnb.repository.room;
 
 import com.buildup.kbnb.dto.room.search.*;
-import com.buildup.kbnb.model.QReservationDate;
-import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
@@ -19,8 +15,8 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 import static com.buildup.kbnb.model.QLocation.location;
-import static com.buildup.kbnb.model.room.QRoom.room;
 import static com.buildup.kbnb.model.QReservationDate.reservationDate;
+import static com.buildup.kbnb.model.room.QRoom.room;
 
 public class RoomRepositoryImpl implements RoomRepositoryCustom {
     private final JPAQueryFactory queryFactory;
@@ -79,7 +75,6 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
     }
 
     private BooleanExpression costBetween(CostSearch costSearch) {
-//        return costSearch.equals(new CostSearch())? null : room.roomCost.between(costSearch.getMinCost(), costSearch.getMaxCost());
         return costSearch == null || costSearch.equals(new CostSearch())
                 ? null : room.roomCost.between(costSearch.getMinCost(), costSearch.getMaxCost());
     }
@@ -107,15 +102,5 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
                         .where(reservationDate.room.id.eq(id)
                                 .and(reservationDate.date.between(Expressions.asDate(checkDateSearch.getStartDate())
                                         , Expressions.asDate(checkDateSearch.getEndDate())))).notExists();
-//                Expressions.asDate(checkDateSearch.getStartDate()).notIn(
-//                        JPAExpressions.select(reservationDate.date)
-//                                .from(reservationDate)
-//                                .where(reservationDate.room.id.eq(id)))
-//                        .and(
-//                                Expressions.asDate(checkDateSearch.getEndDate()).goeAny(
-//                                        JPAExpressions.select(reservationDate.date)
-//                                                .from(reservationDate)
-//                                                .where(reservationDate.room.id.eq(id)))
-//                        );
     }
 }

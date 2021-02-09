@@ -3,7 +3,6 @@ package com.buildup.kbnb.service.reservationService;
 import com.buildup.kbnb.advice.exception.BadRequestException;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Reservation;
-import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
