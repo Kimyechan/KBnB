@@ -1,16 +1,14 @@
 package com.buildup.kbnb.repository.room;
 
-import com.buildup.kbnb.dto.room.search.CostSearch;
-import com.buildup.kbnb.dto.room.search.GuestSearch;
-import com.buildup.kbnb.dto.room.search.LocationSearch;
-import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
+import com.buildup.kbnb.dto.room.search.*;
 import com.buildup.kbnb.model.Location;
+import com.buildup.kbnb.model.Reservation;
+import com.buildup.kbnb.model.ReservationDate;
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
-import com.buildup.kbnb.repository.BathRoomRepository;
-import com.buildup.kbnb.repository.BedRoomRepository;
-import com.buildup.kbnb.repository.LocationRepository;
+import com.buildup.kbnb.repository.*;
+import org.apache.catalina.Store;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,9 +17,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,6 +37,12 @@ class RoomRepositoryTest {
 
     @Autowired
     BedRoomRepository bedRoomRepository;
+
+    @Autowired
+    ReservationRepository reservationRepository;
+
+    @Autowired
+    ReservationDateRepo reservationDateRepo;
 
     @BeforeEach
     public void setUpRoomList() {
@@ -77,6 +80,19 @@ class RoomRepositoryTest {
                     .room(room)
                     .build();
             bedRoomRepository.save(bedRoom2);
+            Reservation reservation = Reservation.builder()
+                    .checkIn(LocalDate.of(2021, 2, 1))
+                    .checkOut(LocalDate.of(2021, 2, 3))
+                    .room(room)
+                    .build();
+            reservationRepository.save(reservation);
+            for (LocalDate date = reservation.getCheckIn();  date.isBefore(reservation.getCheckOut()); date = date.plusDays(1)) {
+                ReservationDate reservationDate = ReservationDate.builder()
+                        .date(date)
+                        .room(room)
+                        .build();
+                reservationDateRepo.save(reservationDate);
+            }
         }
     }
 
@@ -176,10 +192,16 @@ class RoomRepositoryTest {
                 .minCost(10000.0)
                 .build();
 
+        CheckDateSearch checkDateSearch = CheckDateSearch.builder()
+                .startDate(LocalDate.of(2021, 2, 3))
+                .endDate(LocalDate.of(2021, 2, 5))
+                .build();
+
         RoomSearchCondition roomSearchCondition = RoomSearchCondition.builder()
                 .costSearch(costSearch)
                 .locationSearch(locationSearch)
                 .guestSearch(guestSearch)
+                .checkDateSearch(checkDateSearch)
                 .roomType("Shared room")
                 .bedNum(4)
                 .bedRoomNum(2)
