@@ -153,4 +153,4 @@ operation::reservation-detail[]
 
 [[resource-comment-create]]
 === 댓글 생성
-operation::create-comment[]
+operation::comment-create[]

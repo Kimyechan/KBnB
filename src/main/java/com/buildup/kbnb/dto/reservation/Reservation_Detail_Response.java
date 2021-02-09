@@ -3,7 +3,6 @@ package com.buildup.kbnb.dto.reservation;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @Setter
