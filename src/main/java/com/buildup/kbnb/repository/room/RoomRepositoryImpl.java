@@ -15,10 +15,8 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 import static com.buildup.kbnb.model.QLocation.location;
-import static com.buildup.kbnb.model.QReservationDate.reservationDate;
-import static com.buildup.kbnb.model.room.QRoom.room;
 import static com.buildup.kbnb.model.QReservation.reservation;
-import static com.querydsl.core.types.ExpressionUtils.count;
+import static com.buildup.kbnb.model.room.QRoom.room;
 
 public class RoomRepositoryImpl implements RoomRepositoryCustom {
     private final JPAQueryFactory queryFactory;
