@@ -188,6 +188,9 @@ class RoomControllerTest {
                                 fieldWithPath("_embedded.roomDtoList[].roomType").description("숙소 유형"),
                                 fieldWithPath("_embedded.roomDtoList[].cost").description("숙소 비용"),
                                 fieldWithPath("_embedded.roomDtoList[].grade").description("숙소 평점"),
+                                fieldWithPath("_embedded.roomDtoList[].city").description("숙소 위치 도시"),
+                                fieldWithPath("_embedded.roomDtoList[].borough").description("숙소 위치 구"),
+                                fieldWithPath("_embedded.roomDtoList[].neighborhood").description("숙소 위치 동"),
                                 fieldWithPath("_embedded.roomDtoList[].latitude").description("숙소 위치 위도 값"),
                                 fieldWithPath("_embedded.roomDtoList[].longitude").description("숙소 위치 경도 값"),
                                 fieldWithPath("_embedded.roomDtoList[].commentCount").description("댓글 수"),
@@ -277,6 +280,9 @@ class RoomControllerTest {
             }
 
             Location location = Location.builder()
+                    .city("test city" + i)
+                    .borough("test borough" + i)
+                    .neighborhood("test neighborhood" + i)
                     .latitude(37.0)
                     .longitude(138.0)
                     .build();
