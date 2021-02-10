@@ -2,6 +2,7 @@ package com.buildup.kbnb.model.room;
 
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
+import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.user.User;
 import lombok.*;
 
@@ -42,6 +43,18 @@ public class Room {
 
     private Double grade;
 
+    private Double cleanliness;
+
+    private Double accuracy;
+
+    private Double communication;
+
+    private Double locationRate;
+
+    private Double checkIn;
+
+    private Double priceSatisfaction;
+
     private Integer bedNum;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -61,4 +74,17 @@ public class Room {
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<Comment> commentList;
+
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
+    private List<Reservation> reservationDates;
+
+    @PrePersist
+    public void prePersist() {
+        this.cleanliness = this.cleanliness == null ? 0 : this.cleanliness;
+        this.accuracy = this.accuracy == null ? 0 : this.accuracy;
+        this.communication = this.communication == null ? 0 : this.communication;
+        this.locationRate = this.locationRate == null ? 0 : this.locationRate;
+        this.checkIn = this.checkIn == null ? 0 : this.checkIn;
+        this.priceSatisfaction = this.priceSatisfaction == null ? 0 : this.priceSatisfaction;
+    }
 }

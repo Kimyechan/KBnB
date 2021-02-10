@@ -1,9 +1,13 @@
 package com.buildup.kbnb.service.reservationService;
 
 import com.buildup.kbnb.advice.exception.BadRequestException;
+import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Reservation;
+
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.reservation.ReservationRepository;
+
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,5 +45,16 @@ public class ReservationService {
     public void deleteById(Long id) {
         reservationRepository.deleteById(id);
     }
+
+    public Reservation updateWithComment(Reservation reservation, Comment comment) {
+        reservation.setComment(comment);
+        reservation.setCommentExisted(true);
+        return reservationRepository.save(reservation);
+    }
+
+    public Reservation findByIdWithRoomAndUser(Long reservationId) {
+        return reservationRepository.findByIdWithRoomAndUser(reservationId).orElseThrow();
+    }
+
 
 }

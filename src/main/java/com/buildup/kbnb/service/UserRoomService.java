@@ -3,11 +3,9 @@ package com.buildup.kbnb.service;
 import com.buildup.kbnb.model.UserRoom;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.User;
-import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.repository.UserRoomRepository;
 import com.buildup.kbnb.repository.room.RoomRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
