@@ -2,6 +2,7 @@ package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.room.check.CheckRoomReq;
+import com.buildup.kbnb.dto.room.detail.ReservationDate;
 import com.buildup.kbnb.dto.room.search.*;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
@@ -19,8 +20,8 @@ import com.buildup.kbnb.service.CommentService;
 import com.buildup.kbnb.service.RoomService;
 import com.buildup.kbnb.service.UserRoomService;
 import com.buildup.kbnb.service.UserService;
+import com.buildup.kbnb.service.reservationService.ReservationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +91,9 @@ class RoomControllerTest {
 
     @MockBean
     UserRoomService userRoomService;
+
+    @MockBean
+    ReservationService reservationService;
 
     @MockBean
     UserRepository userRepository;
@@ -319,10 +323,18 @@ class RoomControllerTest {
         Pageable pageable = PageRequest.of(0, 6);
         Page<Comment> commentPage = getCommentPages(pageable);
 
+        List<ReservationDate> reservationDates = new ArrayList<>();
+        ReservationDate reservationDate = ReservationDate.builder()
+                .checkIn(LocalDate.of(2021, 2, 20))
+                .checkOut(LocalDate.of(2021,2, 22))
+                .build();
+        reservationDates.add(reservationDate);
+
         given(roomService.getBedNum(any())).willReturn(2);
         given(userService.checkRoomByUser(any(), any())).willReturn(false);
         given(roomService.getRoomDetailById(room.getId())).willReturn(room);
         given(commentService.getListByRoomIdWithUser(room, pageable)).willReturn(commentPage);
+        given(reservationService.findByRoomFilterDay(room.getId(), LocalDate.now())).willReturn(reservationDates);
 
         mockMvc.perform(get("/room/detail")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -367,6 +379,9 @@ class RoomControllerTest {
                                 fieldWithPath("locationDetail.latitude").description("지정 위치 위도"),
                                 fieldWithPath("locationDetail.longitude").description("지정 위치 경도"),
                                 fieldWithPath("roomImgUrlList[]").description("숙소 이미지 리스트"),
+                                fieldWithPath("reservationDates").description("예약 기간 리스트"),
+                                fieldWithPath("reservationDates[].checkIn").description("예약 체크인 날짜"),
+                                fieldWithPath("reservationDates[].checkOut").description("예약 체크아웃 날짜"),
                                 fieldWithPath("commentList[].id").description("댓글 식별자 값"),
                                 fieldWithPath("commentList[].description").description("댓글 상세 설명"),
                                 fieldWithPath("commentList[].userName").description("해당 댓글 유저"),

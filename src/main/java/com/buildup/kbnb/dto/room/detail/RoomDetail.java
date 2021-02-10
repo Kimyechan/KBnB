@@ -32,5 +32,6 @@ public class RoomDetail {
     LocationDetail locationDetail;
     private List<String> roomImgUrlList;
     private List<CommentDetail> commentList;
+    private List<ReservationDate> reservationDates;
     private Boolean isChecked;
 }
