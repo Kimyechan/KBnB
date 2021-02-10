@@ -184,19 +184,23 @@ class CommentControllerTest {
         given(commentService.findAllByRoomId(any())).willReturn(commentList);
 
         Map<String, String> map = new HashMap<>();
-        map.put("roomId", "방 식별자");
+        map.put("None", "없음");
         mockMvc.perform(get("/comment")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .param("roomId", String.valueOf(1))
                 .content(objectMapper.writeValueAsString(map)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("comment-list",
+                        requestParameters(
+                                parameterWithName("roomId").description("방 식별자")
+                        ),
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
                         ),
                         requestFields(
-                                fieldWithPath("roomId").description("방 식별자")
+                                fieldWithPath("None").description("없음")
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
@@ -209,18 +213,6 @@ class CommentControllerTest {
                                 fieldWithPath("locationRate").description("위치"),
                                 fieldWithPath("checkIn").description("체크인"),
                                 fieldWithPath("priceSatisfaction").description("가격 대비 만족도"),
-
-                                fieldWithPath("first6Comments[].id").description("첫 6개 까지의 댓글의 id"),
-                                fieldWithPath("first6Comments[].cleanliness").description("첫 6개 까지의 댓글의 청결도"),
-                                fieldWithPath("first6Comments[].accuracy").description("첫 6개 까지의 댓글의 정확성"),
-                                fieldWithPath("first6Comments[].communication").description("첫 6개 까지의 댓글의 의사소통"),
-                                fieldWithPath("first6Comments[].locationRate").description("첫 6개 까지의 댓글의 위치"),
-                                fieldWithPath("first6Comments[].checkIn").description("첫 6개 까지의 댓글의 체크인"),
-                                fieldWithPath("first6Comments[].priceSatisfaction").description("첫 6개 까지의 댓글의 가격 대비 만족도"),
-                                fieldWithPath("first6Comments[].description").description("첫 6개 까지의 댓글의 댓글"),
-                                fieldWithPath("first6Comments[].date").description("첫 6개 까지의 댓글의 날짜"),
-                                fieldWithPath("first6Comments[].room").description("첫 6개 까지의 댓글의 방"),
-                                fieldWithPath("first6Comments[].user").description("첫 6개 까지의 댓글의 댓글 단 사람"),
 
                                 fieldWithPath("allComments[].id").description("모든 댓글의 id"),
                                 fieldWithPath("allComments[].cleanliness").description("모든 댓글의 청결도"),

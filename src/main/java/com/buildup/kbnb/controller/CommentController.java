@@ -84,12 +84,6 @@ public class CommentController {
     public CommentListResponse buildCommentRes(List<Comment> commentList) {
         int commentListSize = commentList.size();
         double acc = 0; double check= 0; double clean= 0; double comm= 0; double grade= 0; double lo= 0; double price= 0;
-        List<Comment> first6Comments;
-
-        if (commentListSize <= 6)
-            first6Comments = commentList;
-        else
-            first6Comments = commentList.subList(0,6);
         for(Comment comment : commentList) {
             acc += comment.getAccuracy(); lo += comment.getLocationRate();
             check += comment.getCheckIn(); price += comment.getPriceSatisfaction();
@@ -100,7 +94,7 @@ public class CommentController {
         grade = (double)Math.round((acc + lo + check + price + clean + comm)/6*10)/10;
         CommentListResponse commentListResponse = new CommentListResponse().builder()
                 .accuracy(acc).checkIn(check).cleanliness(clean).communication(price).locationRate(lo).priceSatisfaction(price)
-                .grade(grade).allComments(commentList).first6Comments(first6Comments).build();
+                .grade(grade).allComments(commentList).build();
         return commentListResponse;
     }
 }

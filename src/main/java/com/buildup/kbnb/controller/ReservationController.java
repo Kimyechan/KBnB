@@ -108,10 +108,12 @@ public class ReservationController {
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getConfirmedReservationLIst(@CurrentUser UserPrincipal userPrincipal, Pageable pageable, PagedResourcesAssembler<Reservation_ConfirmedResponse> assembler) {
         User user = userService.findById(userPrincipal.getId());
+
         Page<Reservation> reservationPage = reservationService.findPageByUser(user, pageable);
         List<Reservation> reservationList = reservationPage.getContent(); //해당 페이지의 모든 컨텐츠
         List<Reservation_ConfirmedResponse> reservation_confirmedResponseList = createResponseList(reservationList);
         PagedModel<EntityModel<Reservation_ConfirmedResponse>> model = makePageModel(reservation_confirmedResponseList, pageable, reservationPage.getTotalElements(), assembler);
+
         return ResponseEntity.ok(model);
     }
 

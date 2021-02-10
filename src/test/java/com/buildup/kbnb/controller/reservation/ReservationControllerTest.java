@@ -60,6 +60,8 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -249,23 +251,25 @@ class ReservationControllerTest {
         given(reservationService.getHostName(any())).willReturn("this is host name");
 
         Map<String, String> map = new HashMap<>();
-        map.put("page", "페이지 번호");
-        map.put("size", "페이지의 사이즈");
+        map.put("None", "None");
         mockMvc.perform(get("/reservation")
-                .param("page", String.valueOf(pageable.getPageNumber()))
-                .param("size", String.valueOf(pageable.getPageSize()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + userToken)
                 .content(objectMapper.writeValueAsString(map))
+                .param("page", String.valueOf(reservationPage))
+                .param("size", String.valueOf(reservationPage.getSize()))
         ).andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("reservation-lookupList",
+                        requestParameters(
+                                parameterWithName("page").description("페이지"),
+                                parameterWithName("size").description("사이즈")
+                        ),
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
                         ),
                         requestFields(
-                                fieldWithPath("page").description("페이지 번호"),
-                                fieldWithPath("size").description("페이지 요소 갯수")
+                                fieldWithPath("None").description("없음")
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
@@ -331,6 +335,9 @@ class ReservationControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("reservation-detail",
+                        requestParameters(
+                                parameterWithName("reservationId").description("예약 식별자")
+                        ),
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
                         ),
@@ -386,6 +393,9 @@ class ReservationControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("reservation-delete",
+                        requestParameters(
+                                parameterWithName("reservationId").description("예약 식별자")
+                                ),
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
                         ),

@@ -24,6 +24,5 @@ public class CommentListResponse {
 
     private Double priceSatisfaction;
 
-    List<Comment> first6Comments;
     List<Comment> allComments;
 }
