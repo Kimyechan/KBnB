@@ -4,13 +4,19 @@ import com.buildup.kbnb.dto.comment.CommentCreateReq;
 import com.buildup.kbnb.dto.comment.CommentCreateRes;
 import com.buildup.kbnb.dto.comment.CommentListResponse;
 import com.buildup.kbnb.dto.comment.GradeDto;
+import com.buildup.kbnb.dto.reservation.Reservation_ConfirmedResponse;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
+import com.buildup.kbnb.security.CurrentUser;
+import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.CommentService;
 import com.buildup.kbnb.service.reservationService.ReservationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
@@ -71,9 +77,10 @@ public class CommentController {
     }
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> getCommentList(Long roomId) {
+    public ResponseEntity<?> getCommentList(Long roomId, Pageable pageable, PagedResourcesAssembler<Reservation_ConfirmedResponse> assembler) {
 
         List<Comment> commentList = commentService.findAllByRoomId(roomId);
+        Page<Comment> commentPage = commentService.findByRoom
         CommentListResponse commentListResponse = buildCommentRes(commentList);
 
         EntityModel<CommentListResponse> model = EntityModel.of(commentListResponse);

@@ -55,5 +55,6 @@ public class CommentService {
     public List<Comment> findAllByRoomId(Long roomId) {
         return commentRepository.findAllByRoomId(roomId);
     }
+    public Page<Comment> findByROom(Room room)
 
 }
