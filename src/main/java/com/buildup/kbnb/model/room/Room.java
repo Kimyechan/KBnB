@@ -76,7 +76,7 @@ public class Room {
     private List<Comment> commentList;
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
-    private List<Reservation> reservationDates;
+    private List<Reservation> reservationList;
 
     @PrePersist
     public void prePersist() {
