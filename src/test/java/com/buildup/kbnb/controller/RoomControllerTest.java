@@ -514,8 +514,7 @@ class RoomControllerTest {
                 .roomId(1L)
                 .build();
 
-        given(userRepository.findByIdWithCheckRoom(user.getId())).willReturn(java.util.Optional.of(user));
-        given(userRoomService.checkRoomForUser(req.getRoomId(), user)).willReturn(true);
+        given(userRoomService.checkRoomForUser(req.getRoomId(), user.getId())).willReturn(true);
 
         mockMvc.perform(patch("/room/check")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
