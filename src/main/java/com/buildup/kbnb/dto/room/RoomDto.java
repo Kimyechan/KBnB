@@ -24,6 +24,9 @@ public class RoomDto {
     private String roomType;
     private Double cost;
     private Double grade;
+    private String city;
+    private String borough;
+    private String neighborhood;
     private Double latitude;
     private Double longitude;
     private Integer commentCount;

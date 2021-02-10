@@ -23,6 +23,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -179,9 +183,37 @@ class CommentControllerTest {
     @DisplayName("댓글 리스트 확인")
     public void getCommentList() throws Exception {
         User user = createUser();
+        Room room = Room.builder()
+                .id(1L)
+                .cleanliness(4.5)
+                .accuracy(4.5)
+                .communication(4.5)
+                .locationRate(4.5)
+                .checkIn(4.5)
+                .priceSatisfaction(4.5)
+                .commentList(new ArrayList<>())
+                .build();
+        List<Comment> commentList = new ArrayList<>();
+        for (int i = 0; i<2; i++) {
+            Comment comment = Comment.builder()
+                    .id((long) i)
+                    .cleanliness(4.5)
+                    .accuracy(4.5)
+                    .communication(4.5)
+                    .locationRate(4.5)
+                    .checkIn(4.5)
+                    .priceSatisfaction(4.5)
+                    .user(user)
+                    .room(room)
+                    .build();
+            commentList.add(comment);
+        }
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<Comment> commentPage = new PageImpl<>(commentList, pageable, commentList.size());
         String token = tokenProvider.createToken(String.valueOf(user.getId())); //이거 인증 뺴도 되는부분인데 물어보기
-        List<Comment> commentList = createCommentList();
+        given(roomService.findById(any())).willReturn(room);
         given(commentService.findAllByRoomId(any())).willReturn(commentList);
+        given(commentService.getListByRoomIdWithUser(any(), any())).willReturn(commentPage);
 
         Map<String, String> map = new HashMap<>();
         map.put("None", "없음");
@@ -189,12 +221,16 @@ class CommentControllerTest {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .param("roomId", String.valueOf(1))
+                .param("page", String.valueOf(pageable.getPageNumber()))
+                .param("size", String.valueOf(pageable.getPageSize()))
                 .content(objectMapper.writeValueAsString(map)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("comment-list",
                         requestParameters(
-                                parameterWithName("roomId").description("방 식별자")
+                                parameterWithName("roomId").description("방 식별자"),
+                                parameterWithName("page").description("페이지"),
+                                parameterWithName("size").description("페이지의 사이즈")
                         ),
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
@@ -214,17 +250,21 @@ class CommentControllerTest {
                                 fieldWithPath("checkIn").description("체크인"),
                                 fieldWithPath("priceSatisfaction").description("가격 대비 만족도"),
 
-                                fieldWithPath("allComments[].id").description("모든 댓글의 id"),
-                                fieldWithPath("allComments[].cleanliness").description("모든 댓글의 청결도"),
-                                fieldWithPath("allComments[].accuracy").description("모든 댓글의 정확성"),
-                                fieldWithPath("allComments[].communication").description("모든 댓글의 의사소통"),
-                                fieldWithPath("allComments[].locationRate").description("모든 댓글의 위치"),
-                                fieldWithPath("allComments[].checkIn").description("모든 댓글의 체크인"),
-                                fieldWithPath("allComments[].priceSatisfaction").description("모든 댓글의 가격 대비 만족도"),
-                                fieldWithPath("allComments[].description").description("모든 댓글의 댓글"),
-                                fieldWithPath("allComments[].date").description("모든 댓글의 날짜"),
-                                fieldWithPath("allComments[].room").description("모든 댓글의 방"),
-                                fieldWithPath("allComments[].user").description("모든 댓글 단 사람"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].cleanliness").description("댓글당 청결도"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].accuracy").description("댓글당 정확성"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].communication").description("댓글당 의사소통"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].locationRate").description("댓글당 위치"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].checkIn").description("댓글당 체크인"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].priceSatisfaction").description("댓글당 가격대비 만족도"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].description").description("댓글당 댓글"),
+
+                                fieldWithPath("allComments._links.self.href").description("해당 API 주소"),
+
+                                fieldWithPath("allComments.page.size").description("페이지 사이즈"),
+                                fieldWithPath("allComments.page.totalElements").description("총 요소의 갯수"),
+                                fieldWithPath("allComments.page.totalPages").description("총 페이지 갯수"),
+                                fieldWithPath("allComments.page.number").description("해당 페이지 번호"),
+
                                 fieldWithPath("_links.self.href").description("해당 API 주소"),
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 주소")
                         )

@@ -1,6 +1,7 @@
 package com.buildup.kbnb.service.reservationService;
 
 import com.buildup.kbnb.advice.exception.BadRequestException;
+import com.buildup.kbnb.dto.room.detail.ReservationDate;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Reservation;
 
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -57,4 +59,7 @@ public class ReservationService {
     }
 
 
+    public List<ReservationDate> findByRoomFilterDay(Long roomId, LocalDate date) {
+        return reservationRepository.findByRoomFromCurrent(roomId, date);
+    }
 }

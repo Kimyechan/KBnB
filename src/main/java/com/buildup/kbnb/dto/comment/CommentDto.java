@@ -5,15 +5,12 @@ import lombok.*;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 
-import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommentListResponse {
-    private Double grade;
-
+public class CommentDto {
     private Double cleanliness;
 
     private Double accuracy;
@@ -26,5 +23,5 @@ public class CommentListResponse {
 
     private Double priceSatisfaction;
 
-    PagedModel<EntityModel<CommentDto>> allComments;
+    private String description;
 }
