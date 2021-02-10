@@ -5,10 +5,12 @@ import com.buildup.kbnb.dto.room.check.CheckRoomReq;
 import com.buildup.kbnb.dto.room.check.CheckRoomRes;
 import com.buildup.kbnb.dto.room.detail.CommentDetail;
 import com.buildup.kbnb.dto.room.detail.LocationDetail;
+import com.buildup.kbnb.dto.room.detail.ReservationDate;
 import com.buildup.kbnb.dto.room.detail.RoomDetail;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
+import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
@@ -22,6 +24,7 @@ import com.buildup.kbnb.service.CommentService;
 import com.buildup.kbnb.service.RoomService;
 import com.buildup.kbnb.service.UserRoomService;
 import com.buildup.kbnb.service.UserService;
+import com.buildup.kbnb.service.reservationService.ReservationService;
 import com.buildup.kbnb.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,6 +40,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +56,13 @@ public class RoomController {
     private final UserService userService;
     private final CommentService commentService;
     private final UserRoomService userRoomService;
+    private final ReservationService reservationService;
     private final S3Uploader s3Uploader;
     private final RoomRepository roomRepository;
     private final BedRoomRepository bedRoomRepository;
     private final BathRoomRepository bathRoomRepository;
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
-    private final CommentRepository commentRepository;
     private final RoomImgRepository roomImgRepository;
 
     @PostMapping("/list")
@@ -142,10 +146,11 @@ public class RoomController {
         List<CommentDetail> commentDetails = getCommentDetails(commentPage.getContent());
 
         List<String> roomImgUrlList = getRoomImgUrls(room.getRoomImgList());
+        List<ReservationDate> reservationDates = reservationService.findByRoomFilterDay(room.getId(), LocalDate.now());
 
         Long userId = getUserIdAndCheckNull(userPrincipal);
         int bedNum = roomService.getBedNum(room.getBedRoomList());
-        RoomDetail roomDetail = getRoomDetail(userId, room, locationDetail, commentPage, commentDetails, roomImgUrlList, bedNum);
+        RoomDetail roomDetail = getRoomDetail(userId, room, locationDetail, commentPage, commentDetails, roomImgUrlList, reservationDates, bedNum);
 
         EntityModel<RoomDetail> model = EntityModel.of(roomDetail);
         model.add(linkTo(methodOn(RoomController.class).getRoomDetail(roomId, userPrincipal)).withSelfRel());
@@ -157,7 +162,7 @@ public class RoomController {
                                      Room room,
                                      LocationDetail locationDetail,
                                      Page<Comment> commentPage,
-                                     List<CommentDetail> commentDetails, List<String> roomImgUrlList, int bedNum) {
+                                     List<CommentDetail> commentDetails, List<String> roomImgUrlList, List<ReservationDate> reservationDates, int bedNum) {
         return RoomDetail.builder()
                 .id(room.getId())
                 .name(room.getName())
@@ -179,6 +184,7 @@ public class RoomController {
                 .roomImgUrlList(roomImgUrlList)
                 .commentCount(commentPage.getTotalElements())
                 .commentList(commentDetails)
+                .reservationDates(reservationDates)
                 .isChecked(userService.checkRoomByUser(userId, room.getId()))
                 .build();
     }
