@@ -154,3 +154,7 @@ operation::reservation-detail[]
 [[resource-comment-create]]
 === 댓글 생성
 operation::comment-create[]
+
+[[resource-comment-list]]
+=== 댓글 리스트 조회
+operation::comment-list[]
