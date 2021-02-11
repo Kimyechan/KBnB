@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Reservation_Detail_Response {
+public class ReservationDetailResponse {
     private Long roomId;
     private String roomImage;
     private String hostName;
