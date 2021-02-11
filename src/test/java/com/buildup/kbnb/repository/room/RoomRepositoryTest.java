@@ -27,13 +27,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class RoomRepositoryTest {
     @Autowired
     TestEntityManager entityManager;
 
     @Autowired
     RoomRepository roomRepository;
+
+    Room saved;
 
     @BeforeEach
     public void setUpRoomList() {
@@ -61,7 +62,7 @@ class RoomRepositoryTest {
                     .roomCost(10000.0 + 3000 * i)
                     .peopleLimit(i + 1)
                     .build();
-            entityManager.persist(room);
+            saved = entityManager.persist(room);
 
             BathRoom bathRoom = BathRoom.builder()
                     .isPrivate(true)
@@ -228,7 +229,7 @@ class RoomRepositoryTest {
     @Test
     @DisplayName("숙소 상세 검색 - 유저, 위치 정보 같이")
     public void getDetailWithUserLocation() {
-        Room room = roomRepository.findByIdWithUserLocation(1L).orElse(null);
+        Room room = roomRepository.findByIdWithUserLocation(saved.getId()).orElse(null);
 
         assertThat(room).isNotNull();
         assertThat(room.getLocation()).isNotNull();
