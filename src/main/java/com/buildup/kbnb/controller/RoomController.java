@@ -85,7 +85,7 @@ public class RoomController {
 
     private Long getUserIdAndCheckNull(UserPrincipal userPrincipal) {
         Long userId;
-        if (userPrincipal == null){
+        if (userPrincipal == null) {
             userId = null;
         } else {
             userId = userPrincipal.getId();
@@ -229,12 +229,10 @@ public class RoomController {
     }
 
     @PatchMapping("/check")
-    public  ResponseEntity<?> checkRoom(@RequestBody CheckRoomReq checkRoomReq,
-                                        @CurrentUser UserPrincipal userPrincipal) {
+    public ResponseEntity<?> checkRoom(@RequestBody CheckRoomReq checkRoomReq,
+                                       @CurrentUser UserPrincipal userPrincipal) {
         Long userId = userPrincipal.getId();
-        User user = userRepository.findByIdWithCheckRoom(userId).orElseThrow();
-        Boolean isChecked = userRoomService.checkRoomForUser(checkRoomReq.getRoomId(), user);
-
+        Boolean isChecked = userRoomService.checkRoomForUser(checkRoomReq.getRoomId(), userId);
         CheckRoomRes res = CheckRoomRes.builder()
                 .roomId(checkRoomReq.getRoomId())
                 .isChecked(isChecked)
