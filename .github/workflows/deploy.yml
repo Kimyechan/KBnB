@@ -3,7 +3,7 @@ on:
     branches:
       - master
 
-name: Deploy String boot to Amazon EC2
+name: Deploy Spring boot to Amazon EC2
 env:
   PROJECT_NAME: action_codedeploy
 
