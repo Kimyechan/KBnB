@@ -1,22 +1,27 @@
 package com.buildup.kbnb.controller;
 
-import com.buildup.kbnb.dto.comment.CommentCreateReq;
-import com.buildup.kbnb.dto.comment.CommentCreateRes;
-import com.buildup.kbnb.dto.comment.GradeDto;
+import com.buildup.kbnb.dto.comment.*;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.service.CommentService;
+import com.buildup.kbnb.service.RoomService;
 import com.buildup.kbnb.service.reservationService.ReservationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -27,6 +32,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class CommentController {
     private final CommentService commentService;
     private final ReservationService reservationService;
+    private final RoomService roomService;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody CommentCreateReq req) {
@@ -48,7 +54,6 @@ public class CommentController {
 
         return ResponseEntity.created(selfLink.toUri()).body(model);
     }
-
     private GradeDto getGradeInfo(Room room, Integer commentCount, CommentCreateReq req) {
         Double cleanliness = (room.getCleanliness() * commentCount + req.getCleanliness()) / (commentCount + 1);
         Double accuracy = (room.getAccuracy() * commentCount + req.getAccuracy()) / (commentCount + 1);
@@ -57,7 +62,6 @@ public class CommentController {
         Double checkIn = (room.getCheckIn() * commentCount + req.getCheckIn()) / (commentCount + 1);
         Double priceSatisfaction = (room.getPriceSatisfaction() * commentCount + req.getPriceSatisfaction()) / (commentCount + 1);
         Double totalGrade = (cleanliness + accuracy + communication + locationRate + checkIn + priceSatisfaction) / 6;
-
         return GradeDto.builder()
                 .cleanliness(cleanliness)
                 .accuracy(accuracy)
@@ -67,5 +71,36 @@ public class CommentController {
                 .priceSatisfaction(priceSatisfaction)
                 .totalGrade(totalGrade)
                 .build();
+    }
+
+    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> getCommentList(Long roomId,Pageable pageable, PagedResourcesAssembler<CommentDto> assembler) {
+        Room room = roomService.findById(roomId);
+        Page<Comment> commentPage = commentService.getListByRoomIdWithUser(room, pageable);
+        List<Comment> commentList = commentPage.getContent();
+        List<CommentDto> commentDtoList = buildCommentDtoList(commentList);
+        Page<CommentDto> commentDtoPage = new PageImpl<>(commentDtoList, pageable, commentPage.getTotalElements());
+        PagedModel<EntityModel<CommentDto>> pagedModel = assembler.toModel(commentDtoPage);
+
+        CommentListResponse commentListResponse = CommentListResponse.builder()
+                .accuracy(room.getAccuracy()).checkIn(room.getCheckIn()).cleanliness(room.getCleanliness()).communication(room.getCommunication())
+                .locationRate(room.getLocationRate()).priceSatisfaction(room.getPriceSatisfaction()).grade(room.getGrade()).allComments(pagedModel).build();
+
+        EntityModel<CommentListResponse> model = EntityModel.of(commentListResponse);
+        model.add(linkTo(methodOn(CommentController.class).getCommentList(roomId, pageable, assembler)).withSelfRel());
+        model.add(Link.of("/docs/api.html#resource-comment-list").withRel("profile"));
+        return ResponseEntity.ok(model);
+    }
+
+    public List<CommentDto> buildCommentDtoList(List<Comment> commentList) {
+        List<CommentDto> commentDtoList = new ArrayList<>();
+        for(Comment comment : commentList) {
+            CommentDto commentDto = CommentDto.builder().accuracy(comment.getAccuracy()).checkIn(comment.getCheckIn())
+                    .cleanliness(comment.getCleanliness()).communication(comment.getCommunication()).description(comment.getDescription())
+                    .locationRate(comment.getLocationRate()).priceSatisfaction(comment.getPriceSatisfaction()).userImgUrl(comment.getUser().getImageUrl())
+                    .creatingDate(String.valueOf(comment.getDate())).userName(comment.getUser().getName()).build();
+            commentDtoList.add(commentDto);
+        }
+        return commentDtoList;
     }
 }

@@ -23,6 +23,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +36,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -42,8 +49,9 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -169,5 +177,113 @@ class CommentControllerTest {
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 주소")
                         )
                 ));
+    }
+
+    @Test
+    @DisplayName("댓글 리스트 확인")
+    public void getCommentList() throws Exception {
+        User user = createUser();
+        Room room = Room.builder()
+                .id(1L)
+                .cleanliness(4.5)
+                .accuracy(4.5)
+                .communication(4.5)
+                .locationRate(4.5)
+                .checkIn(4.5)
+                .priceSatisfaction(4.5)
+                .commentList(new ArrayList<>())
+                .build();
+        List<Comment> commentList = new ArrayList<>();
+        for (int i = 0; i<2; i++) {
+            Comment comment = Comment.builder()
+                    .id((long) i)
+                    .cleanliness(4.5)
+                    .accuracy(4.5)
+                    .communication(4.5)
+                    .locationRate(4.5)
+                    .checkIn(4.5)
+                    .priceSatisfaction(4.5)
+                    .user(user)
+                    .room(room)
+                    .date(LocalDate.parse("2020-02-02"))
+                    .description("오호홓 너무좋아요")
+                    .build();
+            commentList.add(comment);
+        }
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<Comment> commentPage = new PageImpl<>(commentList, pageable, commentList.size());
+        String token = tokenProvider.createToken(String.valueOf(user.getId())); //이거 인증 뺴도 되는부분인데 물어보기
+        given(roomService.findById(any())).willReturn(room);
+        given(commentService.findAllByRoomId(any())).willReturn(commentList);
+        given(commentService.getListByRoomIdWithUser(any(), any())).willReturn(commentPage);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("None", "없음");
+        mockMvc.perform(get("/comment")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .param("roomId", String.valueOf(1))
+                .param("page", String.valueOf(pageable.getPageNumber()))
+                .param("size", String.valueOf(pageable.getPageSize()))
+                .content(objectMapper.writeValueAsString(map)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("comment-list",
+                        requestParameters(
+                                parameterWithName("roomId").description("방 식별자"),
+                                parameterWithName("page").description("페이지"),
+                                parameterWithName("size").description("페이지의 사이즈")
+                        ),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
+                        ),
+                        requestFields(
+                                fieldWithPath("None").description("없음")
+                        ),
+                        responseHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
+                        ),
+                        responseFields(
+                                fieldWithPath("grade").description("총 등급"),
+                                fieldWithPath("cleanliness").description("청결도"),
+                                fieldWithPath("accuracy").description("정확성"),
+                                fieldWithPath("communication").description("의사소통"),
+                                fieldWithPath("locationRate").description("위치"),
+                                fieldWithPath("checkIn").description("체크인"),
+                                fieldWithPath("priceSatisfaction").description("가격 대비 만족도"),
+
+                                fieldWithPath("allComments._embedded.commentDtoList[].cleanliness").description("댓글당 청결도"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].accuracy").description("댓글당 정확성"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].communication").description("댓글당 의사소통"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].locationRate").description("댓글당 위치"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].checkIn").description("댓글당 체크인"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].priceSatisfaction").description("댓글당 가격대비 만족도"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].description").description("댓글당 댓글"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].userImgUrl").description("유저 이미지 url"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].userName").description("유저 이름"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].creatingDate").description("댓글 작성 날짜"),
+
+
+                                fieldWithPath("allComments._links.self.href").description("해당 API 주소"),
+
+                                fieldWithPath("allComments.page.size").description("페이지 사이즈"),
+                                fieldWithPath("allComments.page.totalElements").description("총 요소의 갯수"),
+                                fieldWithPath("allComments.page.totalPages").description("총 페이지 갯수"),
+                                fieldWithPath("allComments.page.number").description("해당 페이지 번호"),
+
+                                fieldWithPath("_links.self.href").description("해당 API 주소"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 주소")
+                        )
+                ));
+    }
+    public List<Comment> createCommentList() {
+        List<Comment> commentList = new ArrayList<>();
+        for(int i = 0; i< 7; i++) {
+            Comment comment = Comment.builder()
+                    .accuracy(2.2).checkIn(2.2).cleanliness(2.2).communication(2.3)
+                    .id((long)i).priceSatisfaction(2.2).locationRate(2.2).build();
+            commentList.add(comment);
+        }
+        return commentList;
     }
 }
