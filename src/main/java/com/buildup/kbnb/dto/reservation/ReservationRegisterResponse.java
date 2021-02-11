@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Reservation_RegisterResponse {
+public class ReservationRegisterResponse {
     private Long reservationId;
     private String message;
 

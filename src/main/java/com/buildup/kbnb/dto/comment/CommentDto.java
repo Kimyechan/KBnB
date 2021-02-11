@@ -24,4 +24,10 @@ public class CommentDto {
     private Double priceSatisfaction;
 
     private String description;
+
+    private String userImgUrl;
+
+    private String userName;
+
+    private String creatingDate;
 }

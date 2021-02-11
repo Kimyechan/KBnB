@@ -205,6 +205,8 @@ class CommentControllerTest {
                     .priceSatisfaction(4.5)
                     .user(user)
                     .room(room)
+                    .date(LocalDate.parse("2020-02-02"))
+                    .description("오호홓 너무좋아요")
                     .build();
             commentList.add(comment);
         }
@@ -257,6 +259,10 @@ class CommentControllerTest {
                                 fieldWithPath("allComments._embedded.commentDtoList[].checkIn").description("댓글당 체크인"),
                                 fieldWithPath("allComments._embedded.commentDtoList[].priceSatisfaction").description("댓글당 가격대비 만족도"),
                                 fieldWithPath("allComments._embedded.commentDtoList[].description").description("댓글당 댓글"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].userImgUrl").description("유저 이미지 url"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].userName").description("유저 이름"),
+                                fieldWithPath("allComments._embedded.commentDtoList[].creatingDate").description("댓글 작성 날짜"),
+
 
                                 fieldWithPath("allComments._links.self.href").description("해당 API 주소"),
 

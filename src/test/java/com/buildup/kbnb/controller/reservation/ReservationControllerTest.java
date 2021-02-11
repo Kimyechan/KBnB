@@ -1,28 +1,16 @@
 package com.buildup.kbnb.controller.reservation;
 
-import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.config.RestDocsConfiguration;
-import com.buildup.kbnb.dto.reservation.Reservation_ConfirmedResponse;
-import com.buildup.kbnb.dto.reservation.Reservation_RegisterRequest;
-import com.buildup.kbnb.dto.room.search.LocationSearch;
-import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
+import com.buildup.kbnb.dto.reservation.ReservationRegisterRequest;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
-import com.buildup.kbnb.model.room.RoomImg;
-import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
-import com.buildup.kbnb.repository.LocationRepository;
-import com.buildup.kbnb.repository.reservation.ReservationRepository;
-import com.buildup.kbnb.repository.RoomImgRepository;
-import com.buildup.kbnb.repository.UserRepository;
-import com.buildup.kbnb.repository.room.RoomRepository;
 import com.buildup.kbnb.security.CustomUserDetailsService;
 import com.buildup.kbnb.security.TokenProvider;
 import com.buildup.kbnb.security.UserPrincipal;
-import com.buildup.kbnb.service.LocationService;
 import com.buildup.kbnb.service.RoomService;
 import com.buildup.kbnb.service.UserService;
 import com.buildup.kbnb.service.reservationService.ReservationService;
@@ -41,11 +29,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -88,8 +74,7 @@ class ReservationControllerTest {
     ReservationService reservationService;
     @MockBean
     CustomUserDetailsService customUserDetailsService;
-    @MockBean
-    LocationService locationService;
+
 
     public User createUser() {
         User user = User.builder()
@@ -167,9 +152,9 @@ class ReservationControllerTest {
         return room;
     }
 
-    public Reservation_RegisterRequest createReservation_RegisterRequest(Room room) {
+    public ReservationRegisterRequest createReservation_RegisterRequest(Room room) {
         String checkIn = "2021-02-01"; String checkOut = "2021-02-02";
-        return Reservation_RegisterRequest.builder()
+        return ReservationRegisterRequest.builder()
                 .totalCost(30000L)
                 .roomId(room.getId())
                 .message("사장님 잘생겼어요")
@@ -179,7 +164,7 @@ class ReservationControllerTest {
                 .checkOut(LocalDate.parse(checkOut, DateTimeFormatter.ISO_DATE))
                 .build();
     }
-    public Reservation createReservation(Room room, Reservation_RegisterRequest reservationRegisterRequest, User user) {
+    public Reservation createReservation(Room room, ReservationRegisterRequest reservationRegisterRequest, User user) {
         Reservation reservation = Reservation.builder()
                 .id(1L)
                 .room(room)
@@ -197,7 +182,7 @@ class ReservationControllerTest {
         User user = createUser();
         Location location = createLocation();
         Room room = createRoom(user, location);
-        Reservation_RegisterRequest reservation_registerRequest = createReservation_RegisterRequest(room);
+        ReservationRegisterRequest reservation_registerRequest = createReservation_RegisterRequest(room);
         Reservation reservation = createReservation(room, reservation_registerRequest, user);
         String userToken = tokenProvider.createToken(String.valueOf(user.getId()));
         given(userService.findById(any())).willReturn(user);
@@ -275,17 +260,16 @@ class ReservationControllerTest {
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
                         ),
                         responseFields(
-                                fieldWithPath("_embedded.reservation_ConfirmedResponseList[].reservationId").description("예약 식별자"),
-                                fieldWithPath("_embedded.reservation_ConfirmedResponseList[].status").description("예약 상태"),
-                                fieldWithPath("_embedded.reservation_ConfirmedResponseList[].roomName").description("방 이름"),
-                                fieldWithPath("_embedded.reservation_ConfirmedResponseList[].roomLocation").description("방 위치"),
-                                fieldWithPath("_embedded.reservation_ConfirmedResponseList[].hostName").description("호스트 이름"),
-                                fieldWithPath("_embedded.reservation_ConfirmedResponseList[].checkIn").description("체크인 날짜"),
-                                fieldWithPath("_embedded.reservation_ConfirmedResponseList[].checkOut").description("체크아웃 날짜"),
-                                fieldWithPath("_embedded.reservation_ConfirmedResponseList[].roomId").description("방 식별자"),
-                                fieldWithPath("_embedded.reservation_ConfirmedResponseList[].imgUrl").description("방 imgUrl 리스트"),
-                                fieldWithPath("_embedded.reservation_ConfirmedResponseList[].imgUrl").description("방 imgUrl"),
-
+                                fieldWithPath("_embedded.reservationConfirmedResponseList[].reservationId").description("예약 식별자"),
+                                fieldWithPath("_embedded.reservationConfirmedResponseList[].status").description("예약 상태"),
+                                fieldWithPath("_embedded.reservationConfirmedResponseList[].roomName").description("방 이름"),
+                                fieldWithPath("_embedded.reservationConfirmedResponseList[].roomLocation").description("방 위치"),
+                                fieldWithPath("_embedded.reservationConfirmedResponseList[].hostName").description("호스트 이름"),
+                                fieldWithPath("_embedded.reservationConfirmedResponseList[].checkIn").description("체크인 날짜"),
+                                fieldWithPath("_embedded.reservationConfirmedResponseList[].checkOut").description("체크아웃 날짜"),
+                                fieldWithPath("_embedded.reservationConfirmedResponseList[].roomId").description("방 식별자"),
+                                fieldWithPath("_embedded.reservationConfirmedResponseList[].imgUrl").description("방 imgUrl 리스트"),
+                                fieldWithPath("_embedded.reservationConfirmedResponseList[].imgUrl").description("방 imgUrl"),
 
                                 fieldWithPath("page.size").description("페이지 사이즈"),
                                 fieldWithPath("page.totalElements").description("요소의 총 개수"),

@@ -1,20 +1,16 @@
 package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.dto.comment.*;
-import com.buildup.kbnb.dto.reservation.Reservation_ConfirmedResponse;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
-import com.buildup.kbnb.repository.CommentRepository;
 import com.buildup.kbnb.service.CommentService;
 import com.buildup.kbnb.service.RoomService;
 import com.buildup.kbnb.service.reservationService.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -22,10 +18,8 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,7 +97,8 @@ public class CommentController {
         for(Comment comment : commentList) {
             CommentDto commentDto = CommentDto.builder().accuracy(comment.getAccuracy()).checkIn(comment.getCheckIn())
                     .cleanliness(comment.getCleanliness()).communication(comment.getCommunication()).description(comment.getDescription())
-                    .locationRate(comment.getLocationRate()).priceSatisfaction(comment.getPriceSatisfaction()).build();
+                    .locationRate(comment.getLocationRate()).priceSatisfaction(comment.getPriceSatisfaction()).userImgUrl(comment.getUser().getImageUrl())
+                    .creatingDate(String.valueOf(comment.getDate())).userName(comment.getUser().getName()).build();
             commentDtoList.add(commentDto);
         }
         return commentDtoList;

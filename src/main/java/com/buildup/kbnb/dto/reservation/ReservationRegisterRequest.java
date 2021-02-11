@@ -9,14 +9,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Reservation_ConfirmedResponse {
-    private Long reservationId;
+public class ReservationRegisterRequest {
     private Long roomId;
-    private String imgUrl;
-    private String status;
-    private String roomName;
-    private String roomLocation;
-    private String hostName;
     private LocalDate checkIn;
     private LocalDate checkOut;
+    private int guestNumber;
+    private int infantNumber;
+    private Long totalCost;
+    private String message;
 }
