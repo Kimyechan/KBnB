@@ -94,10 +94,9 @@ class RoomRepositoryTest {
                     .room(room)
                     .build();
             entityManager.persist(reservation1);
-
-            entityManager.flush();
-            entityManager.clear();
         }
+        entityManager.flush();
+        entityManager.clear();
     }
 
     @Test
