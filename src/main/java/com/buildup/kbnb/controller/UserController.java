@@ -3,11 +3,15 @@ package com.buildup.kbnb.controller;
 import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
 import com.buildup.kbnb.dto.user.UserDto;
+import com.buildup.kbnb.dto.user.UserUpdateRequest;
+import com.buildup.kbnb.dto.user.UserUpdateResponse;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.UserService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.mail.iap.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -16,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Email;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,12 +70,25 @@ public class UserController {
         return ResponseEntity.ok(model);
     }
 
-    public void updateUser(User user, UserDto userDto) {
-        user.setEmail(userDto.getEmail());
-        user.setName(userDto.getName());
-        user.setBirth(userDto.getBirth());
-        user.setImageUrl(userDto.getImageUrl());
+    @PostMapping(value = "/update", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> beforeUpdate(@CurrentUser UserPrincipal userPrincipal, @RequestBody UserUpdateRequest userUpdateRequest) {
+        User user = userService.findById(userPrincipal.getId());
+        UserUpdateResponse userUpdateResponse = updateUserAndReturnResponseDto(user, userUpdateRequest);
+        EntityModel<UserUpdateResponse> model = EntityModel.of(userUpdateResponse);
+        model.add(linkTo(methodOn(UserController.class).beforeUpdate(userPrincipal, userUpdateRequest)).withSelfRel());
+        model.add(Link.of("/docs/api.html#resource-user-update").withRel("profile"));
+        return ResponseEntity.ok(model);
+    }
+
+    public UserUpdateResponse updateUserAndReturnResponseDto(User user, UserUpdateRequest userUpdateRequest) {
+        user.setEmail(userUpdateRequest.getEmail());
+        user.setName(userUpdateRequest.getName());
+        user.setBirth(userUpdateRequest.getBirth());
+        user.setImageUrl(userUpdateRequest.getImageUrl());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.save(user);
+
+        return UserUpdateResponse.builder()
+                .email(user.getEmail()).id(user.getId()).birth(user.getBirth()).name(user.getName()).imageUrl(user.getImageUrl()).build();
     }
 }
