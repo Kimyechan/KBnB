@@ -41,6 +41,10 @@ dependencies {
     implementation 'com.querydsl:querydsl-jpa'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.1.RELEASE'
 
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '+'
+    compile group: 'com.google.code.gson', name: 'gson', version: '+'
+    compile group: 'commons-io', name: 'commons-io', version: '+'
+
     implementation 'org.modelmapper:modelmapper:2.3.2'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
