@@ -116,6 +116,10 @@ operation::user-get-me[]
 === 유저 정보 수정 전 본인 확인
 operation::user-before-update[]
 
+[[resource-user-update]]
+=== 유저 정보 수정
+operation::user-update[]
+
 [[resource-room]]
 == 숙소
 

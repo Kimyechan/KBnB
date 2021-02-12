@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @Builder
 public class UserUpdateRequest {
 
+    private Long id;
     private String name;
     private LocalDate birth;
     @Email

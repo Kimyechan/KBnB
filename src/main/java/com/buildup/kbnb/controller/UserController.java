@@ -89,6 +89,7 @@ public class UserController {
         userService.save(user);
 
         return UserUpdateResponse.builder()
+                .id(user.getId())
                 .email(user.getEmail()).id(user.getId()).birth(user.getBirth()).name(user.getName()).imageUrl(user.getImageUrl()).build();
     }
 }
