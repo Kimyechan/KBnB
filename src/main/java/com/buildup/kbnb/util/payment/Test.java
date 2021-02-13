@@ -2,8 +2,6 @@ package com.buildup.kbnb.util.payment;
 
 import org.apache.commons.io.IOUtil;
 import com.buildup.kbnb.util.payment.model.request.Cancel;
-import com.buildup.kbnb.util.payment.model.request.RemoteForm;
-import com.buildup.kbnb.util.payment.model.request.SubscribeBilling;
 import com.google.gson.Gson;
 
 import org.apache.http.HttpResponse;

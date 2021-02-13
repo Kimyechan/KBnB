@@ -1,6 +1,8 @@
 package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.util.payment.BootPayApi2;
+import com.buildup.kbnb.util.payment.model.request.Cancel;
+import com.buildup.kbnb.util.payment.model.response.CancelResult;
 import com.buildup.kbnb.util.payment.model.response.Receipt;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,4 +41,10 @@ public class PaymentController {
         private Integer price;
     }
 
+    @PostMapping("/cancel")
+    public ResponseEntity<CancelResult> cancelPayment(@RequestBody Cancel cancel) throws Exception {
+        String token = bootPayApi2.getAccessToken();
+
+        return bootPayApi2.cancel(cancel, token);
+    }
 }
