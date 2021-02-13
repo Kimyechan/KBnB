@@ -2,7 +2,6 @@ package com.buildup.kbnb.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,21 +12,20 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class S3Uploader {
+public class S3UploaderHansol {
 
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String upload(MultipartFile multipartFile, String dirName, String userEmail) throws IOException {
-        File uploadFile = convert(multipartFile, userEmail)
+    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
+        File uploadFile = convert(multipartFile)
                 .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
 
         return upload(uploadFile, dirName);
@@ -53,10 +51,8 @@ public class S3Uploader {
         }
     }
 
-    private Optional<File> convert(MultipartFile file, String userName) throws IOException {
-//        String uniqueFileName = userEmail + LocalDateTime.now() + ".png"; //해당 구문에서 오류
-        String uniqueFileName = userName + ".png";
-        File convertFile = new File(uniqueFileName);
+    private Optional<File> convert(MultipartFile file) throws IOException {
+        File convertFile = new File("test");
         if(convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
                 fos.write(file.getBytes());
@@ -65,11 +61,5 @@ public class S3Uploader {
         }
 
         return Optional.empty();
-    }
-
-
-
-    public void deleteFileFromS3(String fileURL) {
-        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileURL));
     }
 }

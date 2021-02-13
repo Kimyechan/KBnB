@@ -2,6 +2,7 @@ package com.buildup.kbnb.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Email;
@@ -16,11 +17,9 @@ public class UserUpdateRequest {
 
     private Long id;
     private String name;
-    private LocalDate birth;
+    private String birth;
     @Email
     private String email;
     @JsonIgnore
     private String password;
-    private String imageUrl;
-
 }

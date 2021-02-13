@@ -10,6 +10,8 @@ import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.UserService;
+import com.buildup.kbnb.util.S3Uploader;
+import com.buildup.kbnb.util.S3UploaderHansol;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.mail.iap.Response;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +21,15 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.Email;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -35,6 +42,7 @@ public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final S3Uploader s3Uploader;
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
@@ -71,21 +79,30 @@ public class UserController {
     }
 
     @PostMapping(value = "/update", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> beforeUpdate(@CurrentUser UserPrincipal userPrincipal, @RequestBody UserUpdateRequest userUpdateRequest) {
+    public ResponseEntity<?> update(@CurrentUser UserPrincipal userPrincipal, UserUpdateRequest userUpdateRequest, @Nullable  @RequestPart MultipartFile file) throws IOException {
         User user = userService.findById(userPrincipal.getId());
-        UserUpdateResponse userUpdateResponse = updateUserAndReturnResponseDto(user, userUpdateRequest);
+        String newImgUrl;
+        if (file == null)
+            newImgUrl = "https://kbnbbucket.s3.ap-northeast-2.amazonaws.com/userImg/test";
+        else {
+            newImgUrl = s3Uploader.upload(file, "userImg", user.getName());
+        }
+
+        UserUpdateResponse userUpdateResponse = updateUserAndReturnResponseDto(user, userUpdateRequest, newImgUrl);
         EntityModel<UserUpdateResponse> model = EntityModel.of(userUpdateResponse);
-        model.add(linkTo(methodOn(UserController.class).beforeUpdate(userPrincipal, userUpdateRequest)).withSelfRel());
+        model.add(linkTo(methodOn(UserController.class).update(userPrincipal, userUpdateRequest, file)).withSelfRel());
         model.add(Link.of("/docs/api.html#resource-user-update").withRel("profile"));
-        return ResponseEntity.ok(model);
+        return ResponseEntity.ok(model);//이거 테스트를 어찌만들어야하나
     }
 
-    public UserUpdateResponse updateUserAndReturnResponseDto(User user, UserUpdateRequest userUpdateRequest) {
+
+    public UserUpdateResponse updateUserAndReturnResponseDto(User user, UserUpdateRequest userUpdateRequest,String newImgUrl) {
+
         user.setEmail(userUpdateRequest.getEmail());
         user.setName(userUpdateRequest.getName());
-        user.setBirth(userUpdateRequest.getBirth());
-        user.setImageUrl(userUpdateRequest.getImageUrl());
+        user.setBirth(LocalDate.parse("2020-10-10"));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setImageUrl(newImgUrl);
         userService.save(user);
 
         return UserUpdateResponse.builder()
