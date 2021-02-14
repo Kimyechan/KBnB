@@ -1,8 +1,10 @@
 package com.buildup.kbnb.controller.reservation;
 
 import com.buildup.kbnb.config.RestDocsConfiguration;
+import com.buildup.kbnb.dto.reservation.PaymentDto;
 import com.buildup.kbnb.dto.reservation.ReservationRegisterRequest;
 import com.buildup.kbnb.model.Location;
+import com.buildup.kbnb.model.Payment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
@@ -82,16 +84,27 @@ class ReservationControllerTest {
                 .email("test@google.com").name("정한솔")
                 .password("111").build();
         given(customUserDetailsService.loadUserById(user.getId()))
-                .willReturn(UserPrincipal.create(user));//스프링 시큐리티에서 user객체를 다루기위해 변환 시킨 것일 뿐이고
-        //해당 서비스는 토큰값을 통해서 유저를 로드할 때 필터로 사용되기 때문에 정의 해줘야 함
+                .willReturn(UserPrincipal.create(user));
+
         return user;
     }
 
     public Room createRoom(User user, Location location) {
         Room room = Room.builder()
-                .location(location).grade(111.111).roomType("이것은 룸타입").roomCost(111.11)
-                .checkOutTime(LocalTime.parse("11:11:11")).isParking(true).isSmoking(true).cleaningCost(111.111)
-                .id(1L).name("this is room name").host(user).bedNum(3).build();
+                .id(1L)
+                .location(location)
+                .grade(4.5)
+                .roomType("이것은 룸타입")
+                .checkOutTime(LocalTime.parse("11:11:11"))
+                .isParking(true)
+                .isSmoking(true)
+                .roomCost(111.11)
+                .cleaningCost(111.111)
+                .tax(0.0)
+                .name("this is room name")
+                .host(user)
+                .bedNum(3)
+                .build();
         given(roomService.findById(any())).willReturn(room);
 
         return room;
@@ -128,8 +141,10 @@ class ReservationControllerTest {
         BedRoom bedRoom = createBedRoom();
         BathRoom bathRoom = createBathRoom();
 
-        List<BedRoom> bedRooms = new ArrayList<>(); bedRooms.add(bedRoom);
-        List<BathRoom> bathRooms = new ArrayList<>(); bathRooms.add(bathRoom);
+        List<BedRoom> bedRooms = new ArrayList<>();
+        bedRooms.add(bedRoom);
+        List<BathRoom> bathRooms = new ArrayList<>();
+        bathRooms.add(bathRoom);
 
         Location location = createLocation();
 
@@ -157,15 +172,20 @@ class ReservationControllerTest {
     }
 
     public ReservationRegisterRequest createReservation_RegisterRequest(Room room) {
-        String checkIn = "2021-02-01"; String checkOut = "2021-02-02";
+        PaymentDto payment = PaymentDto.builder()
+                .receipt_id("receipt_id")
+                .price((int) (room.getRoomCost() + room.getTax() + room.getTax()))
+                .build();
+
         return ReservationRegisterRequest.builder()
                 .totalCost(30000L)
                 .roomId(room.getId())
                 .message("사장님 잘생겼어요")
                 .infantNumber(2)
                 .guestNumber(2)
-                .checkIn(LocalDate.parse(checkIn,DateTimeFormatter.ISO_DATE))
-                .checkOut(LocalDate.parse(checkOut, DateTimeFormatter.ISO_DATE))
+                .checkIn(LocalDate.of(2021, 2, 1))
+                .checkOut(LocalDate.of(2021, 2, 3))
+                .payment(payment)
                 .build();
     }
 
@@ -186,19 +206,21 @@ class ReservationControllerTest {
     @DisplayName("예약 등록 테스트")
     public void registerReservation() throws Exception {
         User user = createUser();
+        String userToken = tokenProvider.createToken(String.valueOf(user.getId()));
+
         Location location = createLocation();
         Room room = createRoom(user, location);
         ReservationRegisterRequest reservation_registerRequest = createReservation_RegisterRequest(room);
         Reservation reservation = createReservation(room, reservation_registerRequest, user);
-        String userToken = tokenProvider.createToken(String.valueOf(user.getId()));
+
         given(userService.findById(any())).willReturn(user);
-        given(reservationService.save(any())).willReturn(reservation);
-        createReservation_RegisterRequest(room);
+        given(reservationService.saveWithPayment(any(), any())).willReturn(reservation);
+//        createReservation_RegisterRequest(room);
 
         mockMvc.perform(post("/reservation")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + userToken)
-                        .content(objectMapper.writeValueAsString(createReservation_RegisterRequest(room))))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + userToken)
+                .content(objectMapper.writeValueAsString(reservation_registerRequest)))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andDo(document("reservation-register",
@@ -289,12 +311,12 @@ class ReservationControllerTest {
 
     }
 
-    private List<Reservation> getReservationList(User user,Location location) {
+    private List<Reservation> getReservationList(User user, Location location) {
         List<Reservation> list = new ArrayList<>();
         Room room = createRoom(user, location);
-        for(int i = 0; i< 5; i ++) {
+        for (int i = 0; i < 5; i++) {
             Reservation reservation = Reservation.builder()
-                    .user(user).id((long)i).room(room).
+                    .user(user).id((long) i).room(room).
                             checkIn(LocalDate.parse("2020-11-11")).checkOut(LocalDate.parse("2021-11-11")).build();
             list.add(reservation);
         }
@@ -309,7 +331,8 @@ class ReservationControllerTest {
         Room room = createRoom(user);
 
         Reservation reservation = createReservation(room, createReservation_RegisterRequest(room), user);
-        List<Reservation> reservationList = new ArrayList<>(); reservationList.add(reservation);
+        List<Reservation> reservationList = new ArrayList<>();
+        reservationList.add(reservation);
         given(userService.findById(any())).willReturn(user);
         given(reservationService.findByUser(any())).willReturn(reservationList);
         given(reservationService.findById(any())).willReturn(reservation);
@@ -385,7 +408,7 @@ class ReservationControllerTest {
                 .andDo(document("reservation-delete",
                         requestParameters(
                                 parameterWithName("reservationId").description("예약 식별자")
-                                ),
+                        ),
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
                         ),
@@ -400,5 +423,5 @@ class ReservationControllerTest {
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
                         )
                 ));
-        }
     }
+}
