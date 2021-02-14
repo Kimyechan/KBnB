@@ -112,6 +112,18 @@ operation::auth-login-email[]
 === 유저 정보 조회
 operation::user-get-me[]
 
+
+////
+[[resource-user-before-update]]
+=== 유저 정보 수정 전 본인 확인
+operation::user-before-update[]
+////
+
+
+[[resource-user-update]]
+=== 유저 정보 수정
+operation::user-update[]
+
 [[resource-room]]
 == 숙소
 

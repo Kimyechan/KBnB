@@ -52,7 +52,7 @@ app:
 cloud:
   aws:
     s3:
-      bucket: pungdong
+      bucket: kbnbbucket
     region:
       static: ap-northeast-2
     stack:
