@@ -86,6 +86,7 @@ class ReservationControllerTest {
         //해당 서비스는 토큰값을 통해서 유저를 로드할 때 필터로 사용되기 때문에 정의 해줘야 함
         return user;
     }
+
     public Room createRoom(User user, Location location) {
         Room room = Room.builder()
                 .location(location).grade(111.111).roomType("이것은 룸타입").roomCost(111.11)
@@ -95,11 +96,13 @@ class ReservationControllerTest {
 
         return room;
     }
+
     public Location createLocation() {
         Location location = Location.builder().latitude(111.111).longitude(111.111).detailAddress("찾아라 비밀의")
                 .neighborhood("열쇠").borough("답도없는").country("모험들").city("현실과").id(1L).build();
         return location;
     }
+
     public BedRoom createBedRoom() {
         BedRoom bedRoom = BedRoom.builder()
                 .doubleSize(2)
@@ -111,6 +114,7 @@ class ReservationControllerTest {
 
         return bedRoom;
     }
+
     public BathRoom createBathRoom() {
         BathRoom bathRoom = BathRoom.builder()
                 .id(1L)
@@ -164,6 +168,7 @@ class ReservationControllerTest {
                 .checkOut(LocalDate.parse(checkOut, DateTimeFormatter.ISO_DATE))
                 .build();
     }
+
     public Reservation createReservation(Room room, ReservationRegisterRequest reservationRegisterRequest, User user) {
         Reservation reservation = Reservation.builder()
                 .id(1L)
@@ -176,6 +181,7 @@ class ReservationControllerTest {
                 .build();
         return reservation;
     }
+
     @Test
     @DisplayName("예약 등록 테스트")
     public void registerReservation() throws Exception {
@@ -188,6 +194,7 @@ class ReservationControllerTest {
         given(userService.findById(any())).willReturn(user);
         given(reservationService.save(any())).willReturn(reservation);
         createReservation_RegisterRequest(room);
+
         mockMvc.perform(post("/reservation")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + userToken)
@@ -217,9 +224,8 @@ class ReservationControllerTest {
                                 fieldWithPath("_links.profile.href").description("해당 API문서 URL")
                         )
                 ));
-
-
     }
+
     @Test
     @DisplayName("예약 리스트")
     public void getConfirmedReservationList() throws Exception {
