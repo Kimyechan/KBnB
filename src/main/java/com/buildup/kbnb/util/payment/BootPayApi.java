@@ -47,7 +47,7 @@ public class BootPayApi {
 
         if (resToken.getStatus() == 200)
             return resToken.data.token;
-        return "null";
+        return null;
     }
 
     public ResponseEntity<Receipt> getReceiptInfo(String receipt_id, String token) throws Exception {

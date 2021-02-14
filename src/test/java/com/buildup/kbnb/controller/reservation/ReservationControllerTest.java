@@ -1,6 +1,7 @@
 package com.buildup.kbnb.controller.reservation;
 
 import com.buildup.kbnb.config.RestDocsConfiguration;
+import com.buildup.kbnb.dto.reservation.CancelDto;
 import com.buildup.kbnb.dto.reservation.PaymentDto;
 import com.buildup.kbnb.dto.reservation.ReservationRegisterRequest;
 import com.buildup.kbnb.model.Location;
@@ -81,6 +82,7 @@ class ReservationControllerTest {
     public User createUser() {
         User user = User.builder()
                 .id(1L)
+                .name("test")
                 .email("test@google.com").name("정한솔")
                 .password("111").build();
         given(customUserDetailsService.loadUserById(user.getId()))
@@ -388,19 +390,25 @@ class ReservationControllerTest {
     @DisplayName("예약 삭제")
     public void deleteReservation() throws Exception {
         User user = createUser();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+
         List<Reservation> reservationList = new ArrayList<>();
         Room room = createRoom(user);
         Reservation reservation = createReservation(room, createReservation_RegisterRequest(room), user);
         reservationList.add(reservation);
-        String token = tokenProvider.createToken(String.valueOf(user.getId()));//이거 한 순간 loadById(여기엔 user.getId만 들어가)
+
+        CancelDto cancelDto = CancelDto.builder()
+                .reservationId(reservation.getId())
+                .name(user.getName())
+                .reason("test")
+                .build();
+
         given(userService.findById(any())).willReturn(user);
         given(reservationService.findByUser(any())).willReturn(reservationList);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("None", "None");
         mockMvc.perform(delete("/reservation")
                 .param("reservationId", String.valueOf(1L))
-                .content(objectMapper.writeValueAsString(map))
+                .content(objectMapper.writeValueAsString(cancelDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token))
                 .andDo(print())

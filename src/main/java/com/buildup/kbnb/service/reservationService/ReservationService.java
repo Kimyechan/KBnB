@@ -1,6 +1,7 @@
 package com.buildup.kbnb.service.reservationService;
 
 import com.buildup.kbnb.advice.exception.BadRequestException;
+import com.buildup.kbnb.dto.reservation.CancelDto;
 import com.buildup.kbnb.dto.room.detail.ReservationDate;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Payment;
@@ -12,6 +13,7 @@ import com.buildup.kbnb.repository.reservation.ReservationRepository;
 
 import com.buildup.kbnb.service.PaymentService;
 import com.buildup.kbnb.util.payment.BootPayApi;
+import com.buildup.kbnb.util.payment.model.request.Cancel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -73,10 +75,22 @@ public class ReservationService {
     }
 
     public Reservation saveWithPayment(Reservation reservation, Payment payment) throws Exception {
-        bootPayApi.verify(payment.getReceipt_id(), payment.getPrice());
+        bootPayApi.verify(payment.getReceiptId(), payment.getPrice());
 
         Payment savedPayment = paymentService.savePayment(payment);
         reservation.setPayment(savedPayment);
         return save(reservation);
+    }
+
+    public void cancelReservation(Long reservationId, Cancel cancel) throws Exception {
+        Reservation reservation = findById(reservationId);
+        Payment payment = reservation.getPayment();
+        cancel.setReceipt_id(payment.getReceiptId());
+
+        paymentService.deleteById(payment.getId());
+        deleteById(reservationId);
+
+        String token = bootPayApi.getAccessToken();
+        bootPayApi.cancel(cancel, token);
     }
 }
