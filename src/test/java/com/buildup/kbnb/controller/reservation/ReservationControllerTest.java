@@ -386,6 +386,7 @@ class ReservationControllerTest {
                         )
                 ));
     }
+
     @Test
     @DisplayName("예약 삭제")
     public void deleteReservation() throws Exception {
@@ -414,14 +415,13 @@ class ReservationControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("reservation-delete",
-                        requestParameters(
-                                parameterWithName("reservationId").description("예약 식별자")
+                        requestFields(
+                                fieldWithPath("reservationId").description("예약 식별자 값"),
+                                fieldWithPath("name").description("유저 이름"),
+                                fieldWithPath("reason").description("취소 사유")
                         ),
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
-                        ),
-                        requestFields(
-                                fieldWithPath("None").description("없음")
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
