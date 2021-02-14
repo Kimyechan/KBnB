@@ -270,7 +270,7 @@ class ReservationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + userToken)
                 .content(objectMapper.writeValueAsString(map))
-                .param("page", String.valueOf(reservationPage))
+                .param("page", String.valueOf(reservationPage.getNumber()))
                 .param("size", String.valueOf(reservationPage.getSize()))
         ).andDo(print())
                 .andExpect(status().isOk())
@@ -384,7 +384,6 @@ class ReservationControllerTest {
                         )
                 ));
     }
-
     @Test
     @DisplayName("예약 삭제")
     public void deleteReservation() throws Exception {
