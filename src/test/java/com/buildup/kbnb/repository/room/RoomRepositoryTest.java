@@ -6,89 +6,101 @@ import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
-import com.buildup.kbnb.repository.*;
-import com.buildup.kbnb.repository.reservation.ReservationRepository;
+import com.buildup.kbnb.model.user.AuthProvider;
+import com.buildup.kbnb.model.user.User;
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
+@ActiveProfiles("test")
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class RoomRepositoryTest {
+    @Autowired
+    TestEntityManager entityManager;
 
     @Autowired
     RoomRepository roomRepository;
 
-    @Autowired
-    LocationRepository locationRepository;
-
-    @Autowired
-    BathRoomRepository bathRoomRepository;
-
-    @Autowired
-    BedRoomRepository bedRoomRepository;
-
-    @Autowired
-    ReservationRepository reservationRepository;
+    Room savedRoom;
 
     @BeforeEach
     public void setUpRoomList() {
+        User user = User.builder()
+                .name("test")
+                .email("test@gmail.com")
+                .emailVerified(false)
+                .provider(AuthProvider.local)
+                .build();
+        entityManager.persist(user);
+
         for (int i = 0; i < 25; i++) {
             Location location = Location.builder()
                     .latitude(37.0 + 0.5 * i)
                     .longitude(127.0 + 0.5 * i)
                     .build();
-            locationRepository.save(location);
+            entityManager.persist(location);
 
             Room room = Room.builder()
                     .name("test room name 2")
                     .roomType("Shared room")
+                    .host(user)
                     .location(location)
                     .bedNum(4)
                     .roomCost(10000.0 + 3000 * i)
                     .peopleLimit(i + 1)
                     .build();
-            roomRepository.save(room);
+            savedRoom = entityManager.persist(room);
 
             BathRoom bathRoom = BathRoom.builder()
                     .isPrivate(true)
                     .room(room)
                     .build();
-            bathRoomRepository.save(bathRoom);
+            entityManager.persist(bathRoom);
 
             BedRoom bedRoom1 = BedRoom.builder()
                     .doubleSize(2)
                     .room(room)
                     .build();
-            bedRoomRepository.save(bedRoom1);
+            entityManager.persist(bedRoom1);
 
             BedRoom bedRoom2 = BedRoom.builder()
                     .doubleSize(2)
                     .room(room)
                     .build();
-            bedRoomRepository.save(bedRoom2);
+            entityManager.persist(bedRoom2);
+
             Reservation reservation = Reservation.builder()
                     .checkIn(LocalDate.of(2021, 2, 1))
                     .checkOut(LocalDate.of(2021, 2, 3))
                     .room(room)
                     .build();
-            reservationRepository.save(reservation);
+            entityManager.persist(reservation);
+
             Reservation reservation1 = Reservation.builder()
                     .checkIn(LocalDate.of(2021, 2, 5))
                     .checkOut(LocalDate.of(2021, 2, 8))
                     .room(room)
                     .build();
-            reservationRepository.save(reservation1);
+            entityManager.persist(reservation1);
         }
+        entityManager.flush();
+        entityManager.clear();
     }
 
     @Test
@@ -215,5 +227,15 @@ class RoomRepositoryTest {
             assertThat(room.getRoomCost()).isGreaterThanOrEqualTo(10000.0);
             assertThat(room.getRoomCost()).isLessThanOrEqualTo(100000.0);
         }
+    }
+
+    @Test
+    @DisplayName("숙소 상세 검색 - 유저, 위치 정보 같이")
+    public void getDetailWithUserLocation() {
+        Room room = roomRepository.findByIdWithUserLocation(savedRoom.getId()).orElse(null);
+
+        assertThat(room).isNotNull();
+        assertTrue(Hibernate.isInitialized(room.getLocation()));
+        assertTrue(Hibernate.isInitialized(room.getHost()));
     }
 }
