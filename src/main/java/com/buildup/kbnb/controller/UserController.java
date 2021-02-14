@@ -5,6 +5,7 @@ import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
 import com.buildup.kbnb.dto.user.UserDto;
 import com.buildup.kbnb.dto.user.UserUpdateRequest;
 import com.buildup.kbnb.dto.user.UserUpdateResponse;
+import com.buildup.kbnb.model.user.Role;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.CurrentUser;
@@ -102,5 +103,13 @@ public class UserController {
         return UserUpdateResponse.builder()
                 .id(user.getId())
                 .email(user.getEmail()).id(user.getId()).birth(user.getBirth()).name(user.getName()).imageUrl(user.getImageUrl()).build();
+    }
+
+    @PatchMapping(value = "/registerToHost", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public String changeToHostRole(@CurrentUser UserPrincipal userPrincipal) {
+        User user = userService.findById(userPrincipal.getId());
+        user.setRole(Role.HOST.getValue());
+        userService.save(user);
+        return user.getRole();
     }
 }

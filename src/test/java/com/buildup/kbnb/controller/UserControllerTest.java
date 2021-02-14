@@ -178,7 +178,7 @@ class UserControllerTest {
 
         mockMvc.perform(fileUpload("/user/update").file(multipartFile)
                 .content(objectMapper.writeValueAsString(userUpdateRequest(user)))
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
         ).andDo(print())
                 .andExpect(status().isOk())

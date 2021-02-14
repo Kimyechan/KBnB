@@ -4,9 +4,12 @@ import com.buildup.kbnb.advice.exception.ReservationException;
 
 import com.buildup.kbnb.dto.comment.GradeDto;
 
+import com.buildup.kbnb.dto.room.CreateRoomDto;
+import com.buildup.kbnb.dto.room.RoomDto;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
+import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.room.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -52,5 +55,15 @@ public class RoomService {
         room.setGrade(gradeDto.getTotalGrade());
 
         return roomRepository.save(room);
+    }
+
+    public Room registerRoom(User host, CreateRoomDto createRoomDto) {
+        Room room = Room.builder().host(host).name(createRoomDto.getName()).cleaningCost(createRoomDto.getCleaningCost()).isSmoking(createRoomDto.getIsSmoking())
+                .isParking(createRoomDto.getIsParking()).checkOutTime(createRoomDto.getCheckOutTime()).bathRoomList(createRoomDto.getBathRoomList()).bedRoomList(createRoomDto.getBedRoomList())
+                .roomCost(createRoomDto.getRoomCost()).roomType(createRoomDto.getRoomType()).location(createRoomDto.getLocation()).tax(createRoomDto.getTax()).description(createRoomDto.getDescription())
+                .peopleLimit(createRoomDto.getPeopleLimit()).checkInTime(createRoomDto.getCheckInTime()).roomImgList(createRoomDto.getRoomImgList()).bedNum(createRoomDto.getBedNum())
+                .build();
+        roomRepository.save(room);
+        return room;
     }
 }

@@ -38,5 +38,4 @@ public class ExceptionAdvice {
                 .msg(e.getMessage())
                 .build();
     }
-
 }

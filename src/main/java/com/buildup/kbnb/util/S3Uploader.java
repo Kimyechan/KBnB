@@ -64,11 +64,8 @@ public class S3Uploader {
             }
             return Optional.of(convertFile);
         }
-
         return Optional.empty();
     }
-
-
 
     public void deleteFileFromS3(String fileURL) {
         amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileURL));
