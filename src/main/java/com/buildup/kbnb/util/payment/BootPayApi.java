@@ -1,13 +1,11 @@
 package com.buildup.kbnb.util.payment;
 
+import com.buildup.kbnb.util.payment.model.request.Cancel;
 import com.buildup.kbnb.util.payment.model.request.Token;
+import com.buildup.kbnb.util.payment.model.response.CancelResult;
 import com.buildup.kbnb.util.payment.model.response.Receipt;
 import com.buildup.kbnb.util.payment.model.response.ResToken;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 @RequiredArgsConstructor
-public class BootPayApi2 {
+public class BootPayApi {
     private final RestTemplate restTemplate;
 
     private final String BASE_URL = "https://api.bootpay.co.kr/";
@@ -62,5 +60,17 @@ public class BootPayApi2 {
 
         HttpEntity<Receipt> entity = new HttpEntity<>(headers);
         return restTemplate.exchange(URL_VERIFY + "/" + receipt_id + ".json", HttpMethod.GET, entity, Receipt.class);
+    }
+
+    public ResponseEntity<CancelResult> cancel(Cancel cancel, String token) throws Exception {
+        if (token == null || token.isEmpty()) {
+            throw new Exception("token 값이 비어있습니다.");
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.AUTHORIZATION, token);
+
+        HttpEntity<Cancel> entity = new HttpEntity<>(cancel, headers);
+        return restTemplate.exchange(URL_CANCEL, HttpMethod.POST, entity, CancelResult.class);
     }
 }
