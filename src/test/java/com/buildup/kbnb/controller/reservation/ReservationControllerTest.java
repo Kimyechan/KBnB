@@ -152,9 +152,9 @@ class ReservationControllerTest {
                 .host(user)
                 .id(1L)
                 .bedNum(3)
-                .name("사쿠라여?")
+                .name("room name")
                 .peopleLimit(2)
-                .description("사쿠라네?")
+                .description("room description")
                 .tax(200.0)
                 .cleaningCost(200.0)
                 .isSmoking(true)
@@ -215,7 +215,6 @@ class ReservationControllerTest {
 
         given(userService.findById(any())).willReturn(user);
         given(reservationService.saveWithPayment(any(), any())).willReturn(reservation);
-//        createReservation_RegisterRequest(room);
 
         mockMvc.perform(post("/reservation")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -234,7 +233,9 @@ class ReservationControllerTest {
                                 fieldWithPath("guestNumber").description("게스트 수"),
                                 fieldWithPath("infantNumber").description("유아 수"),
                                 fieldWithPath("totalCost").description("총 금액"),
-                                fieldWithPath("message").description("호스트에게 보내는 메시지")
+                                fieldWithPath("message").description("호스트에게 보내는 메시지"),
+                                fieldWithPath("payment.receipt_id").description("영수증 식별자 값"),
+                                fieldWithPath("payment.price").description("결제된 비용")
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
