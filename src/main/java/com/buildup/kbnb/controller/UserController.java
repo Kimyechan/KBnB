@@ -11,9 +11,6 @@ import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.UserService;
 import com.buildup.kbnb.util.S3Uploader;
-import com.buildup.kbnb.util.S3UploaderHansol;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sun.mail.iap.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -24,12 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Nullable;
-import javax.validation.constraints.Email;
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -92,7 +86,7 @@ public class UserController {
         EntityModel<UserUpdateResponse> model = EntityModel.of(userUpdateResponse);
         model.add(linkTo(methodOn(UserController.class).update(userPrincipal, userUpdateRequest, file)).withSelfRel());
         model.add(Link.of("/docs/api.html#resource-user-update").withRel("profile"));
-        return ResponseEntity.ok(model);//이거 테스트를 어찌만들어야하나
+        return ResponseEntity.ok(model);//공식문서 requestpart
     }
 
 

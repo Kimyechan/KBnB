@@ -13,3 +13,13 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
+cloud:
+  aws:
+    s3:
+      bucket: kbnbbucket
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      instanceProfile: true

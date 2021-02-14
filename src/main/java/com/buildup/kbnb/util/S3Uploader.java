@@ -54,9 +54,9 @@ public class S3Uploader {
         }
     }
 
-    private Optional<File> convert(MultipartFile file, String userName) throws IOException {
+    private Optional<File> convert(MultipartFile file, String userEmail) throws IOException {
 //        String uniqueFileName = userEmail + LocalDateTime.now() + ".png"; //해당 구문에서 오류
-        String uniqueFileName = userName + ".png";
+        String uniqueFileName = userEmail + ".png";
         File convertFile = new File(uniqueFileName);
         if(convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {

@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -45,11 +46,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -169,16 +168,15 @@ class UserControllerTest {
     @Test
     @DisplayName("유저 정보 수정")
     public void updateUserInfo() throws Exception{
-        URL url = new URL("https://kbnbbucket.s3.ap-northeast-2.amazonaws.com/userImg/test");
-        InputStream fileInputStream = url.openStream();
-        MockMultipartFile multipartFile = new MockMultipartFile("defaultImg", "testImg","image/png", fileInputStream);
+
+        MockMultipartFile multipartFile = new MockMultipartFile("defaultImg", "testImg","image/png", "image".getBytes());
         User user = createUser();
         given(userService.findById(any())).willReturn(user);
         given(userService.save(any())).willReturn(user);
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
         Map<String, String> map = new HashMap<>(); map.put("file", "수정 요청 ImgUrl");
 
-        mockMvc.perform(multipart("/user/update").file(multipartFile)
+        mockMvc.perform(fileUpload("/user/update").file(multipartFile)
                 .content(objectMapper.writeValueAsString(userUpdateRequest(user)))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
@@ -194,7 +192,9 @@ class UserControllerTest {
                                 fieldWithPath("email").description("수정 요청할 이메일"),
                                 fieldWithPath("birth").description("수정 요청할 생일")
                         ),
-                        requestBody(),
+                        requestParts(
+                                partWithName("defaultImg").description("테스트용 이미지")
+                        ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
                         ),
