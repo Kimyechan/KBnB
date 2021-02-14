@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 @RequiredArgsConstructor
-public class BootPayApi2 {
+public class BootPayApi {
     private final RestTemplate restTemplate;
 
     private final String BASE_URL = "https://api.bootpay.co.kr/";

@@ -1,6 +1,6 @@
 package com.buildup.kbnb.controller;
 
-import com.buildup.kbnb.util.payment.BootPayApi2;
+import com.buildup.kbnb.util.payment.BootPayApi;
 import com.buildup.kbnb.util.payment.model.request.Cancel;
 import com.buildup.kbnb.util.payment.model.response.CancelResult;
 import com.buildup.kbnb.util.payment.model.response.Receipt;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/payment")
 @RequiredArgsConstructor
 public class PaymentController {
-    private final BootPayApi2 bootPayApi2;
+    private final BootPayApi bootPayApi2;
 
     @PostMapping
     public String paymentVerify(@RequestBody PaymentDto paymentDto) throws Exception {
