@@ -34,4 +34,7 @@ public class Reservation {
 
     @OneToOne(fetch = FetchType.LAZY)
     private Comment comment;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Payment payment;
 }

@@ -51,7 +51,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/room")
 @RequiredArgsConstructor
-public class RoomController {
+public class   RoomController {
     private final RoomService roomService;
     private final UserService userService;
     private final CommentService commentService;

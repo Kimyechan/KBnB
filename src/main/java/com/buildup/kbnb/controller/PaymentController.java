@@ -23,7 +23,7 @@ public class PaymentController {
     @PostMapping
     public String paymentVerify(@RequestBody PaymentDto paymentDto) throws Exception {
         String token = bootPayApi2.getAccessToken();
-        ResponseEntity<Receipt> receiptResponseEntity = bootPayApi2.verify(paymentDto.getReceipt_id(), token);
+        ResponseEntity<Receipt> receiptResponseEntity = bootPayApi2.getReceiptInfo(paymentDto.getReceipt_id(), token);
         
         Receipt receipt = receiptResponseEntity.getBody();
         if (!receipt.getData().getPrice().equals(paymentDto.getPrice())) {

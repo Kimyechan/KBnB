@@ -1,7 +1,6 @@
 package com.buildup.kbnb.controller;
 
 
-
 import com.buildup.kbnb.dto.reservation.ReservationRegisterRequest;
 import com.buildup.kbnb.dto.reservation.ReservationRegisterResponse;
 
@@ -10,6 +9,7 @@ import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.dto.reservation.ReservationConfirmedResponse;
 import com.buildup.kbnb.dto.reservation.ReservationDetailResponse;
 import com.buildup.kbnb.model.Location;
+import com.buildup.kbnb.model.Payment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/reservation")
 @RequiredArgsConstructor
@@ -51,14 +52,26 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> registerReservation(@Valid @RequestBody ReservationRegisterRequest reservationRegisterRequest, @CurrentUser UserPrincipal userPrincipal) {
+    public ResponseEntity<?> registerReservation(@Valid @RequestBody ReservationRegisterRequest reservationRegisterRequest, @CurrentUser UserPrincipal userPrincipal) throws Exception {
         User user = userService.findById(userPrincipal.getId());
         Room room = roomService.findById(reservationRegisterRequest.getRoomId());
         List<Reservation> reservationList = reservationService.findByRoomId(room.getId());
 
-        LocalDate checkIn = reservationRegisterRequest.getCheckIn(); LocalDate checkOut = reservationRegisterRequest.getCheckOut();
+        LocalDate checkIn = reservationRegisterRequest.getCheckIn();
+        LocalDate checkOut = reservationRegisterRequest.getCheckOut();
         checkAvailableDate(reservationList, checkIn, checkOut);
-        ReservationRegisterResponse reservationResponse = createReservationResponse(room, reservationRegisterRequest, user);
+
+        Reservation reservation = mapToReservation(room, reservationRegisterRequest, user);
+        Payment payment = Payment.builder()
+                .receipt_id(reservationRegisterRequest.getPayment().getReceipt_id())
+                .price(reservationRegisterRequest.getPayment().getPrice())
+                .build();
+        Reservation savedReservation = reservationService.saveWithPayment(reservation, payment);
+
+        ReservationRegisterResponse reservationResponse = ReservationRegisterResponse.builder()
+                .message("예약 성공")
+                .reservationId(savedReservation.getId())
+                .build();
 
         EntityModel<ReservationRegisterResponse> model = EntityModel.of(reservationResponse);
         URI location = linkTo(methodOn(ReservationController.class).registerReservation(reservationRegisterRequest, userPrincipal)).withSelfRel().toUri();
@@ -68,24 +81,8 @@ public class ReservationController {
                 .body(model);
     }
 
-    private ReservationRegisterResponse createReservationResponse(Room room, ReservationRegisterRequest reservationRegisterRequest, User user) {
-        Reservation reservation = createAndSaveReservation(room, reservationRegisterRequest, user);
-        return ReservationRegisterResponse.builder()
-                .message("예약 성공").reservationId(reservation.getId()).build();
-    }
-
-    private void checkAvailableDate(List<Reservation> reservationList, LocalDate checkIn, LocalDate checkOut) {
-        for(Reservation reservation : reservationList) {
-            if((checkIn.isAfter(reservation.getCheckIn()) && checkIn.isBefore(reservation.getCheckOut()))
-                    || (checkIn.isBefore(reservation.getCheckIn()) && checkOut.isAfter(reservation.getCheckOut()))
-                    || (checkOut.isAfter(reservation.getCheckIn()) && checkOut.isBefore(reservation.getCheckOut()))
-                    || checkOut.isEqual(reservation.getCheckIn()) && checkOut.isEqual(reservation.getCheckOut()))
-                throw new ReservationException("예약이 불가능한 날짜입니다.");
-        }
-    }
-
-    public Reservation createAndSaveReservation(Room room, ReservationRegisterRequest reservationRegisterRequest, User user) {
-        Reservation reservation = Reservation.builder()
+    private Reservation mapToReservation(Room room, ReservationRegisterRequest reservationRegisterRequest, User user) {
+        return Reservation.builder()
                 .room(room)
                 .guestNum(reservationRegisterRequest.getGuestNumber())
                 .checkOut(reservationRegisterRequest.getCheckOut())
@@ -93,8 +90,56 @@ public class ReservationController {
                 .totalCost(reservationRegisterRequest.getTotalCost())
                 .user(user)
                 .build();
-                return reservationService.save(reservation);
     }
+
+    private void checkAvailableDate(List<Reservation> reservationList, LocalDate checkIn, LocalDate checkOut) {
+        for (Reservation reservation : reservationList) {
+            if ((checkIn.isEqual(reservation.getCheckIn()) || checkIn.isAfter(reservation.getCheckIn()) && checkIn.isBefore(reservation.getCheckOut()))
+                    || (checkIn.isBefore(reservation.getCheckIn()) && checkOut.isAfter(reservation.getCheckOut()))
+                    || (checkOut.isAfter(reservation.getCheckIn()) && (checkOut.isBefore(reservation.getCheckOut()) || checkOut.isEqual(reservation.getCheckOut()))
+                    || (checkIn.isEqual(reservation.getCheckIn()) && checkOut.isEqual(reservation.getCheckOut()))))
+                throw new ReservationException("예약이 불가능한 날짜입니다.");
+        }
+    }
+
+    //    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+//    public ResponseEntity<?> registerReservation(@Valid @RequestBody ReservationRegisterRequest reservationRegisterRequest, @CurrentUser UserPrincipal userPrincipal) {
+//        User user = userService.findById(userPrincipal.getId());
+//        Room room = roomService.findById(reservationRegisterRequest.getRoomId());
+//        List<Reservation> reservationList = reservationService.findByRoomId(room.getId());
+//
+//        LocalDate checkIn = reservationRegisterRequest.getCheckIn();
+//        LocalDate checkOut = reservationRegisterRequest.getCheckOut();
+//        checkAvailableDate(reservationList, checkIn, checkOut);
+//        ReservationRegisterResponse reservationResponse = createReservationResponse(room, reservationRegisterRequest, user);
+//
+//        EntityModel<ReservationRegisterResponse> model = EntityModel.of(reservationResponse);
+//        URI location = linkTo(methodOn(ReservationController.class).registerReservation(reservationRegisterRequest, userPrincipal)).withSelfRel().toUri();
+//        model.add(Link.of("/docs/api.html#resource-reservation-register").withRel("profile"));
+//        model.add(linkTo(methodOn(ReservationController.class).registerReservation(reservationRegisterRequest, userPrincipal)).withSelfRel());
+//        return ResponseEntity.created(location)
+//                .body(model);
+//    }
+
+//    private ReservationRegisterResponse createReservationResponse(Room room, ReservationRegisterRequest reservationRegisterRequest, User user) {
+//        Reservation reservation = createAndSaveReservation(room, reservationRegisterRequest, user);
+//        return ReservationRegisterResponse.builder()
+//                .message("예약 성공")
+//                .reservationId(reservation.getId())
+//                .build();
+//    }
+
+//    public Reservation createAndSaveReservation(Room room, ReservationRegisterRequest reservationRegisterRequest, User user) {
+//        Reservation reservation = Reservation.builder()
+//                .room(room)
+//                .guestNum(reservationRegisterRequest.getGuestNumber())
+//                .checkOut(reservationRegisterRequest.getCheckOut())
+//                .checkIn(reservationRegisterRequest.getCheckIn())
+//                .totalCost(reservationRegisterRequest.getTotalCost())
+//                .user(user)
+//                .build();
+//        return reservationService.save(reservation);
+//    }
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getConfirmedReservationLIst(@CurrentUser UserPrincipal userPrincipal, Pageable pageable, PagedResourcesAssembler<ReservationConfirmedResponse> assembler) {
@@ -107,7 +152,7 @@ public class ReservationController {
         return ResponseEntity.ok(model);
     }
 
-    private  PagedModel<EntityModel<ReservationConfirmedResponse>> makePageModel(List<ReservationConfirmedResponse> reservation_confirmedResponseList, Pageable pageable, Long totalElements, PagedResourcesAssembler<ReservationConfirmedResponse> assembler ) {
+    private PagedModel<EntityModel<ReservationConfirmedResponse>> makePageModel(List<ReservationConfirmedResponse> reservation_confirmedResponseList, Pageable pageable, Long totalElements, PagedResourcesAssembler<ReservationConfirmedResponse> assembler) {
         Page<ReservationConfirmedResponse> responsePage = new PageImpl<>(reservation_confirmedResponseList, pageable, totalElements);
         PagedModel<EntityModel<ReservationConfirmedResponse>> model = assembler.toModel(responsePage);
         model.add(Link.of("/docs/api.html#resource-reservation-lookupList").withRel("profile"));
@@ -116,25 +161,26 @@ public class ReservationController {
 
     private List<ReservationConfirmedResponse> createResponseList(List<Reservation> reservationList) {
         List<ReservationConfirmedResponse> reservation_confirmedResponseList = new ArrayList<>();
-        for(Reservation reservation : reservationList) {
-            Room room = reservation.getRoom(); Location location = room.getLocation();
+        for (Reservation reservation : reservationList) {
+            Room room = reservation.getRoom();
+            Location location = room.getLocation();
             ReservationConfirmedResponse reservation_confirmedResponse = ReservationConfirmedResponse.builder()
                     .reservationId(reservation.getId()).checkIn(reservation.getCheckIn()).checkOut(reservation.getCheckOut())
                     .hostName(reservationService.getHostName(reservation)).imgUrl("this is demo url").roomName(room.getName())
-                    .roomId(room.getId()).roomLocation(location.getCountry() + " " + location.getCity() + " " +  location.getBorough() + " " +  location.getNeighborhood() + " " + location.getDetailAddress())
+                    .roomId(room.getId()).roomLocation(location.getCountry() + " " + location.getCity() + " " + location.getBorough() + " " + location.getNeighborhood() + " " + location.getDetailAddress())
                     .status("예약 완료").build();
 
-            if(reservation_confirmedResponse.getCheckOut().isBefore(LocalDate.now()))
+            if (reservation_confirmedResponse.getCheckOut().isBefore(LocalDate.now()))
                 reservation_confirmedResponse.setStatus("완료된 여정");
             reservation_confirmedResponseList.add(reservation_confirmedResponse);
         }
         return reservation_confirmedResponseList;
     }
 
-    @GetMapping(value = "/detail",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    @GetMapping(value = "/detail", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getDetailReservationInfo(@CurrentUser UserPrincipal userPrincipal, Long reservationId) {
-    User user = userService.findById(userPrincipal.getId());
-    List<Long> reservationIdUserHave = reservationService.findByUser(user).stream().map(s -> s.getId()).collect(Collectors.toList());
+        User user = userService.findById(userPrincipal.getId());
+        List<Long> reservationIdUserHave = reservationService.findByUser(user).stream().map(s -> s.getId()).collect(Collectors.toList());
 
         ReservationDetailResponse reservationDetailResponse = judgeReservationIdUserHaveContainReservationId(reservationIdUserHave, reservationId);
         EntityModel<ReservationDetailResponse> model = EntityModel.of(reservationDetailResponse);
@@ -143,9 +189,9 @@ public class ReservationController {
         return ResponseEntity.ok(model);
     }
 
-    private ReservationDetailResponse judgeReservationIdUserHaveContainReservationId(List<Long> reservationIdUserHave, Long reservationId ) {
+    private ReservationDetailResponse judgeReservationIdUserHaveContainReservationId(List<Long> reservationIdUserHave, Long reservationId) {
         ReservationDetailResponse reservationDetailResponse;
-        if(reservationIdUserHave.contains(reservationId))
+        if (reservationIdUserHave.contains(reservationId))
             reservationDetailResponse = ifReservationIdExist(reservationId);
         else throw new ReservationException("해당 유저의 예약 리스트에는 요청한 예약건이 없습니다.");
         return reservationDetailResponse;
@@ -164,10 +210,10 @@ public class ReservationController {
                 .bathRoomNum(reservation.getRoom().getBathRoomList().size())
                 .address(
                         reservation.getRoom().getLocation().getCountry() + " "
-                                +  reservation.getRoom().getLocation().getCity() + " "
-                                +  reservation.getRoom().getLocation().getBorough() + " "
+                                + reservation.getRoom().getLocation().getCity() + " "
+                                + reservation.getRoom().getLocation().getBorough() + " "
                                 + reservation.getRoom().getLocation().getNeighborhood() + " "
-                                + reservation.getRoom().getLocation().getDetailAddress() )
+                                + reservation.getRoom().getLocation().getDetailAddress())
                 .latitude(reservation.getRoom().getLocation().getLatitude())
                 .longitude(reservation.getRoom().getLocation().getLongitude())
                 .checkIn(reservation.getCheckIn())
@@ -187,7 +233,7 @@ public class ReservationController {
     public ResponseEntity<?> deleteReservation(@CurrentUser UserPrincipal userPrincipal, Long reservationId) {
         User user = userService.findById(userPrincipal.getId());
         List<Reservation> reservationList = reservationService.findByUser(user);
-        if(!reservationList.stream().map(s -> s.getId()).collect(Collectors.toList()).contains(reservationId))
+        if (!reservationList.stream().map(s -> s.getId()).collect(Collectors.toList()).contains(reservationId))
             throw new ReservationException("there is no reservation that you asked");
         reservationService.deleteById(reservationId);
         Map<String, String> map = new HashMap<>();
