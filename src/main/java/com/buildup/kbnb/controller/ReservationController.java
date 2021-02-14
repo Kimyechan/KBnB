@@ -1,6 +1,7 @@
 package com.buildup.kbnb.controller;
 
 
+import com.buildup.kbnb.dto.ApiResponse;
 import com.buildup.kbnb.dto.reservation.*;
 
 import com.buildup.kbnb.advice.exception.ReservationException;
@@ -244,8 +245,12 @@ public class ReservationController {
 
         reservationService.cancelReservation(cancelDto.getReservationId(), cancel);
 
-        Map<String, String> map = new HashMap<>();
-        EntityModel<Map> model = EntityModel.of(map);
+        ApiResponse response = ApiResponse.builder()
+                .success(true)
+                .message("예약 취소 되었습니다")
+                .build();
+
+        EntityModel<ApiResponse> model = EntityModel.of(response);
         model.add(linkTo(methodOn(ReservationController.class).deleteReservation(userPrincipal, cancelDto)).withSelfRel());
         model.add(Link.of("/docs/api.html#resource-reservation-delete").withRel("profile"));
         return ResponseEntity.ok(model);
