@@ -50,7 +50,7 @@ public class BootPayApi {
         return "null";
     }
 
-    public ResponseEntity<Receipt> verify(String receipt_id, String token) throws Exception {
+    public ResponseEntity<Receipt> getReceiptInfo(String receipt_id, String token) throws Exception {
         if (token == null || token.isEmpty()) {
             throw new Exception("token 값이 비어있습니다.");
         }
@@ -72,5 +72,15 @@ public class BootPayApi {
 
         HttpEntity<Cancel> entity = new HttpEntity<>(cancel, headers);
         return restTemplate.exchange(URL_CANCEL, HttpMethod.POST, entity, CancelResult.class);
+    }
+
+    public void verify(String receipt_id, Integer price) throws Exception {
+        String token = getAccessToken();
+        ResponseEntity<Receipt> receiptResponseEntity = getReceiptInfo(receipt_id, token);
+
+        Receipt receipt = receiptResponseEntity.getBody();
+        if (!receipt.getData().getPrice().equals(price)) {
+            throw new Exception("금액이 변조 되었습니다");
+        }
     }
 }
