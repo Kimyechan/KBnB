@@ -427,6 +427,8 @@ class ReservationControllerTest {
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
                         ),
                         responseFields(
+                                fieldWithPath("success").description("성공 여부"),
+                                fieldWithPath("message").description("상세 메세지"),
                                 fieldWithPath("_links.self.href").description("해당 API URL"),
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
                         )
