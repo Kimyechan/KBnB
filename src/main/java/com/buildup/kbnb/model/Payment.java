@@ -17,6 +17,6 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String receipt_id;
+    private String receiptId;
     private Integer price;
 }

@@ -1,13 +1,11 @@
 package com.buildup.kbnb.controller;
 
 
-import com.buildup.kbnb.dto.reservation.ReservationRegisterRequest;
-import com.buildup.kbnb.dto.reservation.ReservationRegisterResponse;
+import com.buildup.kbnb.dto.ApiResponse;
+import com.buildup.kbnb.dto.reservation.*;
 
 import com.buildup.kbnb.advice.exception.ReservationException;
 
-import com.buildup.kbnb.dto.reservation.ReservationConfirmedResponse;
-import com.buildup.kbnb.dto.reservation.ReservationDetailResponse;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.Payment;
 import com.buildup.kbnb.model.Reservation;
@@ -19,6 +17,8 @@ import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.RoomService;
 import com.buildup.kbnb.service.UserService;
 import com.buildup.kbnb.service.reservationService.ReservationService;
+import com.buildup.kbnb.util.payment.model.request.Cancel;
+import com.buildup.kbnb.util.payment.model.response.CancelInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -63,7 +63,7 @@ public class ReservationController {
 
         Reservation reservation = mapToReservation(room, reservationRegisterRequest, user);
         Payment payment = Payment.builder()
-                .receipt_id(reservationRegisterRequest.getPayment().getReceipt_id())
+                .receiptId(reservationRegisterRequest.getPayment().getReceipt_id())
                 .price(reservationRegisterRequest.getPayment().getPrice())
                 .build();
         Reservation savedReservation = reservationService.saveWithPayment(reservation, payment);
@@ -230,18 +230,32 @@ public class ReservationController {
     }
 
     @DeleteMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> deleteReservation(@CurrentUser UserPrincipal userPrincipal, Long reservationId) {
+    public ResponseEntity<?> deleteReservation(@CurrentUser UserPrincipal userPrincipal,
+                                               @RequestBody CancelDto cancelDto) throws Exception {
         User user = userService.findById(userPrincipal.getId());
         List<Reservation> reservationList = reservationService.findByUser(user);
-        if (!reservationList.stream().map(s -> s.getId()).collect(Collectors.toList()).contains(reservationId))
+
+        if (!reservationList.stream().map(Reservation::getId).collect(Collectors.toList()).contains(cancelDto.getReservationId())) {
             throw new ReservationException("there is no reservation that you asked");
-        reservationService.deleteById(reservationId);
-        Map<String, String> map = new HashMap<>();
-        EntityModel<Map> model = EntityModel.of(map);
-        model.add(linkTo(methodOn(ReservationController.class).deleteReservation(userPrincipal, reservationId)).withSelfRel());
+        }
+        Cancel cancel = Cancel.builder()
+                .name(cancelDto.getName())
+                .reason(cancelDto.getReason())
+                .build();
+
+        reservationService.cancelReservation(cancelDto.getReservationId(), cancel);
+
+        ApiResponse response = ApiResponse.builder()
+                .success(true)
+                .message("예약 취소 되었습니다")
+                .build();
+
+        EntityModel<ApiResponse> model = EntityModel.of(response);
+        model.add(linkTo(methodOn(ReservationController.class).deleteReservation(userPrincipal, cancelDto)).withSelfRel());
         model.add(Link.of("/docs/api.html#resource-reservation-delete").withRel("profile"));
         return ResponseEntity.ok(model);
     }
+
   /*  @GetMapping(value = "/test",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public void test(@CurrentUser UserPrincipal userPrincipal) {
         System.out.println(userPrincipal.getId());
