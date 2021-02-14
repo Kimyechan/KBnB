@@ -19,13 +19,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class UserRepositoryTest {
     @Autowired
     TestEntityManager entityManager;
 
     @Autowired
     UserRepository userRepository;
+
+    User savedUser;
 
     @BeforeEach
     public void setUp() {
@@ -35,7 +37,7 @@ class UserRepositoryTest {
                 .emailVerified(false)
                 .provider(AuthProvider.local)
                 .build();
-        entityManager.persist(user);
+        savedUser = entityManager.persist(user);
 
         Room room = Room.builder()
                 .name("test room")
@@ -67,7 +69,7 @@ class UserRepositoryTest {
     @Test
     @DisplayName("유저가 찜하기한 방 리스트 조회")
     public void getCheckRoomListById() {
-        User user = userRepository.findByIdWithCheckRoom(1L).orElse(null);
+        User user = userRepository.findByIdWithCheckRoom(savedUser.getId()).orElse(null);
 
         assert user != null;
         assertTrue(Hibernate.isInitialized(user.getCheckRoomList()));

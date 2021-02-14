@@ -4,6 +4,10 @@ spring:
     username: root
     password: jbs
 #  datasource:
+#    url: jdbc:mysql://mysql-1.cfmbtwavrtjc.ap-northeast-2.rds.amazonaws.com:3306/kbnb?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+#    username: root
+#    password: jbs12341234
+#  datasource:
 #    url: jdbc:mysql://localhost:3306/kbnb?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
 #    username: root
 #    password: 12341234
@@ -55,3 +59,7 @@ cloud:
       auto: false
     credentials:
       instanceProfile: true
+
+bootPay:
+  applicationId: 6024e5ee5b2948001d52037e
+  privateKey: n53GEUAuH4NuHjmsPhYJ5Um1N/Tf2K7eWy1w01iF7A8=

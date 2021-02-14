@@ -8,6 +8,7 @@ import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,10 +25,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class RoomRepositoryTest {
     @Autowired
     TestEntityManager entityManager;
@@ -35,7 +37,7 @@ class RoomRepositoryTest {
     @Autowired
     RoomRepository roomRepository;
 
-    Room saved;
+    Room savedRoom;
 
     @BeforeEach
     public void setUpRoomList() {
@@ -63,7 +65,7 @@ class RoomRepositoryTest {
                     .roomCost(10000.0 + 3000 * i)
                     .peopleLimit(i + 1)
                     .build();
-            saved = entityManager.persist(room);
+            savedRoom = entityManager.persist(room);
 
             BathRoom bathRoom = BathRoom.builder()
                     .isPrivate(true)
@@ -230,10 +232,10 @@ class RoomRepositoryTest {
     @Test
     @DisplayName("숙소 상세 검색 - 유저, 위치 정보 같이")
     public void getDetailWithUserLocation() {
-        Room room = roomRepository.findByIdWithUserLocation(saved.getId()).orElse(null);
+        Room room = roomRepository.findByIdWithUserLocation(savedRoom.getId()).orElse(null);
 
         assertThat(room).isNotNull();
-        assertThat(room.getLocation()).isNotNull();
-        assertThat(room.getHost()).isNotNull();
+        assertTrue(Hibernate.isInitialized(room.getLocation()));
+        assertTrue(Hibernate.isInitialized(room.getHost()));
     }
 }
