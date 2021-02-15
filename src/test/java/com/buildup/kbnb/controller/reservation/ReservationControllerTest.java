@@ -1,8 +1,11 @@
 package com.buildup.kbnb.controller.reservation;
 
 import com.buildup.kbnb.config.RestDocsConfiguration;
+import com.buildup.kbnb.dto.reservation.CancelDto;
+import com.buildup.kbnb.dto.reservation.PaymentDto;
 import com.buildup.kbnb.dto.reservation.ReservationRegisterRequest;
 import com.buildup.kbnb.model.Location;
+import com.buildup.kbnb.model.Payment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
@@ -79,27 +82,42 @@ class ReservationControllerTest {
     public User createUser() {
         User user = User.builder()
                 .id(1L)
+                .name("test")
                 .email("test@google.com").name("정한솔")
                 .password("111").build();
         given(customUserDetailsService.loadUserById(user.getId()))
-                .willReturn(UserPrincipal.create(user));//스프링 시큐리티에서 user객체를 다루기위해 변환 시킨 것일 뿐이고
-        //해당 서비스는 토큰값을 통해서 유저를 로드할 때 필터로 사용되기 때문에 정의 해줘야 함
+                .willReturn(UserPrincipal.create(user));
+
         return user;
     }
+
     public Room createRoom(User user, Location location) {
         Room room = Room.builder()
-                .location(location).grade(111.111).roomType("이것은 룸타입").roomCost(111.11)
-                .checkOutTime(LocalTime.parse("11:11:11")).isParking(true).isSmoking(true).cleaningCost(111.111)
-                .id(1L).name("this is room name").host(user).bedNum(3).build();
+                .id(1L)
+                .location(location)
+                .grade(4.5)
+                .roomType("이것은 룸타입")
+                .checkOutTime(LocalTime.parse("11:11:11"))
+                .isParking(true)
+                .isSmoking(true)
+                .roomCost(111.11)
+                .cleaningCost(111.111)
+                .tax(0.0)
+                .name("this is room name")
+                .host(user)
+                .bedNum(3)
+                .build();
         given(roomService.findById(any())).willReturn(room);
 
         return room;
     }
+
     public Location createLocation() {
         Location location = Location.builder().latitude(111.111).longitude(111.111).detailAddress("찾아라 비밀의")
                 .neighborhood("열쇠").borough("답도없는").country("모험들").city("현실과").id(1L).build();
         return location;
     }
+
     public BedRoom createBedRoom() {
         BedRoom bedRoom = BedRoom.builder()
                 .doubleSize(2)
@@ -111,6 +129,7 @@ class ReservationControllerTest {
 
         return bedRoom;
     }
+
     public BathRoom createBathRoom() {
         BathRoom bathRoom = BathRoom.builder()
                 .id(1L)
@@ -124,8 +143,10 @@ class ReservationControllerTest {
         BedRoom bedRoom = createBedRoom();
         BathRoom bathRoom = createBathRoom();
 
-        List<BedRoom> bedRooms = new ArrayList<>(); bedRooms.add(bedRoom);
-        List<BathRoom> bathRooms = new ArrayList<>(); bathRooms.add(bathRoom);
+        List<BedRoom> bedRooms = new ArrayList<>();
+        bedRooms.add(bedRoom);
+        List<BathRoom> bathRooms = new ArrayList<>();
+        bathRooms.add(bathRoom);
 
         Location location = createLocation();
 
@@ -133,9 +154,9 @@ class ReservationControllerTest {
                 .host(user)
                 .id(1L)
                 .bedNum(3)
-                .name("사쿠라여?")
+                .name("room name")
                 .peopleLimit(2)
-                .description("사쿠라네?")
+                .description("room description")
                 .tax(200.0)
                 .cleaningCost(200.0)
                 .isSmoking(true)
@@ -153,17 +174,23 @@ class ReservationControllerTest {
     }
 
     public ReservationRegisterRequest createReservation_RegisterRequest(Room room) {
-        String checkIn = "2021-02-01"; String checkOut = "2021-02-02";
+        PaymentDto payment = PaymentDto.builder()
+                .receipt_id("receipt_id")
+                .price((int) (room.getRoomCost() + room.getTax() + room.getTax()))
+                .build();
+
         return ReservationRegisterRequest.builder()
                 .totalCost(30000L)
                 .roomId(room.getId())
                 .message("사장님 잘생겼어요")
                 .infantNumber(2)
                 .guestNumber(2)
-                .checkIn(LocalDate.parse(checkIn,DateTimeFormatter.ISO_DATE))
-                .checkOut(LocalDate.parse(checkOut, DateTimeFormatter.ISO_DATE))
+                .checkIn(LocalDate.of(2021, 2, 1))
+                .checkOut(LocalDate.of(2021, 2, 3))
+                .payment(payment)
                 .build();
     }
+
     public Reservation createReservation(Room room, ReservationRegisterRequest reservationRegisterRequest, User user) {
         Reservation reservation = Reservation.builder()
                 .id(1L)
@@ -176,22 +203,25 @@ class ReservationControllerTest {
                 .build();
         return reservation;
     }
+
     @Test
     @DisplayName("예약 등록 테스트")
     public void registerReservation() throws Exception {
         User user = createUser();
+        String userToken = tokenProvider.createToken(String.valueOf(user.getId()));
+
         Location location = createLocation();
         Room room = createRoom(user, location);
         ReservationRegisterRequest reservation_registerRequest = createReservation_RegisterRequest(room);
         Reservation reservation = createReservation(room, reservation_registerRequest, user);
-        String userToken = tokenProvider.createToken(String.valueOf(user.getId()));
+
         given(userService.findById(any())).willReturn(user);
-        given(reservationService.save(any())).willReturn(reservation);
-        createReservation_RegisterRequest(room);
+        given(reservationService.saveWithPayment(any(), any())).willReturn(reservation);
+
         mockMvc.perform(post("/reservation")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + userToken)
-                        .content(objectMapper.writeValueAsString(createReservation_RegisterRequest(room))))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + userToken)
+                .content(objectMapper.writeValueAsString(reservation_registerRequest)))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andDo(document("reservation-register",
@@ -205,7 +235,9 @@ class ReservationControllerTest {
                                 fieldWithPath("guestNumber").description("게스트 수"),
                                 fieldWithPath("infantNumber").description("유아 수"),
                                 fieldWithPath("totalCost").description("총 금액"),
-                                fieldWithPath("message").description("호스트에게 보내는 메시지")
+                                fieldWithPath("message").description("호스트에게 보내는 메시지"),
+                                fieldWithPath("payment.receipt_id").description("영수증 식별자 값"),
+                                fieldWithPath("payment.price").description("결제된 비용")
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
@@ -217,9 +249,8 @@ class ReservationControllerTest {
                                 fieldWithPath("_links.profile.href").description("해당 API문서 URL")
                         )
                 ));
-
-
     }
+
     @Test
     @DisplayName("예약 리스트")
     public void getConfirmedReservationList() throws Exception {
@@ -241,7 +272,7 @@ class ReservationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + userToken)
                 .content(objectMapper.writeValueAsString(map))
-                .param("page", String.valueOf(reservationPage))
+                .param("page", String.valueOf(reservationPage.getNumber()))
                 .param("size", String.valueOf(reservationPage.getSize()))
         ).andDo(print())
                 .andExpect(status().isOk())
@@ -283,12 +314,12 @@ class ReservationControllerTest {
 
     }
 
-    private List<Reservation> getReservationList(User user,Location location) {
+    private List<Reservation> getReservationList(User user, Location location) {
         List<Reservation> list = new ArrayList<>();
         Room room = createRoom(user, location);
-        for(int i = 0; i< 5; i ++) {
+        for (int i = 0; i < 5; i++) {
             Reservation reservation = Reservation.builder()
-                    .user(user).id((long)i).room(room).
+                    .user(user).id((long) i).room(room).
                             checkIn(LocalDate.parse("2020-11-11")).checkOut(LocalDate.parse("2021-11-11")).build();
             list.add(reservation);
         }
@@ -303,7 +334,8 @@ class ReservationControllerTest {
         Room room = createRoom(user);
 
         Reservation reservation = createReservation(room, createReservation_RegisterRequest(room), user);
-        List<Reservation> reservationList = new ArrayList<>(); reservationList.add(reservation);
+        List<Reservation> reservationList = new ArrayList<>();
+        reservationList.add(reservation);
         given(userService.findById(any())).willReturn(user);
         given(reservationService.findByUser(any())).willReturn(reservationList);
         given(reservationService.findById(any())).willReturn(reservation);
@@ -359,40 +391,47 @@ class ReservationControllerTest {
     @DisplayName("예약 삭제")
     public void deleteReservation() throws Exception {
         User user = createUser();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+
         List<Reservation> reservationList = new ArrayList<>();
         Room room = createRoom(user);
         Reservation reservation = createReservation(room, createReservation_RegisterRequest(room), user);
         reservationList.add(reservation);
-        String token = tokenProvider.createToken(String.valueOf(user.getId()));//이거 한 순간 loadById(여기엔 user.getId만 들어가)
+
+        CancelDto cancelDto = CancelDto.builder()
+                .reservationId(reservation.getId())
+                .name(user.getName())
+                .reason("test")
+                .build();
+
         given(userService.findById(any())).willReturn(user);
         given(reservationService.findByUser(any())).willReturn(reservationList);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("None", "None");
         mockMvc.perform(delete("/reservation")
                 .param("reservationId", String.valueOf(1L))
-                .content(objectMapper.writeValueAsString(map))
+                .content(objectMapper.writeValueAsString(cancelDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("reservation-delete",
-                        requestParameters(
-                                parameterWithName("reservationId").description("예약 식별자")
-                                ),
+                        requestFields(
+                                fieldWithPath("reservationId").description("예약 식별자 값"),
+                                fieldWithPath("name").description("유저 이름"),
+                                fieldWithPath("reason").description("취소 사유")
+                        ),
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
-                        ),
-                        requestFields(
-                                fieldWithPath("None").description("없음")
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
                         ),
                         responseFields(
+                                fieldWithPath("success").description("성공 여부"),
+                                fieldWithPath("message").description("상세 메세지"),
                                 fieldWithPath("_links.self.href").description("해당 API URL"),
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
                         )
                 ));
-        }
     }
+}
