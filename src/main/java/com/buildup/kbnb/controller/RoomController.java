@@ -185,6 +185,8 @@ public class   RoomController {
                 .isParking(room.getIsParking())
                 .locationDetail(locationDetail)
                 .roomImgUrlList(roomImgUrlList)
+                .hostName(room.getHost().getName())
+                .hostImgURL(room.getHost().getImageUrl())
                 .commentCount(commentPage.getTotalElements())
                 .commentList(commentDetails)
                 .reservationDates(reservationDates)
