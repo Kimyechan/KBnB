@@ -7,7 +7,7 @@ import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.service.CommentService;
 import com.buildup.kbnb.service.RoomService;
-import com.buildup.kbnb.service.reservationService.ReservationService;
+import com.buildup.kbnb.service.reservation.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

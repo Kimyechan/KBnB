@@ -18,7 +18,7 @@ import com.buildup.kbnb.service.CommentService;
 import com.buildup.kbnb.service.RoomService;
 import com.buildup.kbnb.service.UserRoomService;
 import com.buildup.kbnb.service.UserService;
-import com.buildup.kbnb.service.reservationService.ReservationService;
+import com.buildup.kbnb.service.reservation.ReservationService;
 import com.buildup.kbnb.util.S3Uploader;
 import lombok.AllArgsConstructor;
 import lombok.Data;
