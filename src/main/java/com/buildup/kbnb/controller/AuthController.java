@@ -2,7 +2,7 @@ package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.advice.exception.EmailDuplicationException;
 import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
-import com.buildup.kbnb.advice.exception.FieldNotValidException;
+import com.buildup.kbnb.advice.exception.UserFieldNotValidException;
 import com.buildup.kbnb.dto.AuthResponse;
 import com.buildup.kbnb.dto.user.LoginRequest;
 import com.buildup.kbnb.dto.user.SignUpRequest;
@@ -42,7 +42,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult error) {
         if (error.hasErrors()) {
-            throw new FieldNotValidException();
+            throw new UserFieldNotValidException();
         }
 
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(EmailOrPassWrongException::new);
@@ -61,7 +61,7 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest, BindingResult error) {
         if (error.hasErrors()) {
-            throw new FieldNotValidException();
+            throw new UserFieldNotValidException();
         }
 
         if(userRepository.existsByEmail(signUpRequest.getEmail())) {

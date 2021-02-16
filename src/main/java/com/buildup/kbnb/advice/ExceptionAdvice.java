@@ -1,9 +1,6 @@
 package com.buildup.kbnb.advice;
 
-import com.buildup.kbnb.advice.exception.EmailDuplicationException;
-import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
-import com.buildup.kbnb.advice.exception.FieldNotValidException;
-import com.buildup.kbnb.advice.exception.ReservationException;
+import com.buildup.kbnb.advice.exception.*;
 import com.buildup.kbnb.dto.exception.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,11 +28,20 @@ public class ExceptionAdvice {
                 .build();
     }
 
-    @ExceptionHandler(FieldNotValidException.class)
+    @ExceptionHandler(UserFieldNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ExceptionResponse requetNotValid(FieldNotValidException e) {
+    protected ExceptionResponse userFieldNotValid(UserFieldNotValidException e) {
         return ExceptionResponse.builder()
                 .code(-1003)
+                .msg(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(CommentFieldNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ExceptionResponse commentFieldNotValid(CommentFieldNotValidException e) {
+        return ExceptionResponse.builder()
+                .code(-1004)
                 .msg(e.getMessage())
                 .build();
     }

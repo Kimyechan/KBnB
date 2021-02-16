@@ -1,12 +1,12 @@
 package com.buildup.kbnb.advice.exception;
 
-public class FieldNotValidException extends RuntimeException {
+public class UserFieldNotValidException extends RuntimeException {
     private static final String MESSAGE = "requesting field is not valid, delete a blank space or conform to the form";
-    public FieldNotValidException() {
+    public UserFieldNotValidException() {
         super(MESSAGE);
     }
 
-    public FieldNotValidException(String message) {
+    public UserFieldNotValidException(String message) {
         super(message);
     }
 }
