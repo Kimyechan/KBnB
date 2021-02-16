@@ -1,9 +1,13 @@
 package com.buildup.kbnb.controller;
 
+
+import com.amazonaws.util.IOUtils;
 import com.buildup.kbnb.config.RestDocsConfiguration;
+import com.buildup.kbnb.dto.room.CreateRoomRequestDto;
 import com.buildup.kbnb.dto.room.check.CheckRoomReq;
 import com.buildup.kbnb.dto.room.detail.ReservationDate;
 import com.buildup.kbnb.dto.room.search.*;
+import com.buildup.kbnb.dto.user.UserUpdateRequest;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.room.BathRoom;
@@ -21,9 +25,11 @@ import com.buildup.kbnb.service.RoomService;
 import com.buildup.kbnb.service.UserRoomService;
 import com.buildup.kbnb.service.UserService;
 import com.buildup.kbnb.service.reservationService.ReservationService;
+import com.buildup.kbnb.util.S3Uploader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -36,27 +42,40 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -98,6 +117,8 @@ class RoomControllerTest {
     @MockBean
     UserRepository userRepository;
 
+    @MockBean
+    S3Uploader s3Uploader;
     public User createUser() {
         User user = User.builder()
                 .id(1L)
@@ -540,5 +561,41 @@ class RoomControllerTest {
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
                         )
                 ));
+    }
+    @Test
+    @DisplayName("호스트의 방 등록")
+    public void hostRegisterRoom() throws Exception {
+        User user = createUser();
+        Room room = Room.builder().name("테스트").id(1L).build();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+        given(userService.findById(any())).willReturn(user);
+        given(roomService.createRoom(any(), any())).willReturn(room);
+        CreateRoomRequestDto req = new CreateRoomRequestDto(); req.setName("테스트");
+
+
+
+        mockMvc.perform(multipart("/host/registerBasicRoom")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .content(objectMapper.writeValueAsString(req)))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+    @Test
+    @DisplayName("방 등록_사진 추가")
+    public void addPhoto() throws Exception {
+        User user = createUser();
+        Room room = Room.builder().name("테스트").id(1L).build();
+        given(userService.findById(any())).willReturn(user);
+        given(roomService.findById(any())).willReturn(room);
+        given(s3Uploader.upload(any(), any(), any())).willReturn("testUrl");
+
+        MockMultipartFile files = new MockMultipartFile("defaultImg", "testImg","image/png", "image".getBytes());
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+        mockMvc.perform(fileUpload("/host/addPhoto").file(files)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .param("roomId", String.valueOf(1L)))
+                .andDo(print());
     }
 }

@@ -102,7 +102,7 @@ public class ReservationController {
 
         Page<Reservation> reservationPage = reservationService.findPageByUser(user, pageable);
         List<Reservation> reservationList = reservationPage.getContent(); //해당 페이지의 모든 컨텐츠
-        List<ReservationConfirmedResponse> reservation_confirmedResponseList = createResponseList(reservationList);
+        List<ReservationConfirmedResponse> reservation_confirmedResponseList = reservationService.createResponseList(reservationList);
         PagedModel<EntityModel<ReservationConfirmedResponse>> model = makePageModel(reservation_confirmedResponseList, pageable, reservationPage.getTotalElements(), assembler);
         return ResponseEntity.ok(model);
     }
@@ -114,74 +114,21 @@ public class ReservationController {
         return model;
     }
 
-    private List<ReservationConfirmedResponse> createResponseList(List<Reservation> reservationList) {
-        List<ReservationConfirmedResponse> reservation_confirmedResponseList = new ArrayList<>();
-        for(Reservation reservation : reservationList) {
-            Room room = reservation.getRoom(); Location location = room.getLocation();
-            ReservationConfirmedResponse reservation_confirmedResponse = ReservationConfirmedResponse.builder()
-                    .reservationId(reservation.getId()).checkIn(reservation.getCheckIn()).checkOut(reservation.getCheckOut())
-                    .hostName(reservationService.getHostName(reservation)).imgUrl("this is demo url").roomName(room.getName())
-                    .roomId(room.getId()).roomLocation(location.getCountry() + " " + location.getCity() + " " +  location.getBorough() + " " +  location.getNeighborhood() + " " + location.getDetailAddress())
-                    .status("예약 완료").build();
 
-            if(reservation_confirmedResponse.getCheckOut().isBefore(LocalDate.now()))
-                reservation_confirmedResponse.setStatus("완료된 여정");
-            reservation_confirmedResponseList.add(reservation_confirmedResponse);
-        }
-        return reservation_confirmedResponseList;
-    }
 
     @GetMapping(value = "/detail",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getDetailReservationInfo(@CurrentUser UserPrincipal userPrincipal, Long reservationId) {
     User user = userService.findById(userPrincipal.getId());
     List<Long> reservationIdUserHave = reservationService.findByUser(user).stream().map(s -> s.getId()).collect(Collectors.toList());
 
-        ReservationDetailResponse reservationDetailResponse = judgeReservationIdUserHaveContainReservationId(reservationIdUserHave, reservationId);
+        ReservationDetailResponse reservationDetailResponse = reservationService.judgeReservationIdUserHaveContainReservationId(reservationIdUserHave, reservationId);
         EntityModel<ReservationDetailResponse> model = EntityModel.of(reservationDetailResponse);
         model.add(linkTo(methodOn(ReservationController.class).getDetailReservationInfo(userPrincipal, reservationId)).withSelfRel());
         model.add(Link.of("/docs/api.html#resource-reservation-detail").withRel("profile"));
         return ResponseEntity.ok(model);
     }
 
-    private ReservationDetailResponse judgeReservationIdUserHaveContainReservationId(List<Long> reservationIdUserHave, Long reservationId ) {
-        ReservationDetailResponse reservationDetailResponse;
-        if(reservationIdUserHave.contains(reservationId))
-            reservationDetailResponse = ifReservationIdExist(reservationId);
-        else throw new ReservationException("해당 유저의 예약 리스트에는 요청한 예약건이 없습니다.");
-        return reservationDetailResponse;
-    }
 
-    public ReservationDetailResponse ifReservationIdExist(Long reservationId) {
-        Reservation reservation = reservationService.findById(reservationId);
-        List<BedRoom> bedRoomList = reservation.getRoom().getBedRoomList();
-        int bedRoomNum = bedRoomList.size();
-        int bedNum = reservation.getRoom().getBedNum();
-        ReservationDetailResponse reservation_detail_response = ReservationDetailResponse.builder()
-                .hostImage("this is demo host Image URL")
-                .roomImage("this is demo room Image URL")
-                .bedRoomNum(bedRoomNum)
-                .bedNum(bedNum)
-                .bathRoomNum(reservation.getRoom().getBathRoomList().size())
-                .address(
-                        reservation.getRoom().getLocation().getCountry() + " "
-                                +  reservation.getRoom().getLocation().getCity() + " "
-                                +  reservation.getRoom().getLocation().getBorough() + " "
-                                + reservation.getRoom().getLocation().getNeighborhood() + " "
-                                + reservation.getRoom().getLocation().getDetailAddress() )
-                .latitude(reservation.getRoom().getLocation().getLatitude())
-                .longitude(reservation.getRoom().getLocation().getLongitude())
-                .checkIn(reservation.getCheckIn())
-                .checkOut(reservation.getCheckOut())
-                .guestNum(reservation.getGuestNum())
-                .hostName(reservation.getRoom().getHost().getName())
-                .roomName(reservation.getRoom().getName())
-                .isParking(reservation.getRoom().getIsParking())
-                .isSmoking(reservation.getRoom().getIsSmoking())
-                .roomId(reservation.getRoom().getId())
-                .totalCost(reservation.getTotalCost())
-                .build();
-        return reservation_detail_response;
-    }
 
     @DeleteMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> deleteReservation(@CurrentUser UserPrincipal userPrincipal, Long reservationId) {
@@ -196,51 +143,5 @@ public class ReservationController {
         model.add(Link.of("/docs/api.html#resource-reservation-delete").withRel("profile"));
         return ResponseEntity.ok(model);
     }
-  /*  @GetMapping(value = "/test",produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public void test(@CurrentUser UserPrincipal userPrincipal) {
-        System.out.println(userPrincipal.getId());
-        System.out.println("=============================================");
-    }
-    public Reservation_Detail_Response ifReservationIdExist(Long reservationId) {
-        Reservation reservation = reservationService.findById(reservationId);
-        List<BedRoom> bedRoomList = reservation.getRoom().getBedRoomList();
-        int bedRoomNum = bedRoomList.size();
-        int bedNum = bedNum(bedRoomList);
-        Reservation_Detail_Response reservation_detail_response = Reservation_Detail_Response.builder()
-                .hostImage("this is demo host Image URL")
-                .roomImage("this is demo room Image URL")
-                .bedRoomNum(bedRoomNum)
-                .bedNum(bedNum)
-                .bathRoomNum(reservation.getRoom().getBathRoomList().size())
-                .address(
-                        reservation.getRoom().getLocation().getCountry() + " "
-                                +  reservation.getRoom().getLocation().getCity() + " "
-                                +  reservation.getRoom().getLocation().getBorough() + " "
-                                + reservation.getRoom().getLocation().getNeighborhood() + " "
-                                + reservation.getRoom().getLocation().getDetailAddress() )
-                .latitude(reservation.getRoom().getLocation().getLatitude())
-                .longitude(reservation.getRoom().getLocation().getLongitude())
-                .checkIn(reservation.getCheckIn())
-                .checkOut(reservation.getCheckOut())
-                .guestNum(reservation.getGuestNum())
-                .hostName(reservation.getRoom().getHost().getName())
-                .roomName(reservation.getRoom().getName())
-                .isParking(reservation.getRoom().getIsParking())
-                .isSmoking(reservation.getRoom().getIsSmoking())
-                .roomId(reservation.getRoom().getId())
-                .totalCost(reservation.getTotalCost())
-                .build();
-        return reservation_detail_response;
-    }*/
-/*public int bedNum(List<BedRoom> bedRoomList) {
-        int bedNum = 0;
-    for(BedRoom bedRoom : bedRoomList) {
-        bedNum += bedRoom.getDoubleSize();
-        bedNum += bedRoom.getQueenSize();
-        bedNum += bedRoom.getSingleSize();
-        bedNum += bedRoom.getSuperSingleSize();
-    }
 
-    return bedNum;
-}*/
 }

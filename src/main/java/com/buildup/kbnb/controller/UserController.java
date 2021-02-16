@@ -87,7 +87,7 @@ public class UserController {
         EntityModel<UserUpdateResponse> model = EntityModel.of(userUpdateResponse);
         model.add(linkTo(methodOn(UserController.class).update(userPrincipal, userUpdateRequest, file)).withSelfRel());
         model.add(Link.of("/docs/api.html#resource-user-update").withRel("profile"));
-        return ResponseEntity.ok(model);//공식문서 requestpart
+        return ResponseEntity.ok(model);
     }
 
 
@@ -105,11 +105,11 @@ public class UserController {
                 .email(user.getEmail()).id(user.getId()).birth(user.getBirth()).name(user.getName()).imageUrl(user.getImageUrl()).build();
     }
 
-    @PatchMapping(value = "/registerToHost", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+/*    @PatchMapping(value = "/registerToHost", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public String changeToHostRole(@CurrentUser UserPrincipal userPrincipal) {
         User user = userService.findById(userPrincipal.getId());
         user.setRole(Role.HOST.getValue());
         userService.save(user);
         return user.getRole();
-    }
+    }*/
 }

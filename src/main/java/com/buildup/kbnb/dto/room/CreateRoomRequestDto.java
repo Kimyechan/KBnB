@@ -7,13 +7,19 @@ import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.RoomImg;
 import com.buildup.kbnb.model.user.User;
+import com.sun.istack.Nullable;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.io.File;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -21,8 +27,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateRoomDto {
-    private Long id;
+public class CreateRoomRequestDto {
     private String name;
     private String roomType;
     private Double roomCost;
@@ -34,11 +39,19 @@ public class CreateRoomDto {
     private LocalTime checkInTime;
     private Boolean isSmoking;
     private Boolean isParking;
-    private Integer bedNum;
 
-    private User host;
-    private Location location;
-    private List<RoomImg> roomImgList;
-    private List<BathRoom> bathRoomList;
-    private List<BedRoom> bedRoomList;
+
+    //location
+    private String country;
+    private String city;
+    private String borough;
+    private String neighborhood;
+    private String detailAddress;
+    private Double latitude;
+    private Double longitude;
+    //imgList는 multipartFile로
+    @Nullable
+    List<BedRoomDto> bedRoomDtoList = new ArrayList<>();
+    @Nullable
+    List<BathRoomDto> bathRoomDtoList = new ArrayList<>();
 }

@@ -4,17 +4,19 @@ import com.buildup.kbnb.advice.exception.ReservationException;
 
 import com.buildup.kbnb.dto.comment.GradeDto;
 
-import com.buildup.kbnb.dto.room.CreateRoomDto;
-import com.buildup.kbnb.dto.room.RoomDto;
+import com.buildup.kbnb.dto.room.CreateRoomRequestDto;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
+import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.User;
+import com.buildup.kbnb.repository.LocationRepository;
 import com.buildup.kbnb.repository.room.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.List;
 
@@ -22,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoomService {
     private final RoomRepository roomRepository;
-
+    private final LocationRepository locationRepository;
     public Page<Room> searchListByCondition(RoomSearchCondition roomSearchCondition, Pageable pageable) {
         return roomRepository.searchByCondition(roomSearchCondition, pageable);
     }
@@ -56,14 +58,19 @@ public class RoomService {
 
         return roomRepository.save(room);
     }
-
-    public Room registerRoom(User host, CreateRoomDto createRoomDto) {
-        Room room = Room.builder().host(host).name(createRoomDto.getName()).cleaningCost(createRoomDto.getCleaningCost()).isSmoking(createRoomDto.getIsSmoking())
-                .isParking(createRoomDto.getIsParking()).checkOutTime(createRoomDto.getCheckOutTime()).bathRoomList(createRoomDto.getBathRoomList()).bedRoomList(createRoomDto.getBedRoomList())
-                .roomCost(createRoomDto.getRoomCost()).roomType(createRoomDto.getRoomType()).location(createRoomDto.getLocation()).tax(createRoomDto.getTax()).description(createRoomDto.getDescription())
-                .peopleLimit(createRoomDto.getPeopleLimit()).checkInTime(createRoomDto.getCheckInTime()).roomImgList(createRoomDto.getRoomImgList()).bedNum(createRoomDto.getBedNum())
-                .build();
-        roomRepository.save(room);
-        return room;
+    public Location createLocation_InRoomService(CreateRoomRequestDto createRoomRequestDto) {
+        Location location = Location.builder().latitude(createRoomRequestDto.getLatitude()).longitude(createRoomRequestDto.getLongitude()).detailAddress(createRoomRequestDto.getDetailAddress())
+                .neighborhood(createRoomRequestDto.getNeighborhood()).borough(createRoomRequestDto.getBorough()).country(createRoomRequestDto.getCountry()).city(createRoomRequestDto.getCity()).build();
+        return locationRepository.save(location);
+    }
+    @ModelAttribute("creatingRoom")
+    public Room createRoom(User user, CreateRoomRequestDto createRoomRequestDto) {
+        Room room = Room.builder().name(createRoomRequestDto.getName()).cleaningCost(createRoomRequestDto.getCleaningCost()).host(user).checkInTime(createRoomRequestDto.getCheckInTime()).peopleLimit(createRoomRequestDto.getPeopleLimit())
+                .description(createRoomRequestDto.getDescription()).tax(createRoomRequestDto.getTax()).roomCost(createRoomRequestDto.getRoomCost()).isParking(createRoomRequestDto.getIsParking())
+                .isSmoking(createRoomRequestDto.getIsSmoking()).roomType(createRoomRequestDto.getRoomType()).build();
+        room.setLocation(createLocation_InRoomService(createRoomRequestDto));
+        room.setBathRoomList(createRoomRequestDto.getBathRoomDtoList()); room.setBedRoomList(createRoomRequestDto.getBedRoomDtoList());
+        room.setBedNum(getBedNum(room.getBedRoomList()));
+        return roomRepository.save(room);
     }
 }

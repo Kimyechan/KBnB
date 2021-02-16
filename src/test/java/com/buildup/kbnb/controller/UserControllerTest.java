@@ -174,12 +174,10 @@ class UserControllerTest {
         given(userService.findById(any())).willReturn(user);
         given(userService.save(any())).willReturn(user);
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
-        Map<String, String> map = new HashMap<>(); map.put("file", "수정 요청 ImgUrl");
-
         mockMvc.perform(fileUpload("/user/update").file(multipartFile)
-                .content(objectMapper.writeValueAsString(userUpdateRequest(user)))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .content(objectMapper.writeValueAsString(userUpdateRequest(user)))
         ).andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("user-update",
