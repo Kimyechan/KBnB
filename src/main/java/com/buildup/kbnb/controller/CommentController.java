@@ -86,13 +86,11 @@ public class CommentController {
         Room room = roomService.findById(roomId);
         Page<Comment> commentPage = commentService.getListByRoomIdWithUser(room, pageable);
         List<Comment> commentList = commentPage.getContent();
-        List<CommentDto> commentDtoList = buildCommentDtoList(commentList);
+        List<CommentDto> commentDtoList = mapCommentDtoList(commentList);
         Page<CommentDto> commentDtoPage = new PageImpl<>(commentDtoList, pageable, commentPage.getTotalElements());
         PagedModel<EntityModel<CommentDto>> pagedModel = assembler.toModel(commentDtoPage);
 
-        CommentListResponse commentListResponse = CommentListResponse.builder()
-                .accuracy(room.getAccuracy()).checkIn(room.getCheckIn()).cleanliness(room.getCleanliness()).communication(room.getCommunication())
-                .locationRate(room.getLocationRate()).priceSatisfaction(room.getPriceSatisfaction()).grade(room.getGrade()).allComments(pagedModel).build();
+        CommentListResponse commentListResponse = mapToCommentListResponse(room, pagedModel);
 
         EntityModel<CommentListResponse> model = EntityModel.of(commentListResponse);
         model.add(linkTo(methodOn(CommentController.class).getCommentList(roomId, pageable, assembler)).withSelfRel());
@@ -100,13 +98,33 @@ public class CommentController {
         return ResponseEntity.ok(model);
     }
 
-    public List<CommentDto> buildCommentDtoList(List<Comment> commentList) {
+    private CommentListResponse mapToCommentListResponse(Room room, PagedModel<EntityModel<CommentDto>> pagedModel) {
+        return CommentListResponse.builder()
+                .accuracy(room.getAccuracy())
+                .checkIn(room.getCheckIn())
+                .cleanliness(room.getCleanliness())
+                .communication(room.getCommunication())
+                .locationRate(room.getLocationRate())
+                .priceSatisfaction(room.getPriceSatisfaction())
+                .grade(room.getGrade())
+                .allComments(pagedModel).build();
+    }
+
+    public List<CommentDto> mapCommentDtoList(List<Comment> commentList) {
         List<CommentDto> commentDtoList = new ArrayList<>();
         for(Comment comment : commentList) {
-            CommentDto commentDto = CommentDto.builder().accuracy(comment.getAccuracy()).checkIn(comment.getCheckIn())
-                    .cleanliness(comment.getCleanliness()).communication(comment.getCommunication()).description(comment.getDescription())
-                    .locationRate(comment.getLocationRate()).priceSatisfaction(comment.getPriceSatisfaction()).userImgUrl(comment.getUser().getImageUrl())
-                    .creatingDate(String.valueOf(comment.getDate())).userName(comment.getUser().getName()).build();
+            CommentDto commentDto = CommentDto.builder()
+                    .accuracy(comment.getAccuracy())
+                    .checkIn(comment.getCheckIn())
+                    .cleanliness(comment.getCleanliness())
+                    .communication(comment.getCommunication())
+                    .description(comment.getDescription())
+                    .locationRate(comment.getLocationRate())
+                    .priceSatisfaction(comment.getPriceSatisfaction())
+                    .userImgUrl(comment.getUser().getImageUrl())
+                    .creatingDate(comment.getDate())
+                    .userName(comment.getUser().getName())
+                    .build();
             commentDtoList.add(commentDto);
         }
         return commentDtoList;
