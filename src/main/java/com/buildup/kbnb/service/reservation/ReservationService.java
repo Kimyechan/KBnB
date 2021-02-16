@@ -1,7 +1,6 @@
-package com.buildup.kbnb.service.reservationService;
+package com.buildup.kbnb.service.reservation;
 
 import com.buildup.kbnb.advice.exception.BadRequestException;
-import com.buildup.kbnb.dto.reservation.CancelDto;
 import com.buildup.kbnb.dto.room.detail.ReservationDate;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Payment;

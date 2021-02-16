@@ -14,7 +14,7 @@ import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.RoomService;
 import com.buildup.kbnb.service.UserService;
-import com.buildup.kbnb.service.reservationService.ReservationService;
+import com.buildup.kbnb.service.reservation.ReservationService;
 import com.buildup.kbnb.util.payment.model.request.Cancel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
