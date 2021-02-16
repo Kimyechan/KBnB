@@ -65,6 +65,7 @@ public class AuthController {
         user.setPassword(signUpRequest.getPassword());
         user.setProvider(AuthProvider.local);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setImageUrl("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-16T12%3A11%3A25.400507.png");
 
         User savedUser = userRepository.save(user);
 

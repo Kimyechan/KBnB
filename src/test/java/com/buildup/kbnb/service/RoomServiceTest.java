@@ -1,6 +1,7 @@
 package com.buildup.kbnb.service;
 
 import com.buildup.kbnb.model.room.BedRoom;
+import com.buildup.kbnb.repository.*;
 import com.buildup.kbnb.repository.room.RoomRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,10 +19,15 @@ class RoomServiceTest {
     @Mock
     RoomRepository roomRepository;
 
+    @Mock BedRoomRepository bedRoomRepository;
+    @Mock BathRoomRepository bathRoomRepository;
+    @Mock LocationRepository locationRepository;
+    @Mock UserRepository userRepository;
+    @Mock RoomImgRepository roomImgRepository;;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        roomService = new RoomService(roomRepository);
+        roomService = new RoomService(roomRepository, bedRoomRepository, bathRoomRepository, locationRepository, userRepository, roomImgRepository);
     }
 
     @Test
