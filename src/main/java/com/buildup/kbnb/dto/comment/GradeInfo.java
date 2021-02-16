@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GradeDto {
+public class GradeInfo {
     private Double totalGrade;
     private Double cleanliness;
     private Double accuracy;

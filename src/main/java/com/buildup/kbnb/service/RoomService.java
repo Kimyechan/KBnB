@@ -3,7 +3,7 @@ package com.buildup.kbnb.service;
 import com.buildup.kbnb.advice.exception.ReservationException;
 
 import com.buildup.kbnb.controller.RoomController;
-import com.buildup.kbnb.dto.comment.GradeDto;
+import com.buildup.kbnb.dto.comment.GradeInfo;
 
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
 import com.buildup.kbnb.model.Location;
@@ -58,14 +58,14 @@ public class RoomService {
     public Room save(Room room) {
         return roomRepository.save(room);
     }
-    public Room updateRoomGrade(Room room, GradeDto gradeDto) {
-        room.setCleanliness(gradeDto.getCleanliness());
-        room.setAccuracy(gradeDto.getAccuracy());
-        room.setCommunication(gradeDto.getCommunication());
-        room.setLocationRate(gradeDto.getLocationRate());
-        room.setCheckIn(gradeDto.getCheckIn());
-        room.setPriceSatisfaction(gradeDto.getPriceSatisfaction());
-        room.setGrade(gradeDto.getTotalGrade());
+    public Room updateRoomGrade(Room room, GradeInfo gradeInfo) {
+        room.setCleanliness(gradeInfo.getCleanliness());
+        room.setAccuracy(gradeInfo.getAccuracy());
+        room.setCommunication(gradeInfo.getCommunication());
+        room.setLocationRate(gradeInfo.getLocationRate());
+        room.setCheckIn(gradeInfo.getCheckIn());
+        room.setPriceSatisfaction(gradeInfo.getPriceSatisfaction());
+        room.setGrade(gradeInfo.getTotalGrade());
 
         return roomRepository.save(room);
     }
