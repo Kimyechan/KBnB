@@ -10,14 +10,8 @@ import com.buildup.kbnb.dto.room.detail.RoomDetail;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
-import com.buildup.kbnb.model.Reservation;
-import com.buildup.kbnb.model.room.BathRoom;
-import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.room.RoomImg;
-import com.buildup.kbnb.model.user.User;
-import com.buildup.kbnb.repository.*;
-import com.buildup.kbnb.repository.room.RoomRepository;
 import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.CommentService;
@@ -44,7 +38,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,12 +54,6 @@ public class   RoomController {
     private final UserRoomService userRoomService;
     private final ReservationService reservationService;
     private final S3Uploader s3Uploader;
-    private final RoomRepository roomRepository;
-    private final BedRoomRepository bedRoomRepository;
-    private final BathRoomRepository bathRoomRepository;
-    private final LocationRepository locationRepository;
-    private final UserRepository userRepository;
-    private final RoomImgRepository roomImgRepository;
 
     @PostMapping("/list")
     public ResponseEntity<?> getRoomList(@RequestBody RoomSearchCondition roomSearchCondition,
@@ -253,113 +240,6 @@ public class   RoomController {
     @PostMapping("/upload")
     public String upload(@CurrentUser UserPrincipal userPrincipal, @RequestParam("file") MultipartFile file) throws IOException {
         return s3Uploader.upload(file, "kbnbRoom", userPrincipal.getName());
-    }
-
-    @GetMapping("/test")
-    public String getRoomListTest(@CurrentUser UserPrincipal userPrincipal,
-                                  @RequestParam Integer numberOfRoom) {
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow();
-        for (int i = 0; i < numberOfRoom; i++) {
-//            Location location = Location.builder()
-//                    .latitude(37.55559028863329 + 0.001 * i)
-//                    .longitude(126.76740548073847 + 0.002 * i)
-//                    .build();
-            Location location = Location.builder()
-                    .latitude(37.5051891 + 0.001 * i)
-                    .longitude(126.9774869 + 0.002 * i)
-                    .build();
-            locationRepository.save(location);
-
-            Room room = Room.builder()
-                    .name("test room name 2")
-                    .roomType("Shared room")
-                    .host(user)
-                    .location(location)
-                    .roomCost(10000.0)
-                    .peopleLimit(4)
-                    .checkInTime(LocalTime.of(15, 0))
-                    .checkOutTime(LocalTime.of(13, 0))
-                    .isSmoking(false)
-                    .isParking(false)
-                    .grade(0.0)
-                    .bedNum(4)
-                    .build();
-            roomRepository.save(room);
-            for (int j = 0; j < 5; j++) {
-                RoomImg roomImg = RoomImg.builder()
-                        .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png")
-                        .room(room)
-                        .build();
-                roomImgRepository.save(roomImg);
-            }
-
-            BathRoom bathRoom = BathRoom.builder()
-                    .isPrivate(true)
-                    .room(room)
-                    .build();
-            bathRoomRepository.save(bathRoom);
-
-            BedRoom bedRoom1 = BedRoom.builder()
-                    .doubleSize(2)
-                    .room(room)
-                    .build();
-            bedRoomRepository.save(bedRoom1);
-
-            BedRoom bedRoom2 = BedRoom.builder()
-                    .doubleSize(2)
-                    .room(room)
-                    .build();
-            bedRoomRepository.save(bedRoom2);
-        }
-
-//        Location location = Location.builder()
-//                .latitude(37.5051891 + 0.001 )
-//                .longitude(126.9774869 + 0.002 )
-//                .build();
-//        locationRepository.save(location);
-//
-//        Room room = Room.builder()
-//                .name("test room name 2")
-//                .roomType("Shared room")
-//                .host(user)
-//                .location(location)
-//                .roomCost(10000.0)
-//                .peopleLimit(4)
-//                .checkInTime(LocalTime.of(15, 0))
-//                .checkOutTime(LocalTime.of(13, 0))
-//                .isSmoking(false)
-//                .isParking(false)
-//                .grade(0.0)
-//                .bedNum(4)
-//                .build();
-//        roomRepository.save(room);
-//        for (int j = 0; j < 5; j++) {
-//            RoomImg roomImg = RoomImg.builder()
-//                    .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-05T22%3A49%3A59.421617.png")
-//                    .room(room)
-//                    .build();
-//            roomImgRepository.save(roomImg);
-//        }
-//
-//        BathRoom bathRoom = BathRoom.builder()
-//                .isPrivate(true)
-//                .room(room)
-//                .build();
-//        bathRoomRepository.save(bathRoom);
-//
-//        BedRoom bedRoom1 = BedRoom.builder()
-//                .doubleSize(2)
-//                .room(room)
-//                .build();
-//        bedRoomRepository.save(bedRoom1);
-//
-//        BedRoom bedRoom2 = BedRoom.builder()
-//                .doubleSize(2)
-//                .room(room)
-//                .build();
-//        bedRoomRepository.save(bedRoom2);
-
-        return "ok";
     }
 
     @PostMapping("/dummy")
