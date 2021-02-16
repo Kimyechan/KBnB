@@ -26,6 +26,9 @@ import com.buildup.kbnb.service.UserRoomService;
 import com.buildup.kbnb.service.UserService;
 import com.buildup.kbnb.service.reservationService.ReservationService;
 import com.buildup.kbnb.util.S3Uploader;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -357,5 +360,32 @@ public class   RoomController {
 //        bedRoomRepository.save(bedRoom2);
 
         return "ok";
+    }
+
+    @PostMapping("/dummy")
+    public String dummy(@RequestBody RoomDummy roomDummy, @CurrentUser UserPrincipal userPrincipal) {
+        roomService.createRoomDummyData(roomDummy, userPrincipal);
+        return "Ok";
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RoomDummy {
+        private List<RoomDummyDetail> roomList;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RoomDummyDetail {
+        private String room_type;
+        private String country;
+        private String city;
+        private String borough;
+        private String neighborhood;
+        private Double latitude;
+        private Double longitude;
+        private String location;
     }
 }
