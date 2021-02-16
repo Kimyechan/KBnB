@@ -5,6 +5,7 @@ import lombok.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -12,35 +13,35 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @Builder
 public class CommentCreateReq {
-    @NotEmpty
+    @NotNull
     private Long reservationId;
 
-    @NotEmpty
+    @NotNull
     @Min(0)
     @Max(5)
     private Double cleanliness;
 
-    @NotEmpty
+    @NotNull
     @Min(0)
     @Max(5)
     private Double accuracy;
 
-    @NotEmpty
+    @NotNull
     @Min(0)
     @Max(5)
     private Double communication;
 
-    @NotEmpty
+    @NotNull
     @Min(0)
     @Max(5)
     private Double locationRate;
 
-    @NotEmpty
+    @NotNull
     @Min(0)
     @Max(5)
     private Double checkIn;
 
-    @NotEmpty
+    @NotNull
     @Min(0)
     @Max(5)
     private Double priceSatisfaction;
