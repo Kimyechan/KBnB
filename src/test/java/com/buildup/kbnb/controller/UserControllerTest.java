@@ -132,32 +132,7 @@ class UserControllerTest {
                 ));
     }
 
- /*   @Test
-    @DisplayName("유저 정보 수정 전 본인 확인")
-    public void beforeUpdateUserInfo() throws Exception{
-        User user = createUser();
-        given(userService.findById(any())).willReturn(user);
-        String token = tokenProvider.createToken(String.valueOf(user.getId()));
 
-        mockMvc.perform(post("/user/beforeUpdate")
-                .param("email", "test@gmail.com")
-                .param("password","test")
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-        ).andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document("user-before-update",
-                        requestParameters(
-                                parameterWithName("email").description("입력된 email"),
-                                parameterWithName("password").description("입력된 password")
-                        ),
-                        responseFields(
-                                fieldWithPath("본인 인증 성공: ").description("회원 정보 수정 페이지로 이동"),
-                                fieldWithPath("_links.self.href").description("해당 API URL"),
-                                fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
-                        )
-                ));
-    }*/
     public UserUpdateRequest userUpdateRequest(User user) {
         UserUpdateRequest userUpdateRequest = UserUpdateRequest.builder().password(passwordEncoder.encode("updatedPassword"))
                 .name("updatedName").email("updated@google.com")
@@ -167,13 +142,17 @@ class UserControllerTest {
 
     @Test
     @DisplayName("유저 정보 수정")
-    public void updateUserInfo() throws Exception{
+    public void updateUserInfo() throws Exception {
 
-        MockMultipartFile multipartFile = new MockMultipartFile("defaultImg", "testImg","image/png", "image".getBytes());
+        MockMultipartFile multipartFile = new MockMultipartFile("defaultImg", "testImg", "image/png", "image".getBytes());
         User user = createUser();
         given(userService.findById(any())).willReturn(user);
         given(userService.save(any())).willReturn(user);
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
+
+        Map<String, String> map = new HashMap<>();
+        map.put("file", "수정 요청 ImgUrl");
+
         mockMvc.perform(fileUpload("/user/update").file(multipartFile)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
@@ -207,6 +186,6 @@ class UserControllerTest {
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
 
                         )
-                        ));
+                ));
     }
 }

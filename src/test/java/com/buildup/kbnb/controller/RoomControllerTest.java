@@ -398,6 +398,8 @@ class RoomControllerTest {
                                 fieldWithPath("bathRoomNum").description("욕실 수"),
                                 fieldWithPath("grade").description("숙소 평점"),
                                 fieldWithPath("commentCount").description("댓글 수"),
+                                fieldWithPath("hostName").description("호스트 이름"),
+                                fieldWithPath("hostImgURL").description("호스트 이미지 URL"),
                                 fieldWithPath("locationDetail.country").description("지정 위치 국가 이름"),
                                 fieldWithPath("locationDetail.city").description("지정 위치 도시 이름"),
                                 fieldWithPath("locationDetail.borough").description("지정 위치 자치구 이름"),

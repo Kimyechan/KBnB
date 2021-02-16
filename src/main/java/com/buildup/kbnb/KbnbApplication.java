@@ -32,12 +32,12 @@ public class KbnbApplication {
     @Bean
     public RestTemplate restTemplate() {
         HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-        factory.setReadTimeout(5000); // 읽기시간초과, ms
-        factory.setConnectTimeout(3000); // 연결시간초과, ms
-        HttpClient httpClient = HttpClientBuilder.create() .setMaxConnTotal(100) // connection pool 적용
-                    .setMaxConnPerRoute(5) // connection pool 적용
+        factory.setReadTimeout(5000);
+        factory.setConnectTimeout(3000);
+        HttpClient httpClient = HttpClientBuilder.create() .setMaxConnTotal(100)
+                    .setMaxConnPerRoute(5)
                     .build();
-        factory.setHttpClient(httpClient); // 동기실행에 사용될 HttpClient 세팅
+        factory.setHttpClient(httpClient);
         return new RestTemplate(factory);
     }
 }

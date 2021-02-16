@@ -1,4 +1,4 @@
-package com.buildup.kbnb.dto;
+package com.buildup.kbnb.dto.reservation;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,10 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class ApiResponse {
-    private boolean success;
-    private String message;
+public class PaymentDto {
+    private String receipt_id;
+    private Integer price;
 }

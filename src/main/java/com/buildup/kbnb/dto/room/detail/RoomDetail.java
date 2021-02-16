@@ -28,6 +28,9 @@ public class RoomDetail {
     private Integer bathRoomNum;
     private Double grade;
 
+    private String hostName;
+    private String hostImgURL;
+
     private Long commentCount;
     LocationDetail locationDetail;
     private List<String> roomImgUrlList;

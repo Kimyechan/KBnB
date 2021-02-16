@@ -1,4 +1,4 @@
-= DIVING REST API Guide
+= KBnB REST API Guide
 김예찬;
 :doctype: book
 :icons: font

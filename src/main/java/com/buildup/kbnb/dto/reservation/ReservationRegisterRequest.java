@@ -17,4 +17,5 @@ public class ReservationRegisterRequest {
     private int infantNumber;
     private Long totalCost;
     private String message;
+    private PaymentDto payment;
 }
