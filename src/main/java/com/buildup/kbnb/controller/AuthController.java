@@ -68,29 +68,32 @@ public class AuthController {
             throw new EmailDuplicationException();
         }
 
-        User user = new User();
-        user.setName(signUpRequest.getName());
-        user.setBirth(signUpRequest.getBirth());
-        user.setEmail(signUpRequest.getEmail());
-        user.setPassword(signUpRequest.getPassword());
-        user.setProvider(AuthProvider.local);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setImageUrl("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-16T12%3A11%3A25.400507.png");
-
+        User user = mapDtoToUser(signUpRequest);
         User savedUser = userRepository.save(user);
 
-        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+        String token = tokenProvider.createToken(String.valueOf(savedUser.getId()));
         SignUpResponse response = SignUpResponse.builder()
                     .accessToken(token)
                     .tokenType("Bearer")
                     .build();
 
-        EntityModel<SignUpResponse> model = EntityModel.of(response);
         URI location = linkTo(methodOn(UserController.class).getCurrentUser(UserPrincipal.create(savedUser))).toUri();
+        EntityModel<SignUpResponse> model = EntityModel.of(response);
         model.add(linkTo(methodOn(AuthController.class).registerUser(signUpRequest, error)).withSelfRel());
         model.add(Link.of("/docs/api.html#resource-user-signup-email").withRel("profile"));
 
         return ResponseEntity.created(location)
                 .body(model);
+    }
+
+    private User mapDtoToUser(SignUpRequest signUpRequest) {
+        return User.builder()
+                .name(signUpRequest.getName())
+                .birth(signUpRequest.getBirth())
+                .email(signUpRequest.getEmail())
+                .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .provider(AuthProvider.local)
+                .imageUrl("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-16T12%3A11%3A25.400507.png")
+                .build();
     }
 }
