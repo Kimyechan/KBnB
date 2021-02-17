@@ -564,7 +564,7 @@ class RoomControllerTest {
                         )
                 ));
     }
-    @Test
+  /*  @Test
     @DisplayName("호스트의 방 등록")
     public void hostRegisterRoom() throws Exception {
         User user = createUser();
@@ -599,5 +599,5 @@ class RoomControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .param("roomId", String.valueOf(1L)))
                 .andDo(print());
-    }
+    }*/
 }

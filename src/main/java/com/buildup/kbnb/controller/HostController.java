@@ -1,3 +1,4 @@
+/*
 package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.dto.reservation.ReservationDetailResponse;
@@ -93,3 +94,4 @@ public ResponseEntity<?> addPhoto(@CurrentUser UserPrincipal userPrincipal, List
     System.out.println("===========================================");
 }
 }
+*/

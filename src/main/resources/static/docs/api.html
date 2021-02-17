@@ -523,14 +523,23 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#resource-user-update_request_body">Request body</a></li>
 <li><a href="#resource-user-update_request_fields">Request fields</a></li>
 <li><a href="#resource-user-update_request_headers">Request headers</a></li>
-<<<<<<< HEAD
 <li><a href="#resource-user-update_request_part-files-fields">Request part-files-fields</a></li>
-=======
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
 <li><a href="#resource-user-update_request_parts">Request parts</a></li>
 <li><a href="#resource-user-update_response_body">Response body</a></li>
 <li><a href="#resource-user-update_response_fields">Response fields</a></li>
 <li><a href="#resource-user-update_response_headers">Response headers</a></li>
+</ul>
+</li>
+<li><a href="#resource-user-updatePhoto">유저 사진 수정</a>
+<ul class="sectlevel3">
+<li><a href="#resource-user-updatePhoto_curl_request">Example request</a></li>
+<li><a href="#resource-user-updatePhoto_http_request">HTTP request</a></li>
+<li><a href="#resource-user-updatePhoto_http_response">Example response</a></li>
+<li><a href="#resource-user-updatePhoto_httpie_request">HTTPie request</a></li>
+<li><a href="#resource-user-updatePhoto_request_body">Request body</a></li>
+<li><a href="#resource-user-updatePhoto_request_parts">Request parts</a></li>
+<li><a href="#resource-user-updatePhoto_response_body">Response body</a></li>
+<li><a href="#resource-user-updatePhoto_response_fields">Response fields</a></li>
 </ul>
 </li>
 </ul>
@@ -931,7 +940,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /auth/signup HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 100
+Content-Length: 105
 Host: localhost:8080
 
 {
@@ -959,14 +968,10 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 398
+Content-Length: 409
 
 {
-<<<<<<< HEAD
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEzNDYwOTkwLCJleHAiOjE2MTQzMjQ5OTB9.RXtDchCOTmHFoBnIt0sIs04VG63R9KZYSDXnPd7W2imqQhJxLSrp9leHsu13rrJpnkk5NTJw4IqeZX9M9WWo8Q",
-=======
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEzNDU4NDM3LCJleHAiOjE2MTQzMjI0Mzd9.TTeXpdwUTtiCim8srfha-UFZ4_Lhd7FPr_z7Ypow1PGTHp5ObV4BrwqKz7oDS1xBD1SKTf0RtuRbgrbjfHRIKw",
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEzNTQxMjMxLCJleHAiOjE2MTQ0MDUyMzF9.htZcYSSlahk3ClH9qPxAKpQhtcvx5F_p2DLpBsmlEdObcKpGJp0UTPHsknZGgDm6FVTXJCQEJqKCSyiFOMvZOA",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -1072,11 +1077,7 @@ Content-Length: 398
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code>{
-<<<<<<< HEAD
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEzNDYwOTkwLCJleHAiOjE2MTQzMjQ5OTB9.RXtDchCOTmHFoBnIt0sIs04VG63R9KZYSDXnPd7W2imqQhJxLSrp9leHsu13rrJpnkk5NTJw4IqeZX9M9WWo8Q",
-=======
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEzNDU4NDM3LCJleHAiOjE2MTQzMjI0Mzd9.TTeXpdwUTtiCim8srfha-UFZ4_Lhd7FPr_z7Ypow1PGTHp5ObV4BrwqKz7oDS1xBD1SKTf0RtuRbgrbjfHRIKw",
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudWxsIiwiaWF0IjoxNjEzNTQxMjMxLCJleHAiOjE2MTQ0MDUyMzF9.htZcYSSlahk3ClH9qPxAKpQhtcvx5F_p2DLpBsmlEdObcKpGJp0UTPHsknZGgDm6FVTXJCQEJqKCSyiFOMvZOA",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -1172,7 +1173,7 @@ Content-Length: 398
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /auth/login HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 55
+Content-Length: 58
 Host: localhost:8080
 
 {
@@ -1197,14 +1198,10 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 392
+Content-Length: 403
 
 {
-<<<<<<< HEAD
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTg5LCJleHAiOjE2MTQzMjQ5ODl9._pJvLLvsi9rHeW0egYWDNRQyg0upOwcl9TFH5cvMFPiuL6zVXe8CDeIrZLqWX-Uabs3OfrWlt3OHGdTFZsUMAA",
-=======
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDM2LCJleHAiOjE2MTQzMjI0MzZ9.XBNCI8sw0BQLIzrODvjhnFP_SFx4GCWPG0_NhxU9TKRbameS4J4xSlVFRTXAKtlZ-jVWDstKi3rO8YqJsK458Q",
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjMxLCJleHAiOjE2MTQ0MDUyMzF9.d69_iTNkHW5VS7c6AjZpai_hge35KIpiX7ozcUGMxXbf4qlx4PUFFd-cV9Rbj8zTo6T0mojYiv7kfdqQQ7NLCg",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -1296,11 +1293,7 @@ Content-Length: 392
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code>{
-<<<<<<< HEAD
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTg5LCJleHAiOjE2MTQzMjQ5ODl9._pJvLLvsi9rHeW0egYWDNRQyg0upOwcl9TFH5cvMFPiuL6zVXe8CDeIrZLqWX-Uabs3OfrWlt3OHGdTFZsUMAA",
-=======
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDM2LCJleHAiOjE2MTQzMjI0MzZ9.XBNCI8sw0BQLIzrODvjhnFP_SFx4GCWPG0_NhxU9TKRbameS4J4xSlVFRTXAKtlZ-jVWDstKi3rO8YqJsK458Q",
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjMxLCJleHAiOjE2MTQ0MDUyMzF9.d69_iTNkHW5VS7c6AjZpai_hge35KIpiX7ozcUGMxXbf4qlx4PUFFd-cV9Rbj8zTo6T0mojYiv7kfdqQQ7NLCg",
   "tokenType" : "Bearer",
   "_links" : {
     "self" : {
@@ -1383,11 +1376,7 @@ Content-Length: 392
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/user/me' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk5LCJleHAiOjE2MTQzMjQ5OTl9.On6nrOYjh3qBzR-lRHJwcAGsblAs3yy8Z6l1gwZi36LhdSGYpYCbDtV2RmrzEX8XuHm1srQLSHJZm3Ndxxx6aA'</code></pre>
-=======
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDE5LCJleHAiOjE2MTQzMjI0MTl9.1NcQodu2twqRxvGLsMh_nufXUKgrTEQckHe-xBLx5iFQa8MrUrQ9Pif9gFc7mzuHUu36XT-q1NYQDquFtSGM2w'</code></pre>
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQzLCJleHAiOjE2MTQ0MDUyNDN9.ueOj_aUjvVP2ja5LH5P8lKOALfpt8anOFvctZcYo13kjyBCEsfP_Co2AjntVZ0LFbnrGTd_RMEFnbgBh36o58w'</code></pre>
 </div>
 </div>
 </div>
@@ -1397,11 +1386,7 @@ Content-Length: 392
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /user/me HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-<<<<<<< HEAD
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk5LCJleHAiOjE2MTQzMjQ5OTl9.On6nrOYjh3qBzR-lRHJwcAGsblAs3yy8Z6l1gwZi36LhdSGYpYCbDtV2RmrzEX8XuHm1srQLSHJZm3Ndxxx6aA
-=======
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDE5LCJleHAiOjE2MTQzMjI0MTl9.1NcQodu2twqRxvGLsMh_nufXUKgrTEQckHe-xBLx5iFQa8MrUrQ9Pif9gFc7mzuHUu36XT-q1NYQDquFtSGM2w
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQzLCJleHAiOjE2MTQ0MDUyNDN9.ueOj_aUjvVP2ja5LH5P8lKOALfpt8anOFvctZcYo13kjyBCEsfP_Co2AjntVZ0LFbnrGTd_RMEFnbgBh36o58w
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1421,7 +1406,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 298
+Content-Length: 312
 
 {
   "name" : "test",
@@ -1447,11 +1432,7 @@ Content-Length: 298
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ http GET 'http://localhost:8080/user/me' \
     'Content-Type:application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk5LCJleHAiOjE2MTQzMjQ5OTl9.On6nrOYjh3qBzR-lRHJwcAGsblAs3yy8Z6l1gwZi36LhdSGYpYCbDtV2RmrzEX8XuHm1srQLSHJZm3Ndxxx6aA'</code></pre>
-=======
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDE5LCJleHAiOjE2MTQzMjI0MTl9.1NcQodu2twqRxvGLsMh_nufXUKgrTEQckHe-xBLx5iFQa8MrUrQ9Pif9gFc7mzuHUu36XT-q1NYQDquFtSGM2w'</code></pre>
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQzLCJleHAiOjE2MTQ0MDUyNDN9.ueOj_aUjvVP2ja5LH5P8lKOALfpt8anOFvctZcYo13kjyBCEsfP_Co2AjntVZ0LFbnrGTd_RMEFnbgBh36o58w'</code></pre>
 </div>
 </div>
 </div>
@@ -1593,15 +1574,9 @@ Content-Length: 298
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/user/update' -i -X POST \
-    -H 'Content-Type: multipart/form-data;charset=UTF-8' \
-<<<<<<< HEAD
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk5LCJleHAiOjE2MTQzMjQ5OTl9.On6nrOYjh3qBzR-lRHJwcAGsblAs3yy8Z6l1gwZi36LhdSGYpYCbDtV2RmrzEX8XuHm1srQLSHJZm3Ndxxx6aA' \
-=======
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDE5LCJleHAiOjE2MTQzMjI0MTl9.1NcQodu2twqRxvGLsMh_nufXUKgrTEQckHe-xBLx5iFQa8MrUrQ9Pif9gFc7mzuHUu36XT-q1NYQDquFtSGM2w' \
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
-    -F 'defaultImg=@testImg;type=image/png' \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQzLCJleHAiOjE2MTQ0MDUyNDN9.ueOj_aUjvVP2ja5LH5P8lKOALfpt8anOFvctZcYo13kjyBCEsfP_Co2AjntVZ0LFbnrGTd_RMEFnbgBh36o58w' \
     -d '{
-  "id" : 1,
   "name" : "updatedName",
   "birth" : "2020-11-11",
   "email" : "updated@google.com"
@@ -1614,18 +1589,12 @@ Content-Length: 298
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /user/update HTTP/1.1
-Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-<<<<<<< HEAD
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk5LCJleHAiOjE2MTQzMjQ5OTl9.On6nrOYjh3qBzR-lRHJwcAGsblAs3yy8Z6l1gwZi36LhdSGYpYCbDtV2RmrzEX8XuHm1srQLSHJZm3Ndxxx6aA
-Content-Length: 105
-=======
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDE5LCJleHAiOjE2MTQzMjI0MTl9.1NcQodu2twqRxvGLsMh_nufXUKgrTEQckHe-xBLx5iFQa8MrUrQ9Pif9gFc7mzuHUu36XT-q1NYQDquFtSGM2w
-Content-Length: 100
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQzLCJleHAiOjE2MTQ0MDUyNDN9.ueOj_aUjvVP2ja5LH5P8lKOALfpt8anOFvctZcYo13kjyBCEsfP_Co2AjntVZ0LFbnrGTd_RMEFnbgBh36o58w
+Content-Length: 92
 Host: localhost:8080
 
 {
-  "id" : 1,
   "name" : "updatedName",
   "birth" : "2020-11-11",
   "email" : "updated@google.com"
@@ -1648,14 +1617,12 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 327
+Content-Length: 270
 
 {
-  "id" : 1,
-  "name" : null,
-  "birth" : "2020-10-10",
-  "email" : null,
-  "imageUrl" : "https://kbnbbucket.s3.ap-northeast-2.amazonaws.com/userImg/test",
+  "name" : "updatedName",
+  "birth" : "2020-11-11",
+  "email" : "updated@google.com",
   "_links" : {
     "self" : {
       "href" : "http://localhost:8080/user/update"
@@ -1673,17 +1640,12 @@ Content-Length: 327
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ echo '{
-  "id" : 1,
   "name" : "updatedName",
   "birth" : "2020-11-11",
   "email" : "updated@google.com"
-}' | http --form POST 'http://localhost:8080/user/update' \
-    'defaultImg'@'testImg' \
-<<<<<<< HEAD
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk5LCJleHAiOjE2MTQzMjQ5OTl9.On6nrOYjh3qBzR-lRHJwcAGsblAs3yy8Z6l1gwZi36LhdSGYpYCbDtV2RmrzEX8XuHm1srQLSHJZm3Ndxxx6aA'</code></pre>
-=======
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDE5LCJleHAiOjE2MTQzMjI0MTl9.1NcQodu2twqRxvGLsMh_nufXUKgrTEQckHe-xBLx5iFQa8MrUrQ9Pif9gFc7mzuHUu36XT-q1NYQDquFtSGM2w'</code></pre>
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+}' | http POST 'http://localhost:8080/user/update' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQzLCJleHAiOjE2MTQ0MDUyNDN9.ueOj_aUjvVP2ja5LH5P8lKOALfpt8anOFvctZcYo13kjyBCEsfP_Co2AjntVZ0LFbnrGTd_RMEFnbgBh36o58w'</code></pre>
 </div>
 </div>
 </div>
@@ -1692,7 +1654,6 @@ Content-Length: 327
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code>{
-  "id" : 1,
   "name" : "updatedName",
   "birth" : "2020-11-11",
   "email" : "updated@google.com"
@@ -1716,11 +1677,6 @@ Content-Length: 327
 </tr>
 </thead>
 <tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 식별자</p></td>
-</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
@@ -1761,25 +1717,8 @@ Content-Length: 327
 </table>
 </div>
 <div class="sect3">
-<h4 id="resource-user-update_request_parts"><a class="link" href="#resource-user-update_request_parts">Request parts</a></h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Part</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>defaultImg</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">테스트용 이미지</p></td>
-</tr>
-</tbody>
-</table>
+<h4 id="resource-user-update_request_part-files-fields"><a class="link" href="#resource-user-update_request_part-files-fields">Request part-files-fields</a></h4>
+
 </div>
 <div class="sect3">
 <h4 id="resource-user-update_request_parts"><a class="link" href="#resource-user-update_request_parts">Request parts</a></h4>
@@ -1807,11 +1746,9 @@ Content-Length: 327
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code>{
-  "id" : 1,
-  "name" : null,
-  "birth" : "2020-10-10",
-  "email" : null,
-  "imageUrl" : "https://kbnbbucket.s3.ap-northeast-2.amazonaws.com/userImg/test",
+  "name" : "updatedName",
+  "birth" : "2020-11-11",
+  "email" : "updated@google.com",
   "_links" : {
     "self" : {
       "href" : "http://localhost:8080/user/update"
@@ -1841,24 +1778,14 @@ Content-Length: 327
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">유저 식별자</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">수정 요청된 이름</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>email</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">수정 요청된 이메일</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>imageUrl</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">수정 요청된 이미지 url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">수정 요청된 이메일</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>birth</code></p></td>
@@ -1900,6 +1827,148 @@ Content-Length: 327
 </table>
 </div>
 </div>
+<div class="sect2">
+<h3 id="resource-user-updatePhoto"><a class="link" href="#resource-user-updatePhoto">유저 사진 수정</a></h3>
+<div class="sect3">
+<h4 id="resource-user-updatePhoto_curl_request"><a class="link" href="#resource-user-updatePhoto_curl_request">Example request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/user/update/photo' -i -X POST \
+    -H 'Content-Type: multipart/form-data;charset=UTF-8' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQzLCJleHAiOjE2MTQ0MDUyNDN9.ueOj_aUjvVP2ja5LH5P8lKOALfpt8anOFvctZcYo13kjyBCEsfP_Co2AjntVZ0LFbnrGTd_RMEFnbgBh36o58w' \
+    -F 'file=example'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resource-user-updatePhoto_http_request"><a class="link" href="#resource-user-updatePhoto_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /user/update/photo HTTP/1.1
+Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQzLCJleHAiOjE2MTQ0MDUyNDN9.ueOj_aUjvVP2ja5LH5P8lKOALfpt8anOFvctZcYo13kjyBCEsfP_Co2AjntVZ0LFbnrGTd_RMEFnbgBh36o58w
+Host: localhost:8080
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=file
+
+example
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resource-user-updatePhoto_http_response"><a class="link" href="#resource-user-updatePhoto_http_response">Example response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/hal+json;charset=utf8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 139
+
+{
+  "newImgUrl" : "test url",
+  "_links" : {
+    "profile" : {
+      "href" : "/docs/api.html#resource-user-updatePhoto"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resource-user-updatePhoto_httpie_request"><a class="link" href="#resource-user-updatePhoto_httpie_request">HTTPie request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ http --form POST 'http://localhost:8080/user/update/photo' \
+    'file'@&lt;(echo 'example') \
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQzLCJleHAiOjE2MTQ0MDUyNDN9.ueOj_aUjvVP2ja5LH5P8lKOALfpt8anOFvctZcYo13kjyBCEsfP_Co2AjntVZ0LFbnrGTd_RMEFnbgBh36o58w'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resource-user-updatePhoto_request_body"><a class="link" href="#resource-user-updatePhoto_request_body">Request body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resource-user-updatePhoto_request_parts"><a class="link" href="#resource-user-updatePhoto_request_parts">Request parts</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Part</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>file</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">변경될 이미지</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="resource-user-updatePhoto_response_body"><a class="link" href="#resource-user-updatePhoto_response_body">Response body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code>{
+  "newImgUrl" : "test url",
+  "_links" : {
+    "profile" : {
+      "href" : "/docs/api.html#resource-user-updatePhoto"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resource-user-updatePhoto_response_fields"><a class="link" href="#resource-user-updatePhoto_response_fields">Response fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>newImgUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">새로운 이미지URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_links.profile.href</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">해당 API 문서 URL</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1916,11 +1985,7 @@ Content-Length: 327
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/room/list?page=1&amp;size=5' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk3LCJleHAiOjE2MTQzMjQ5OTd9.2YSLan5TAnKggJ0ygs1OjzMqPbSAKHmKcAKaTARHKBaSiXmZqgM6jGc8VQsLDcYrwkp4Wqz08-o9W8rWPWVRtA' \
-=======
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDM5LCJleHAiOjE2MTQzMjI0Mzl9.dFXzGPs-kBipcUi7_DZAY-miTzeSLcb6dLbF-06x3kESMco4Lj4u1voMlm__O8zHF_MiFyukKHXzieWzqgGdRw' \
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQxLCJleHAiOjE2MTQ0MDUyNDF9.aPF0jmMV6ef76wabsnLM-FCKXLoqDowBlayxtgp0xfP0kQQ4H77N7rW_bzp_JBtU2U_oAL2pARKQqZ4Mp7vhgg' \
     -d '{
   "locationSearch" : {
     "latitude" : 10.0,
@@ -1957,13 +2022,8 @@ Content-Length: 327
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /room/list?page=1&amp;size=5 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-<<<<<<< HEAD
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk3LCJleHAiOjE2MTQzMjQ5OTd9.2YSLan5TAnKggJ0ygs1OjzMqPbSAKHmKcAKaTARHKBaSiXmZqgM6jGc8VQsLDcYrwkp4Wqz08-o9W8rWPWVRtA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQxLCJleHAiOjE2MTQ0MDUyNDF9.aPF0jmMV6ef76wabsnLM-FCKXLoqDowBlayxtgp0xfP0kQQ4H77N7rW_bzp_JBtU2U_oAL2pARKQqZ4Mp7vhgg
 Content-Length: 545
-=======
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDM5LCJleHAiOjE2MTQzMjI0Mzl9.dFXzGPs-kBipcUi7_DZAY-miTzeSLcb6dLbF-06x3kESMco4Lj4u1voMlm__O8zHF_MiFyukKHXzieWzqgGdRw
-Content-Length: 519
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
 Host: localhost:8080
 
 {
@@ -2011,7 +2071,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 6070
+Content-Length: 6210
 
 {
   "_embedded" : {
@@ -2189,11 +2249,7 @@ Content-Length: 6070
   "bathRoomNum" : 1
 }' | http POST 'http://localhost:8080/room/list?page=1&amp;size=5' \
     'Content-Type:application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk3LCJleHAiOjE2MTQzMjQ5OTd9.2YSLan5TAnKggJ0ygs1OjzMqPbSAKHmKcAKaTARHKBaSiXmZqgM6jGc8VQsLDcYrwkp4Wqz08-o9W8rWPWVRtA'</code></pre>
-=======
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDM5LCJleHAiOjE2MTQzMjI0Mzl9.dFXzGPs-kBipcUi7_DZAY-miTzeSLcb6dLbF-06x3kESMco4Lj4u1voMlm__O8zHF_MiFyukKHXzieWzqgGdRw'</code></pre>
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQxLCJleHAiOjE2MTQ0MDUyNDF9.aPF0jmMV6ef76wabsnLM-FCKXLoqDowBlayxtgp0xfP0kQQ4H77N7rW_bzp_JBtU2U_oAL2pARKQqZ4Mp7vhgg'</code></pre>
 </div>
 </div>
 </div>
@@ -2737,11 +2793,7 @@ Content-Length: 6070
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/room/detail?roomId=1' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk3LCJleHAiOjE2MTQzMjQ5OTd9.2YSLan5TAnKggJ0ygs1OjzMqPbSAKHmKcAKaTARHKBaSiXmZqgM6jGc8VQsLDcYrwkp4Wqz08-o9W8rWPWVRtA'</code></pre>
-=======
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDM5LCJleHAiOjE2MTQzMjI0Mzl9.dFXzGPs-kBipcUi7_DZAY-miTzeSLcb6dLbF-06x3kESMco4Lj4u1voMlm__O8zHF_MiFyukKHXzieWzqgGdRw'</code></pre>
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQxLCJleHAiOjE2MTQ0MDUyNDF9.aPF0jmMV6ef76wabsnLM-FCKXLoqDowBlayxtgp0xfP0kQQ4H77N7rW_bzp_JBtU2U_oAL2pARKQqZ4Mp7vhgg'</code></pre>
 </div>
 </div>
 </div>
@@ -2751,11 +2803,7 @@ Content-Length: 6070
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /room/detail?roomId=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-<<<<<<< HEAD
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk3LCJleHAiOjE2MTQzMjQ5OTd9.2YSLan5TAnKggJ0ygs1OjzMqPbSAKHmKcAKaTARHKBaSiXmZqgM6jGc8VQsLDcYrwkp4Wqz08-o9W8rWPWVRtA
-=======
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDM5LCJleHAiOjE2MTQzMjI0Mzl9.dFXzGPs-kBipcUi7_DZAY-miTzeSLcb6dLbF-06x3kESMco4Lj4u1voMlm__O8zHF_MiFyukKHXzieWzqgGdRw
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQxLCJleHAiOjE2MTQ0MDUyNDF9.aPF0jmMV6ef76wabsnLM-FCKXLoqDowBlayxtgp0xfP0kQQ4H77N7rW_bzp_JBtU2U_oAL2pARKQqZ4Mp7vhgg
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2775,7 +2823,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 2094
+Content-Length: 2174
 
 {
   "id" : 1,
@@ -2867,11 +2915,7 @@ Content-Length: 2094
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ http GET 'http://localhost:8080/room/detail?roomId=1' \
     'Content-Type:application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk3LCJleHAiOjE2MTQzMjQ5OTd9.2YSLan5TAnKggJ0ygs1OjzMqPbSAKHmKcAKaTARHKBaSiXmZqgM6jGc8VQsLDcYrwkp4Wqz08-o9W8rWPWVRtA'</code></pre>
-=======
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDM5LCJleHAiOjE2MTQzMjI0Mzl9.dFXzGPs-kBipcUi7_DZAY-miTzeSLcb6dLbF-06x3kESMco4Lj4u1voMlm__O8zHF_MiFyukKHXzieWzqgGdRw'</code></pre>
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQxLCJleHAiOjE2MTQ0MDUyNDF9.aPF0jmMV6ef76wabsnLM-FCKXLoqDowBlayxtgp0xfP0kQQ4H77N7rW_bzp_JBtU2U_oAL2pARKQqZ4Mp7vhgg'</code></pre>
 </div>
 </div>
 </div>
@@ -3256,11 +3300,7 @@ Content-Length: 2094
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/room/check' -i -X PATCH \
     -H 'Content-Type: application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk3LCJleHAiOjE2MTQzMjQ5OTd9.2YSLan5TAnKggJ0ygs1OjzMqPbSAKHmKcAKaTARHKBaSiXmZqgM6jGc8VQsLDcYrwkp4Wqz08-o9W8rWPWVRtA' \
-=======
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDM5LCJleHAiOjE2MTQzMjI0Mzl9.dFXzGPs-kBipcUi7_DZAY-miTzeSLcb6dLbF-06x3kESMco4Lj4u1voMlm__O8zHF_MiFyukKHXzieWzqgGdRw' \
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQwLCJleHAiOjE2MTQ0MDUyNDB9.4e-b3ZJBM5F_3HfjmZYJoiRQeFRKSedzg9i8rTxIit_36YQluT5NMardjtZShdpAhMiaMStjFVE0w_MCuFRDIg' \
     -d '{
   "roomId" : 1
 }'</code></pre>
@@ -3273,13 +3313,8 @@ Content-Length: 2094
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /room/check HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-<<<<<<< HEAD
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk3LCJleHAiOjE2MTQzMjQ5OTd9.2YSLan5TAnKggJ0ygs1OjzMqPbSAKHmKcAKaTARHKBaSiXmZqgM6jGc8VQsLDcYrwkp4Wqz08-o9W8rWPWVRtA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQwLCJleHAiOjE2MTQ0MDUyNDB9.4e-b3ZJBM5F_3HfjmZYJoiRQeFRKSedzg9i8rTxIit_36YQluT5NMardjtZShdpAhMiaMStjFVE0w_MCuFRDIg
 Content-Length: 20
-=======
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDM5LCJleHAiOjE2MTQzMjI0Mzl9.dFXzGPs-kBipcUi7_DZAY-miTzeSLcb6dLbF-06x3kESMco4Lj4u1voMlm__O8zHF_MiFyukKHXzieWzqgGdRw
-Content-Length: 18
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
 Host: localhost:8080
 
 {
@@ -3303,7 +3338,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 208
+Content-Length: 219
 
 {
   "roomId" : 1,
@@ -3328,11 +3363,7 @@ Content-Length: 208
   "roomId" : 1
 }' | http PATCH 'http://localhost:8080/room/check' \
     'Content-Type:application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk3LCJleHAiOjE2MTQzMjQ5OTd9.2YSLan5TAnKggJ0ygs1OjzMqPbSAKHmKcAKaTARHKBaSiXmZqgM6jGc8VQsLDcYrwkp4Wqz08-o9W8rWPWVRtA'</code></pre>
-=======
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDM5LCJleHAiOjE2MTQzMjI0Mzl9.dFXzGPs-kBipcUi7_DZAY-miTzeSLcb6dLbF-06x3kESMco4Lj4u1voMlm__O8zHF_MiFyukKHXzieWzqgGdRw'</code></pre>
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjQwLCJleHAiOjE2MTQ0MDUyNDB9.4e-b3ZJBM5F_3HfjmZYJoiRQeFRKSedzg9i8rTxIit_36YQluT5NMardjtZShdpAhMiaMStjFVE0w_MCuFRDIg'</code></pre>
 </div>
 </div>
 </div>
@@ -3488,11 +3519,7 @@ Content-Length: 208
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/reservation' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk1LCJleHAiOjE2MTQzMjQ5OTV9.1ZXYKCJ2pL3V4pJifZDbmv3iTGAmr9aL7_ot24JdK01rXtZ0oLXd5nGVDjxW1b-oWm_yyKQAvg-Z5ImgoyHHdg' \
-=======
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI3LCJleHAiOjE2MTQzMjI0Mjd9.dgD5KTgxlvd46ujWm83rHeRJ1_0PQI0iPRVVEvEvp7QW2QRMvELfcOJZgC3eGtH_G6DbXMX0v0CVAePkrq1LOw' \
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM2LCJleHAiOjE2MTQ0MDUyMzZ9.WGbgnWdDARtbcbzfS-AeabuV7JdGNu34EM1v9jNruYI7UjyxVWatyC9ceDuH42ZoGsTsZEXAPKYiyozztBcllA' \
     -d '{
   "roomId" : 1,
   "checkIn" : "2021-02-01",
@@ -3515,13 +3542,8 @@ Content-Length: 208
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /reservation HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-<<<<<<< HEAD
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk1LCJleHAiOjE2MTQzMjQ5OTV9.1ZXYKCJ2pL3V4pJifZDbmv3iTGAmr9aL7_ot24JdK01rXtZ0oLXd5nGVDjxW1b-oWm_yyKQAvg-Z5ImgoyHHdg
-Content-Length: 192
-=======
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI3LCJleHAiOjE2MTQzMjI0Mjd9.dgD5KTgxlvd46ujWm83rHeRJ1_0PQI0iPRVVEvEvp7QW2QRMvELfcOJZgC3eGtH_G6DbXMX0v0CVAePkrq1LOw
-Content-Length: 256
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM2LCJleHAiOjE2MTQ0MDUyMzZ9.WGbgnWdDARtbcbzfS-AeabuV7JdGNu34EM1v9jNruYI7UjyxVWatyC9ceDuH42ZoGsTsZEXAPKYiyozztBcllA
+Content-Length: 268
 Host: localhost:8080
 
 {
@@ -3556,7 +3578,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 235
+Content-Length: 246
 
 {
   "reservationId" : 1,
@@ -3591,11 +3613,7 @@ Content-Length: 235
   }
 }' | http POST 'http://localhost:8080/reservation' \
     'Content-Type:application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk1LCJleHAiOjE2MTQzMjQ5OTV9.1ZXYKCJ2pL3V4pJifZDbmv3iTGAmr9aL7_ot24JdK01rXtZ0oLXd5nGVDjxW1b-oWm_yyKQAvg-Z5ImgoyHHdg'</code></pre>
-=======
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI3LCJleHAiOjE2MTQzMjI0Mjd9.dgD5KTgxlvd46ujWm83rHeRJ1_0PQI0iPRVVEvEvp7QW2QRMvELfcOJZgC3eGtH_G6DbXMX0v0CVAePkrq1LOw'</code></pre>
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM2LCJleHAiOjE2MTQ0MDUyMzZ9.WGbgnWdDARtbcbzfS-AeabuV7JdGNu34EM1v9jNruYI7UjyxVWatyC9ceDuH42ZoGsTsZEXAPKYiyozztBcllA'</code></pre>
 </div>
 </div>
 </div>
@@ -3792,11 +3810,7 @@ Content-Length: 235
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/reservation?page=0&amp;size=5' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk0LCJleHAiOjE2MTQzMjQ5OTR9.eIhEMWcBfesdWmGt63kENQ8e-NVa5CNAU_8LQ7kehCP6vciWEJuEH66yK5kDtRunDKa4NemIo11MkNnGE_0Rrw' \
-=======
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI3LCJleHAiOjE2MTQzMjI0Mjd9.dgD5KTgxlvd46ujWm83rHeRJ1_0PQI0iPRVVEvEvp7QW2QRMvELfcOJZgC3eGtH_G6DbXMX0v0CVAePkrq1LOw' \
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM2LCJleHAiOjE2MTQ0MDUyMzZ9.WGbgnWdDARtbcbzfS-AeabuV7JdGNu34EM1v9jNruYI7UjyxVWatyC9ceDuH42ZoGsTsZEXAPKYiyozztBcllA' \
     -d '{
   "None" : "None"
 }'</code></pre>
@@ -3809,13 +3823,8 @@ Content-Length: 235
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /reservation?page=0&amp;size=5 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-<<<<<<< HEAD
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk0LCJleHAiOjE2MTQzMjQ5OTR9.eIhEMWcBfesdWmGt63kENQ8e-NVa5CNAU_8LQ7kehCP6vciWEJuEH66yK5kDtRunDKa4NemIo11MkNnGE_0Rrw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM2LCJleHAiOjE2MTQ0MDUyMzZ9.WGbgnWdDARtbcbzfS-AeabuV7JdGNu34EM1v9jNruYI7UjyxVWatyC9ceDuH42ZoGsTsZEXAPKYiyozztBcllA
 Content-Length: 23
-=======
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI3LCJleHAiOjE2MTQzMjI0Mjd9.dgD5KTgxlvd46ujWm83rHeRJ1_0PQI0iPRVVEvEvp7QW2QRMvELfcOJZgC3eGtH_G6DbXMX0v0CVAePkrq1LOw
-Content-Length: 21
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
 Host: localhost:8080
 
 {
@@ -3839,11 +3848,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-<<<<<<< HEAD
 Content-Length: 622
-=======
-Content-Length: 1076
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
 
 {
   "_embedded" : {
@@ -3885,11 +3890,7 @@ Content-Length: 1076
   "None" : "None"
 }' | http GET 'http://localhost:8080/reservation?page=0&amp;size=5' \
     'Content-Type:application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk0LCJleHAiOjE2MTQzMjQ5OTR9.eIhEMWcBfesdWmGt63kENQ8e-NVa5CNAU_8LQ7kehCP6vciWEJuEH66yK5kDtRunDKa4NemIo11MkNnGE_0Rrw'</code></pre>
-=======
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI3LCJleHAiOjE2MTQzMjI0Mjd9.dgD5KTgxlvd46ujWm83rHeRJ1_0PQI0iPRVVEvEvp7QW2QRMvELfcOJZgC3eGtH_G6DbXMX0v0CVAePkrq1LOw'</code></pre>
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM2LCJleHAiOjE2MTQ0MDUyMzZ9.WGbgnWdDARtbcbzfS-AeabuV7JdGNu34EM1v9jNruYI7UjyxVWatyC9ceDuH42ZoGsTsZEXAPKYiyozztBcllA'</code></pre>
 </div>
 </div>
 </div>
@@ -4138,11 +4139,7 @@ Content-Length: 1076
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/reservation?reservationId=1' -i -X DELETE \
     -H 'Content-Type: application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk1LCJleHAiOjE2MTQzMjQ5OTV9.1ZXYKCJ2pL3V4pJifZDbmv3iTGAmr9aL7_ot24JdK01rXtZ0oLXd5nGVDjxW1b-oWm_yyKQAvg-Z5ImgoyHHdg' \
-=======
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI3LCJleHAiOjE2MTQzMjI0Mjd9.dgD5KTgxlvd46ujWm83rHeRJ1_0PQI0iPRVVEvEvp7QW2QRMvELfcOJZgC3eGtH_G6DbXMX0v0CVAePkrq1LOw' \
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM2LCJleHAiOjE2MTQ0MDUyMzZ9.WGbgnWdDARtbcbzfS-AeabuV7JdGNu34EM1v9jNruYI7UjyxVWatyC9ceDuH42ZoGsTsZEXAPKYiyozztBcllA' \
     -d '{
   "reservationId" : 1,
   "name" : "정한솔",
@@ -4157,13 +4154,8 @@ Content-Length: 1076
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /reservation?reservationId=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-<<<<<<< HEAD
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk1LCJleHAiOjE2MTQzMjQ5OTV9.1ZXYKCJ2pL3V4pJifZDbmv3iTGAmr9aL7_ot24JdK01rXtZ0oLXd5nGVDjxW1b-oWm_yyKQAvg-Z5ImgoyHHdg
-Content-Length: 23
-=======
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI3LCJleHAiOjE2MTQzMjI0Mjd9.dgD5KTgxlvd46ujWm83rHeRJ1_0PQI0iPRVVEvEvp7QW2QRMvELfcOJZgC3eGtH_G6DbXMX0v0CVAePkrq1LOw
-Content-Length: 70
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM2LCJleHAiOjE2MTQ0MDUyMzZ9.WGbgnWdDARtbcbzfS-AeabuV7JdGNu34EM1v9jNruYI7UjyxVWatyC9ceDuH42ZoGsTsZEXAPKYiyozztBcllA
+Content-Length: 74
 Host: localhost:8080
 
 {
@@ -4189,7 +4181,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 246
+Content-Length: 257
 
 {
   "success" : true,
@@ -4216,11 +4208,7 @@ Content-Length: 246
   "reason" : "test"
 }' | http DELETE 'http://localhost:8080/reservation?reservationId=1' \
     'Content-Type:application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk1LCJleHAiOjE2MTQzMjQ5OTV9.1ZXYKCJ2pL3V4pJifZDbmv3iTGAmr9aL7_ot24JdK01rXtZ0oLXd5nGVDjxW1b-oWm_yyKQAvg-Z5ImgoyHHdg'</code></pre>
-=======
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI3LCJleHAiOjE2MTQzMjI0Mjd9.dgD5KTgxlvd46ujWm83rHeRJ1_0PQI0iPRVVEvEvp7QW2QRMvELfcOJZgC3eGtH_G6DbXMX0v0CVAePkrq1LOw'</code></pre>
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM2LCJleHAiOjE2MTQ0MDUyMzZ9.WGbgnWdDARtbcbzfS-AeabuV7JdGNu34EM1v9jNruYI7UjyxVWatyC9ceDuH42ZoGsTsZEXAPKYiyozztBcllA'</code></pre>
 </div>
 </div>
 </div>
@@ -4400,11 +4388,7 @@ Content-Length: 246
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/reservation/detail?reservationId=1' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk1LCJleHAiOjE2MTQzMjQ5OTV9.1ZXYKCJ2pL3V4pJifZDbmv3iTGAmr9aL7_ot24JdK01rXtZ0oLXd5nGVDjxW1b-oWm_yyKQAvg-Z5ImgoyHHdg' \
-=======
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI3LCJleHAiOjE2MTQzMjI0Mjd9.dgD5KTgxlvd46ujWm83rHeRJ1_0PQI0iPRVVEvEvp7QW2QRMvELfcOJZgC3eGtH_G6DbXMX0v0CVAePkrq1LOw' \
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM2LCJleHAiOjE2MTQ0MDUyMzZ9.WGbgnWdDARtbcbzfS-AeabuV7JdGNu34EM1v9jNruYI7UjyxVWatyC9ceDuH42ZoGsTsZEXAPKYiyozztBcllA' \
     -d '{
   "None" : "None"
 }'</code></pre>
@@ -4417,13 +4401,8 @@ Content-Length: 246
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /reservation/detail?reservationId=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-<<<<<<< HEAD
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk1LCJleHAiOjE2MTQzMjQ5OTV9.1ZXYKCJ2pL3V4pJifZDbmv3iTGAmr9aL7_ot24JdK01rXtZ0oLXd5nGVDjxW1b-oWm_yyKQAvg-Z5ImgoyHHdg
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM2LCJleHAiOjE2MTQ0MDUyMzZ9.WGbgnWdDARtbcbzfS-AeabuV7JdGNu34EM1v9jNruYI7UjyxVWatyC9ceDuH42ZoGsTsZEXAPKYiyozztBcllA
 Content-Length: 23
-=======
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI3LCJleHAiOjE2MTQzMjI0Mjd9.dgD5KTgxlvd46ujWm83rHeRJ1_0PQI0iPRVVEvEvp7QW2QRMvELfcOJZgC3eGtH_G6DbXMX0v0CVAePkrq1LOw
-Content-Length: 21
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
 Host: localhost:8080
 
 {
@@ -4447,7 +4426,6 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-<<<<<<< HEAD
 Content-Length: 562
 
 {
@@ -4468,28 +4446,6 @@ Content-Length: 562
   "checkOut" : null,
   "parking" : false,
   "smoking" : false,
-=======
-Content-Length: 673
-
-{
-  "roomId" : 1,
-  "roomImage" : "this is demo room Image URL",
-  "hostName" : "정한솔",
-  "hostImage" : "this is demo host Image URL",
-  "totalCost" : 30000,
-  "guestNum" : 2,
-  "address" : "모험들 현실과 답도없는 열쇠 찾아라 비밀의",
-  "latitude" : 111.111,
-  "longitude" : 111.111,
-  "roomName" : "room name",
-  "bedRoomNum" : 1,
-  "bedNum" : 3,
-  "bathRoomNum" : 1,
-  "checkIn" : "2021-02-01",
-  "checkOut" : "2021-02-03",
-  "parking" : true,
-  "smoking" : true,
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
   "_links" : {
     "self" : {
       "href" : "http://localhost:8080/reservation/detail"
@@ -4510,11 +4466,7 @@ Content-Length: 673
   "None" : "None"
 }' | http GET 'http://localhost:8080/reservation/detail?reservationId=1' \
     'Content-Type:application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTk1LCJleHAiOjE2MTQzMjQ5OTV9.1ZXYKCJ2pL3V4pJifZDbmv3iTGAmr9aL7_ot24JdK01rXtZ0oLXd5nGVDjxW1b-oWm_yyKQAvg-Z5ImgoyHHdg'</code></pre>
-=======
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI3LCJleHAiOjE2MTQzMjI0Mjd9.dgD5KTgxlvd46ujWm83rHeRJ1_0PQI0iPRVVEvEvp7QW2QRMvELfcOJZgC3eGtH_G6DbXMX0v0CVAePkrq1LOw'</code></pre>
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM2LCJleHAiOjE2MTQ0MDUyMzZ9.WGbgnWdDARtbcbzfS-AeabuV7JdGNu34EM1v9jNruYI7UjyxVWatyC9ceDuH42ZoGsTsZEXAPKYiyozztBcllA'</code></pre>
 </div>
 </div>
 </div>
@@ -4600,7 +4552,6 @@ Content-Length: 673
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code>{
   "roomId" : 1,
-<<<<<<< HEAD
   "roomImage" : null,
   "hostName" : null,
   "hostImage" : null,
@@ -4617,24 +4568,6 @@ Content-Length: 673
   "checkOut" : null,
   "parking" : false,
   "smoking" : false,
-=======
-  "roomImage" : "this is demo room Image URL",
-  "hostName" : "정한솔",
-  "hostImage" : "this is demo host Image URL",
-  "totalCost" : 30000,
-  "guestNum" : 2,
-  "address" : "모험들 현실과 답도없는 열쇠 찾아라 비밀의",
-  "latitude" : 111.111,
-  "longitude" : 111.111,
-  "roomName" : "room name",
-  "bedRoomNum" : 1,
-  "bedNum" : 3,
-  "bathRoomNum" : 1,
-  "checkIn" : "2021-02-01",
-  "checkOut" : "2021-02-03",
-  "parking" : true,
-  "smoking" : true,
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
   "_links" : {
     "self" : {
       "href" : "http://localhost:8080/reservation/detail"
@@ -4796,11 +4729,7 @@ Content-Length: 673
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/comment' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTkyLCJleHAiOjE2MTQzMjQ5OTJ9.gt2I_1Kd3vPghkZsARTvo9tfiNzYmSRUQPATjviSsyhvkTuE0RSqTRhoOtzBWLsfWmvRVxXX5aEbVgV5SpqZmw' \
-=======
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI5LCJleHAiOjE2MTQzMjI0Mjl9.WVuuWakwdU1ptlG8UR4KTPNiyAL0Kl4sisQS20G_cJhYoE4wDnjaD2NPEUb5ar4lCYk4uLYEKxKSWCGN7VsfFg' \
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM0LCJleHAiOjE2MTQ0MDUyMzR9.nRsPSL4jsn0CaX3fCoOEk-U3ME0BYLQecIH8paW3mt74rbKmkB889tIW8oFOyH6uNM-QMd_NTupeJxOhXCjBew' \
     -d '{
   "reservationId" : 1,
   "cleanliness" : 4.5,
@@ -4820,13 +4749,8 @@ Content-Length: 673
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /comment HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-<<<<<<< HEAD
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTkyLCJleHAiOjE2MTQzMjQ5OTJ9.gt2I_1Kd3vPghkZsARTvo9tfiNzYmSRUQPATjviSsyhvkTuE0RSqTRhoOtzBWLsfWmvRVxXX5aEbVgV5SpqZmw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM0LCJleHAiOjE2MTQ0MDUyMzR9.nRsPSL4jsn0CaX3fCoOEk-U3ME0BYLQecIH8paW3mt74rbKmkB889tIW8oFOyH6uNM-QMd_NTupeJxOhXCjBew
 Content-Length: 208
-=======
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI5LCJleHAiOjE2MTQzMjI0Mjl9.WVuuWakwdU1ptlG8UR4KTPNiyAL0Kl4sisQS20G_cJhYoE4wDnjaD2NPEUb5ar4lCYk4uLYEKxKSWCGN7VsfFg
-Content-Length: 199
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
 Host: localhost:8080
 
 {
@@ -4858,7 +4782,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 190
+Content-Length: 200
 
 {
   "commentId" : 1,
@@ -4889,11 +4813,7 @@ Content-Length: 190
   "description" : "test comment"
 }' | http POST 'http://localhost:8080/comment' \
     'Content-Type:application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTkyLCJleHAiOjE2MTQzMjQ5OTJ9.gt2I_1Kd3vPghkZsARTvo9tfiNzYmSRUQPATjviSsyhvkTuE0RSqTRhoOtzBWLsfWmvRVxXX5aEbVgV5SpqZmw'</code></pre>
-=======
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI5LCJleHAiOjE2MTQzMjI0Mjl9.WVuuWakwdU1ptlG8UR4KTPNiyAL0Kl4sisQS20G_cJhYoE4wDnjaD2NPEUb5ar4lCYk4uLYEKxKSWCGN7VsfFg'</code></pre>
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM0LCJleHAiOjE2MTQ0MDUyMzR9.nRsPSL4jsn0CaX3fCoOEk-U3ME0BYLQecIH8paW3mt74rbKmkB889tIW8oFOyH6uNM-QMd_NTupeJxOhXCjBew'</code></pre>
 </div>
 </div>
 </div>
@@ -5080,11 +5000,7 @@ Content-Length: 190
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/comment?roomId=1&amp;page=0&amp;size=2' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTkyLCJleHAiOjE2MTQzMjQ5OTJ9.gt2I_1Kd3vPghkZsARTvo9tfiNzYmSRUQPATjviSsyhvkTuE0RSqTRhoOtzBWLsfWmvRVxXX5aEbVgV5SpqZmw' \
-=======
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI5LCJleHAiOjE2MTQzMjI0Mjl9.WVuuWakwdU1ptlG8UR4KTPNiyAL0Kl4sisQS20G_cJhYoE4wDnjaD2NPEUb5ar4lCYk4uLYEKxKSWCGN7VsfFg' \
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM0LCJleHAiOjE2MTQ0MDUyMzR9.nRsPSL4jsn0CaX3fCoOEk-U3ME0BYLQecIH8paW3mt74rbKmkB889tIW8oFOyH6uNM-QMd_NTupeJxOhXCjBew' \
     -d '{
   "None" : "없음"
 }'</code></pre>
@@ -5097,13 +5013,8 @@ Content-Length: 190
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /comment?roomId=1&amp;page=0&amp;size=2 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-<<<<<<< HEAD
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTkyLCJleHAiOjE2MTQzMjQ5OTJ9.gt2I_1Kd3vPghkZsARTvo9tfiNzYmSRUQPATjviSsyhvkTuE0RSqTRhoOtzBWLsfWmvRVxXX5aEbVgV5SpqZmw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM0LCJleHAiOjE2MTQ0MDUyMzR9.nRsPSL4jsn0CaX3fCoOEk-U3ME0BYLQecIH8paW3mt74rbKmkB889tIW8oFOyH6uNM-QMd_NTupeJxOhXCjBew
 Content-Length: 25
-=======
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI5LCJleHAiOjE2MTQzMjI0Mjl9.WVuuWakwdU1ptlG8UR4KTPNiyAL0Kl4sisQS20G_cJhYoE4wDnjaD2NPEUb5ar4lCYk4uLYEKxKSWCGN7VsfFg
-Content-Length: 23
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
 Host: localhost:8080
 
 {
@@ -5127,7 +5038,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 1314
+Content-Length: 1368
 
 {
   "grade" : null,
@@ -5195,11 +5106,7 @@ Content-Length: 1314
   "None" : "없음"
 }' | http GET 'http://localhost:8080/comment?roomId=1&amp;page=0&amp;size=2' \
     'Content-Type:application/json;charset=UTF-8' \
-<<<<<<< HEAD
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDYwOTkyLCJleHAiOjE2MTQzMjQ5OTJ9.gt2I_1Kd3vPghkZsARTvo9tfiNzYmSRUQPATjviSsyhvkTuE0RSqTRhoOtzBWLsfWmvRVxXX5aEbVgV5SpqZmw'</code></pre>
-=======
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNDU4NDI5LCJleHAiOjE2MTQzMjI0Mjl9.WVuuWakwdU1ptlG8UR4KTPNiyAL0Kl4sisQS20G_cJhYoE4wDnjaD2NPEUb5ar4lCYk4uLYEKxKSWCGN7VsfFg'</code></pre>
->>>>>>> 906249dca0850ed6659885a402640af6f389fdd3
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjEzNTQxMjM0LCJleHAiOjE2MTQ0MDUyMzR9.nRsPSL4jsn0CaX3fCoOEk-U3ME0BYLQecIH8paW3mt74rbKmkB889tIW8oFOyH6uNM-QMd_NTupeJxOhXCjBew'</code></pre>
 </div>
 </div>
 </div>
@@ -5515,7 +5422,7 @@ Content-Length: 1314
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-02-14 21:24:42 +0900
+Last updated 2021-02-17 14:53:32 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/github.min.css">
