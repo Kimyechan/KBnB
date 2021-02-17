@@ -1,7 +1,6 @@
 package com.buildup.kbnb.service;
 
 import com.buildup.kbnb.model.room.BedRoom;
-import com.buildup.kbnb.repository.LocationRepository;
 import com.buildup.kbnb.repository.*;
 import com.buildup.kbnb.repository.room.RoomRepository;
 import org.junit.jupiter.api.BeforeEach;

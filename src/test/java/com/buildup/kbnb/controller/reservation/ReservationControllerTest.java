@@ -1,14 +1,7 @@
 package com.buildup.kbnb.controller.reservation;
 
 import com.buildup.kbnb.config.RestDocsConfiguration;
-
-import com.buildup.kbnb.dto.reservation.ReservationConfirmedResponse;
-import com.buildup.kbnb.dto.reservation.ReservationDetailResponse;
-
-import com.buildup.kbnb.dto.reservation.CancelDto;
-import com.buildup.kbnb.dto.reservation.PaymentDto;
-
-import com.buildup.kbnb.dto.reservation.ReservationRegisterRequest;
+import com.buildup.kbnb.dto.reservation.*;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BathRoom;

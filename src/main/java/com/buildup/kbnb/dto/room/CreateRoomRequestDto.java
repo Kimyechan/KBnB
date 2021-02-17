@@ -1,23 +1,8 @@
 package com.buildup.kbnb.dto.room;
 
-import com.amazonaws.services.ec2.model.Reservation;
-import com.buildup.kbnb.model.Comment;
-import com.buildup.kbnb.model.Location;
-import com.buildup.kbnb.model.room.BathRoom;
-import com.buildup.kbnb.model.room.BedRoom;
-import com.buildup.kbnb.model.room.RoomImg;
-import com.buildup.kbnb.model.user.User;
 import com.sun.istack.Nullable;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import java.io.File;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;

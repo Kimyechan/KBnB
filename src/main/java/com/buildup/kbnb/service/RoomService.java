@@ -2,35 +2,22 @@ package com.buildup.kbnb.service;
 
 import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.controller.RoomController;
-
-import com.buildup.kbnb.dto.room.CreateRoomRequestDto;
 import com.buildup.kbnb.dto.comment.GradeInfo;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
 import com.buildup.kbnb.model.Location;
-
-import com.buildup.kbnb.model.room.BedRoom;
-import com.buildup.kbnb.model.room.Room;
-import com.buildup.kbnb.model.user.User;
-import com.buildup.kbnb.repository.LocationRepository;
-
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.room.RoomImg;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.*;
-
 import com.buildup.kbnb.repository.room.RoomRepository;
 import com.buildup.kbnb.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import org.springframework.web.bind.annotation.ModelAttribute;
-
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.time.LocalTime;
 import java.util.List;
@@ -83,22 +70,6 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
-    public Location createLocation_InRoomService(CreateRoomRequestDto createRoomRequestDto) {
-        Location location = Location.builder().latitude(createRoomRequestDto.getLatitude()).longitude(createRoomRequestDto.getLongitude()).detailAddress(createRoomRequestDto.getDetailAddress())
-                .neighborhood(createRoomRequestDto.getNeighborhood()).borough(createRoomRequestDto.getBorough()).country(createRoomRequestDto.getCountry()).city(createRoomRequestDto.getCity()).build();
-        return locationRepository.save(location);
-    }
-    @ModelAttribute("creatingRoom")
-    public Room createRoom(User user, CreateRoomRequestDto createRoomRequestDto) {
-        Room room = Room.builder().name(createRoomRequestDto.getName()).cleaningCost(createRoomRequestDto.getCleaningCost()).host(user).checkInTime(createRoomRequestDto.getCheckInTime()).peopleLimit(createRoomRequestDto.getPeopleLimit())
-                .description(createRoomRequestDto.getDescription()).tax(createRoomRequestDto.getTax()).roomCost(createRoomRequestDto.getRoomCost()).isParking(createRoomRequestDto.getIsParking())
-                .isSmoking(createRoomRequestDto.getIsSmoking()).roomType(createRoomRequestDto.getRoomType()).build();
-        room.setLocation(createLocation_InRoomService(createRoomRequestDto));
-        room.setBathRoomList(createRoomRequestDto.getBathRoomDtoList());
-        room.setBedRoomList(createRoomRequestDto.getBedRoomDtoList());
-        room.setBedNum(getBedNum(room.getBedRoomList()));
-        return roomRepository.save(room);
-    }
 
     public void createRoomDummyData(RoomController.RoomDummy roomDummy, UserPrincipal userPrincipal) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow();
