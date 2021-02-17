@@ -57,20 +57,6 @@ public class UserController {
 
         return ResponseEntity.ok().body(model);
     }
-    @PostMapping(value = "/beforeUpdate", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> beforeUpdate(@CurrentUser UserPrincipal userPrincipal, String email, String password) {
-        User user = userService.findById(userPrincipal.getId());
-        Map map;
-        if (email.equals(user.getEmail()) && passwordEncoder.matches(password, user.getPassword())) {
-           map = new HashMap(); map.put("본인 인증 성공: ","회원정보 수정 페이지로 이동");
-        }
-        else throw new ReservationException("Access denied check email and password again");
-
-        EntityModel<Map> model = EntityModel.of(map);
-        model.add(linkTo(methodOn(UserController.class).beforeUpdate(userPrincipal, email, password)).withSelfRel());
-        model.add(Link.of("/docs/api.html#resource-user-before-update").withRel("profile"));
-        return ResponseEntity.ok(model);
-    }
 
     @PostMapping(value = "/update", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> update(@CurrentUser UserPrincipal userPrincipal, UserUpdateRequest userUpdateRequest, @Nullable  @RequestPart MultipartFile file) throws IOException {

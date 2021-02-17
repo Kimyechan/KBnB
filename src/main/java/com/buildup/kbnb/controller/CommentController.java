@@ -1,12 +1,13 @@
 package com.buildup.kbnb.controller;
 
+import com.buildup.kbnb.advice.exception.CommentFieldNotValidException;
 import com.buildup.kbnb.dto.comment.*;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.service.CommentService;
 import com.buildup.kbnb.service.RoomService;
-import com.buildup.kbnb.service.reservationService.ReservationService;
+import com.buildup.kbnb.service.reservation.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,8 +19,10 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +38,11 @@ public class CommentController {
     private final RoomService roomService;
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody CommentCreateReq req) {
+    public ResponseEntity<?> create(@RequestBody @Valid CommentCreateReq req, BindingResult error) {
+        if (error.hasErrors()) {
+            throw new CommentFieldNotValidException();
+        }
+
         Reservation reservation = reservationService.findByIdWithRoomAndUser(req.getReservationId());
 
         Room room = reservation.getRoom();
@@ -48,12 +55,13 @@ public class CommentController {
                 .build();
 
         EntityModel<CommentCreateRes> model = EntityModel.of(res);
-        WebMvcLinkBuilder selfLink = linkTo(methodOn(CommentController.class).create(req));
+        WebMvcLinkBuilder selfLink = linkTo(methodOn(CommentController.class).create(req, error));
         model.add(selfLink.withSelfRel());
         model.add(Link.of("/docs/api.html#resource-comment-create").withRel("profile"));
 
         return ResponseEntity.created(selfLink.toUri()).body(model);
     }
+
     private GradeDto getGradeInfo(Room room, Integer commentCount, CommentCreateReq req) {
         Double cleanliness = (room.getCleanliness() * commentCount + req.getCleanliness()) / (commentCount + 1);
         Double accuracy = (room.getAccuracy() * commentCount + req.getAccuracy()) / (commentCount + 1);
