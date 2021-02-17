@@ -11,11 +11,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class UserUpdateResponse {
-    private Long id;
     private String name;
     private LocalDate birth;
     @Email
     private String email;
-    private String imageUrl;
 
 }

@@ -51,8 +51,6 @@ public class HostController {
     @Autowired
     RoomService roomService;
     @Autowired
-    RoomRepository roomRepository;
-    @Autowired
     LocationRepository locationRepository;
     @Autowired
     S3Uploader s3Uploader;
@@ -87,5 +85,11 @@ public ResponseEntity<?> addPhoto(@CurrentUser UserPrincipal userPrincipal, List
     System.out.println(model);
     System.out.println("===========================================");
     return ResponseEntity.ok(model);//한번에 작성하는 법 테스트 통과 x 실행시도 에러
+}
+@GetMapping(value = "/test", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public void test() {
+    Room room = roomService.findById(1L);
+    System.out.println(room.getId());
+    System.out.println("===========================================");
 }
 }

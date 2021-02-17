@@ -113,16 +113,14 @@ operation::auth-login-email[]
 operation::user-get-me[]
 
 
-////
-[[resource-user-before-update]]
-=== 유저 정보 수정 전 본인 확인
-operation::user-before-update[]
-////
-
 
 [[resource-user-update]]
 === 유저 정보 수정
 operation::user-update[]
+
+[[resource-user-updatePhoto]]
+=== 유저 사진 수정
+operation::user-updatePhoto[]
 
 [[resource-room]]
 == 숙소

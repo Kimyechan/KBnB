@@ -10,6 +10,7 @@ import com.buildup.kbnb.security.CustomUserDetailsService;
 import com.buildup.kbnb.security.TokenProvider;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.UserService;
+import com.buildup.kbnb.util.S3Uploader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,10 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.LocalDate;
@@ -71,6 +69,9 @@ class UserControllerTest {
 
     @MockBean
     UserService userService;
+
+    @MockBean
+    S3Uploader s3Uploader;
 
     @MockBean
     private CustomUserDetailsService customUserDetailsService;
@@ -133,10 +134,9 @@ class UserControllerTest {
     }
 
 
-    public UserUpdateRequest userUpdateRequest(User user) {
+    public UserUpdateRequest userUpdateRequest() {
         UserUpdateRequest userUpdateRequest = UserUpdateRequest.builder().password(passwordEncoder.encode("updatedPassword"))
-                .name("updatedName").email("updated@google.com")
-                .id(user.getId()).birth("2020-11-11").build();
+                .name("updatedName").email("updated@google.com").birth("2020-11-11").build();
         return userUpdateRequest;
     }
 
@@ -144,19 +144,18 @@ class UserControllerTest {
     @DisplayName("유저 정보 수정")
     public void updateUserInfo() throws Exception {
 
-        MockMultipartFile multipartFile = new MockMultipartFile("defaultImg", "testImg", "image/png", "image".getBytes());
+
         User user = createUser();
         given(userService.findById(any())).willReturn(user);
         given(userService.save(any())).willReturn(user);
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
 
-        Map<String, String> map = new HashMap<>();
-        map.put("file", "수정 요청 ImgUrl");
 
-        mockMvc.perform(fileUpload("/user/update").file(multipartFile)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
+
+        mockMvc.perform(post("/user/update")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .content(objectMapper.writeValueAsString(userUpdateRequest(user)))
+                .content(objectMapper.writeValueAsString(userUpdateRequest()))
         ).andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("user-update",
@@ -164,22 +163,16 @@ class UserControllerTest {
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
                         ),
                         requestFields(
-                                fieldWithPath("id").description("유저 식별자"),
                                 fieldWithPath("name").description("수정 요청할 이름"),
                                 fieldWithPath("email").description("수정 요청할 이메일"),
                                 fieldWithPath("birth").description("수정 요청할 생일")
-                        ),
-                        requestParts(
-                                partWithName("defaultImg").description("테스트용 이미지")
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
                         ),
                         responseFields(
-                                fieldWithPath("id").description("유저 식별자"),
                                 fieldWithPath("name").description("수정 요청된 이름"),
                                 fieldWithPath("email").description("수정 요청된 이메일"),
-                                fieldWithPath("imageUrl").description("수정 요청된 이미지 url"),
                                 fieldWithPath("birth").description("수정 요청된 생일"),
 
                                 fieldWithPath("_links.self.href").description("해당 API URL"),
@@ -188,4 +181,29 @@ class UserControllerTest {
                         )
                 ));
     }
+    @Test
+    @DisplayName("유저 이미지 변경 테스트")
+    public void updatePhoto() throws Exception {
+        User user = createUser();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+        given(userService.findById(any())).willReturn(user);
+        given(s3Uploader.upload(any(),any(),any())).willReturn("test url");
+
+        mockMvc.perform(fileUpload("/user/update/photo").file("file", "example".getBytes())
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+
+        ).andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("user-updatePhoto",
+                        requestParts(
+                               partWithName("file").description("변경될 이미지")
+                        ),
+                        responseFields(
+                                fieldWithPath("newImgUrl").description("새로운 이미지URL"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
+                        )
+                        ));
+    }
+
 }
