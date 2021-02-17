@@ -10,12 +10,11 @@ import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
 
 import com.buildup.kbnb.model.Payment;
-
 import com.buildup.kbnb.model.Reservation;
-
 
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
+
 
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.reservation.ReservationRepository;

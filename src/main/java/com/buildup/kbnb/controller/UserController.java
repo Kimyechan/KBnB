@@ -5,7 +5,6 @@ import com.buildup.kbnb.dto.user.UserDto;
 import com.buildup.kbnb.dto.user.UserImgUpdateResponse;
 import com.buildup.kbnb.dto.user.UserUpdateRequest;
 import com.buildup.kbnb.dto.user.UserUpdateResponse;
-import com.buildup.kbnb.model.user.Role;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.CurrentUser;
@@ -21,9 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Nullable;
-import javax.swing.text.html.parser.Entity;
-import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.time.LocalDate;
 
@@ -99,11 +95,4 @@ public class UserController {
                 .email(user.getEmail()).birth(user.getBirth()).name(user.getName()).build();
     }
 
-/*    @PatchMapping(value = "/registerToHost", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public String changeToHostRole(@CurrentUser UserPrincipal userPrincipal) {
-        User user = userService.findById(userPrincipal.getId());
-        user.setRole(Role.HOST.getValue());
-        userService.save(user);
-        return user.getRole();
-    }*/
 }

@@ -1,9 +1,12 @@
 package com.buildup.kbnb.controller;
 
+import com.buildup.kbnb.dto.host.HostPhotoResponse;
+import com.buildup.kbnb.dto.host.UrlListResponse;
 import com.buildup.kbnb.dto.reservation.ReservationDetailResponse;
 import com.buildup.kbnb.dto.reservation.ReservationRegisterResponse;
 import com.buildup.kbnb.dto.room.CreateRoomRequestDto;
 import com.buildup.kbnb.dto.room.CreateRoomResponseDto;
+import com.buildup.kbnb.dto.user.UserImgUpdateResponse;
 import com.buildup.kbnb.dto.user.UserUpdateRequest;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.room.BedRoom;
@@ -32,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.MulticastSocket;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -67,30 +71,28 @@ public ResponseEntity<?> registerBasicRoom(@CurrentUser UserPrincipal userPrinci
     CreateRoomResponseDto createRoomResponseDto = CreateRoomResponseDto.builder().roomId(room.getId()).msg("방 기본정보 등록 성공").build();
 
         EntityModel<CreateRoomResponseDto> model = EntityModel.of(createRoomResponseDto);
+    model.add(Link.of("/docs/api.html#resource-host-registerBasicRoom").withRel("profile"));
         return ResponseEntity.ok(model);
     }
-@PostMapping(value = "/addPhoto", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-public ResponseEntity<?> addPhoto(@CurrentUser UserPrincipal userPrincipal, List<MultipartFile> files, Long roomId) throws IOException {
-    Room room = roomService.findById(roomId);
+    @PostMapping(value = "/addPhoto" , produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal, @RequestParam Long roomId, @RequestPart List<MultipartFile> file) throws IOException {
     User user = userService.findById(userPrincipal.getId());
-    List<RoomImg> imgUrlList = new ArrayList<>();
+    Room room = roomService.findById(roomId);
+    List<RoomImg> roomImgList = new ArrayList<>();
     int i = 0;
-    for(MultipartFile file : files) {
-        String newImgUrl = s3Uploader.upload(file, "roomImg", user.getName()+ i++);
-        RoomImg roomImg = RoomImg.builder().url(newImgUrl).room(room).build();
+    for(MultipartFile file1 : file) {
+        String newUrl = s3Uploader.upload(file1,"roomImg", user.getName() + i++);
+        RoomImg roomImg = RoomImg.builder().room(room).url(newUrl).build();
         roomImgRepository.save(roomImg);
-        imgUrlList.add(roomImg);
+        roomImgList.add(roomImg);
     }
-    room.setRoomImgList(imgUrlList);
-    EntityModel<Room> model = EntityModel.of(room);//json으로 안말려서
-    System.out.println(model);
-    System.out.println("===========================================");
-    return ResponseEntity.ok(model);//한번에 작성하는 법 테스트 통과 x 실행시도 에러
-}
-@GetMapping(value = "/test", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public void test() {
-    Room room = roomService.findById(1L);
-    System.out.println(room.getId());
-    System.out.println("===========================================");
-}
+    room.setRoomImgList(roomImgList);
+    roomService.save(room);
+
+    HostPhotoResponse hostPhotoResponse = HostPhotoResponse.builder()
+            .imgCount(file.size()).build();
+    EntityModel<HostPhotoResponse> model = EntityModel.of(hostPhotoResponse);
+        model.add(Link.of("/docs/api.html#resource-host-addPhoto").withRel("profile"));
+    return ResponseEntity.ok(model);
+    }
 }

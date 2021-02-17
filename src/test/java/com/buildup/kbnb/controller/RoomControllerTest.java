@@ -1,13 +1,11 @@
 package com.buildup.kbnb.controller;
 
 
-import com.amazonaws.util.IOUtils;
 import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.room.CreateRoomRequestDto;
 import com.buildup.kbnb.dto.room.check.CheckRoomReq;
 import com.buildup.kbnb.dto.room.detail.ReservationDate;
 import com.buildup.kbnb.dto.room.search.*;
-import com.buildup.kbnb.dto.user.UserUpdateRequest;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.room.BathRoom;
@@ -24,13 +22,11 @@ import com.buildup.kbnb.service.CommentService;
 import com.buildup.kbnb.service.RoomService;
 import com.buildup.kbnb.service.UserRoomService;
 import com.buildup.kbnb.service.UserService;
-import com.buildup.kbnb.util.S3Uploader;
 import com.buildup.kbnb.service.reservation.ReservationService;
-
+import com.buildup.kbnb.util.S3Uploader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -48,22 +44,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -73,6 +58,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -578,28 +564,76 @@ class RoomControllerTest {
 
 
 
-        mockMvc.perform(multipart("/host/registerBasicRoom")
+        mockMvc.perform(post("/host/registerBasicRoom")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .content(objectMapper.writeValueAsString(req)))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("host-registerBasicRoom",
+                        requestFields(
+                                fieldWithPath("name").description("방이름"),
+                                fieldWithPath("roomType").description("룸타입"),
+                                fieldWithPath("roomCost").description("방비용"),
+                                fieldWithPath("cleaningCost").description("청소비용"),
+                                fieldWithPath("tax").description("세금"),
+                                fieldWithPath("peopleLimit").description("인원 제한"),
+                                fieldWithPath("description").description("설명"),
+                                fieldWithPath("checkOutTime").description("체크아웃 시간"),
+                                fieldWithPath("checkInTime").description("체크인 시간"),
+                                fieldWithPath("isSmoking").description("흡연 가능 여부"),
+                                fieldWithPath("isParking").description("주차 가능 여부"),
+                                fieldWithPath("country").description("나라"),
+                                fieldWithPath("city").description("시"),
+                                fieldWithPath("borough").description("구"),
+                                fieldWithPath("neighborhood").description("동"),
+                                fieldWithPath("detailAddress").description("상세 주소"),
+                                fieldWithPath("latitude").description("위도"),
+                                fieldWithPath("longitude").description("경도"),
+                                fieldWithPath("bedRoomDtoList.[]").description("침실 리스트"),
+                                fieldWithPath("bathRoomDtoList.[]").description("욕실 리스트")
+
+                        ),
+                        responseFields(
+                                fieldWithPath("msg").description("방 등록 여부"),
+                                fieldWithPath("roomId").description("방 식별자"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 주소")
+
+                        )
+                        ));
     }
     @Test
     @DisplayName("방 등록_사진 추가")
     public void addPhoto() throws Exception {
         User user = createUser();
-        Room room = Room.builder().name("테스트").id(1L).build();
+        Room room = Room.builder().name("테스트방").build();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
         given(userService.findById(any())).willReturn(user);
         given(roomService.findById(any())).willReturn(room);
-        given(s3Uploader.upload(any(), any(), any())).willReturn("testUrl");
+        given(s3Uploader.upload(any(),any(),any())).willReturn("test url");
+        given(roomService.save(any())).willReturn(room);
 
-        MockMultipartFile files = new MockMultipartFile("defaultImg", "testImg","image/png", "image".getBytes());
-        String token = tokenProvider.createToken(String.valueOf(user.getId()));
-        mockMvc.perform(fileUpload("/host/addPhoto").file(files)
+        mockMvc.perform(fileUpload("/host/addPhoto")
+                .file("file", "example".getBytes())
+                .file("file", "example2".getBytes())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .param("roomId", String.valueOf(1L)))
-                .andDo(print());
+                .param("roomId", String.valueOf(1L))
+        ).andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("host-addPhoto",
+                        requestParts(
+                                partWithName("file").description("업로드될 파일 리스트")
+                        ),
+                        requestParameters(
+                                parameterWithName("roomId").description("방 식별자")
+                        ),
+                        responseFields(
+                                fieldWithPath("imgCount").description("등록된 사진의 갯수"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 주소")
+                        )
+                        )
+
+                );
     }
 }

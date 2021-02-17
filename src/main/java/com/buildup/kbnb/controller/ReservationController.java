@@ -4,7 +4,6 @@ package com.buildup.kbnb.controller;
 import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.dto.ApiResponse;
 import com.buildup.kbnb.dto.reservation.*;
-import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.Payment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BedRoom;
@@ -31,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -122,23 +120,6 @@ public class ReservationController {
         return model;
     }
 
-    private List<ReservationConfirmedResponse> createResponseList(List<Reservation> reservationList) {
-        List<ReservationConfirmedResponse> reservation_confirmedResponseList = new ArrayList<>();
-        for (Reservation reservation : reservationList) {
-            Room room = reservation.getRoom();
-            Location location = room.getLocation();
-            ReservationConfirmedResponse reservation_confirmedResponse = ReservationConfirmedResponse.builder()
-                    .reservationId(reservation.getId()).checkIn(reservation.getCheckIn()).checkOut(reservation.getCheckOut())
-                    .hostName(reservationService.getHostName(reservation)).imgUrl("this is demo url").roomName(room.getName())
-                    .roomId(room.getId()).roomLocation(location.getCountry() + " " + location.getCity() + " " + location.getBorough() + " " + location.getNeighborhood() + " " + location.getDetailAddress())
-                    .status("예약 완료").build();
-
-            if (reservation_confirmedResponse.getCheckOut().isBefore(LocalDate.now()))
-                reservation_confirmedResponse.setStatus("완료된 여정");
-            reservation_confirmedResponseList.add(reservation_confirmedResponse);
-        }
-        return reservation_confirmedResponseList;
-    }
 
     @GetMapping(value = "/detail", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getDetailReservationInfo(@CurrentUser UserPrincipal userPrincipal, Long reservationId) {
@@ -152,13 +133,6 @@ public class ReservationController {
         return ResponseEntity.ok(model);
     }
 
-    private ReservationDetailResponse judgeReservationIdUserHaveContainReservationId(List<Long> reservationIdUserHave, Long reservationId) {
-        ReservationDetailResponse reservationDetailResponse;
-        if (reservationIdUserHave.contains(reservationId))
-            reservationDetailResponse = ifReservationIdExist(reservationId);
-        else throw new ReservationException("해당 유저의 예약 리스트에는 요청한 예약건이 없습니다.");
-        return reservationDetailResponse;
-    }
 
     public ReservationDetailResponse ifReservationIdExist(Long reservationId) {
         Reservation reservation = reservationService.findById(reservationId);

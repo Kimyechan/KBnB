@@ -1,18 +1,13 @@
 package com.buildup.kbnb.model.room;
 
-import com.buildup.kbnb.dto.room.BathRoomDto;
-import com.buildup.kbnb.dto.room.BedRoomDto;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.user.User;
-import com.buildup.kbnb.repository.BathRoomRepository;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -73,6 +68,5 @@ public class Room {
         this.checkIn = this.checkIn == null ? 0 : this.checkIn;
         this.priceSatisfaction = this.priceSatisfaction == null ? 0 : this.priceSatisfaction;
     }
-
 
 }
