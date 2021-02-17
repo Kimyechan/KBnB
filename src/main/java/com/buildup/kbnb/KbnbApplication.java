@@ -1,6 +1,5 @@
 package com.buildup.kbnb;
 
-import com.buildup.kbnb.util.payment.BootPayApi;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.modelmapper.ModelMapper;

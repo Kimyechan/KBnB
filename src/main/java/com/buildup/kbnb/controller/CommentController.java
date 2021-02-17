@@ -47,8 +47,8 @@ public class CommentController {
 
         Room room = reservation.getRoom();
         Integer commentCount = room.getCommentList().size();
-        GradeDto gradeDto = getGradeInfo(room, commentCount, req);
-        Comment savedComment = commentService.createCommentTx(req, reservation, room, gradeDto);
+        GradeInfo gradeInfo = calcGradeInfo(room, commentCount, req);
+        Comment savedComment = commentService.createCommentTx(req, reservation, room, gradeInfo);
 
         CommentCreateRes res = CommentCreateRes.builder()
                 .commentId(savedComment.getId())
@@ -62,7 +62,7 @@ public class CommentController {
         return ResponseEntity.created(selfLink.toUri()).body(model);
     }
 
-    private GradeDto getGradeInfo(Room room, Integer commentCount, CommentCreateReq req) {
+    private GradeInfo calcGradeInfo(Room room, Integer commentCount, CommentCreateReq req) {
         Double cleanliness = (room.getCleanliness() * commentCount + req.getCleanliness()) / (commentCount + 1);
         Double accuracy = (room.getAccuracy() * commentCount + req.getAccuracy()) / (commentCount + 1);
         Double communication = (room.getCommunication() * commentCount + req.getCommunication()) / (commentCount + 1);
@@ -70,7 +70,8 @@ public class CommentController {
         Double checkIn = (room.getCheckIn() * commentCount + req.getCheckIn()) / (commentCount + 1);
         Double priceSatisfaction = (room.getPriceSatisfaction() * commentCount + req.getPriceSatisfaction()) / (commentCount + 1);
         Double totalGrade = (cleanliness + accuracy + communication + locationRate + checkIn + priceSatisfaction) / 6;
-        return GradeDto.builder()
+
+        return GradeInfo.builder()
                 .cleanliness(cleanliness)
                 .accuracy(accuracy)
                 .communication(communication)
@@ -82,31 +83,51 @@ public class CommentController {
     }
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> getCommentList(Long roomId,Pageable pageable, PagedResourcesAssembler<CommentDto> assembler) {
+    public ResponseEntity<?> getCommentList(Long roomId, Pageable pageable, PagedResourcesAssembler<CommentDto> assembler) {
         Room room = roomService.findById(roomId);
         Page<Comment> commentPage = commentService.getListByRoomIdWithUser(room, pageable);
         List<Comment> commentList = commentPage.getContent();
-        List<CommentDto> commentDtoList = buildCommentDtoList(commentList);
-        Page<CommentDto> commentDtoPage = new PageImpl<>(commentDtoList, pageable, commentPage.getTotalElements());
-        PagedModel<EntityModel<CommentDto>> pagedModel = assembler.toModel(commentDtoPage);
 
-        CommentListResponse commentListResponse = CommentListResponse.builder()
-                .accuracy(room.getAccuracy()).checkIn(room.getCheckIn()).cleanliness(room.getCleanliness()).communication(room.getCommunication())
-                .locationRate(room.getLocationRate()).priceSatisfaction(room.getPriceSatisfaction()).grade(room.getGrade()).allComments(pagedModel).build();
+        List<CommentDto> commentDtoList = mapToCommentDtoList(commentList);
+        Page<CommentDto> commentDtoPage = new PageImpl<>(commentDtoList, pageable, commentPage.getTotalElements());
+
+        PagedModel<EntityModel<CommentDto>> pagedModel = assembler.toModel(commentDtoPage);
+        CommentListResponse commentListResponse = mapToCommentListResponse(room, pagedModel);
 
         EntityModel<CommentListResponse> model = EntityModel.of(commentListResponse);
         model.add(linkTo(methodOn(CommentController.class).getCommentList(roomId, pageable, assembler)).withSelfRel());
         model.add(Link.of("/docs/api.html#resource-comment-list").withRel("profile"));
+
         return ResponseEntity.ok(model);
     }
 
-    public List<CommentDto> buildCommentDtoList(List<Comment> commentList) {
+    private CommentListResponse mapToCommentListResponse(Room room, PagedModel<EntityModel<CommentDto>> pagedModel) {
+        return CommentListResponse.builder()
+                .accuracy(room.getAccuracy())
+                .checkIn(room.getCheckIn())
+                .cleanliness(room.getCleanliness())
+                .communication(room.getCommunication())
+                .locationRate(room.getLocationRate())
+                .priceSatisfaction(room.getPriceSatisfaction())
+                .grade(room.getGrade())
+                .allComments(pagedModel).build();
+    }
+
+    public List<CommentDto> mapToCommentDtoList(List<Comment> commentList) {
         List<CommentDto> commentDtoList = new ArrayList<>();
         for(Comment comment : commentList) {
-            CommentDto commentDto = CommentDto.builder().accuracy(comment.getAccuracy()).checkIn(comment.getCheckIn())
-                    .cleanliness(comment.getCleanliness()).communication(comment.getCommunication()).description(comment.getDescription())
-                    .locationRate(comment.getLocationRate()).priceSatisfaction(comment.getPriceSatisfaction()).userImgUrl(comment.getUser().getImageUrl())
-                    .creatingDate(String.valueOf(comment.getDate())).userName(comment.getUser().getName()).build();
+            CommentDto commentDto = CommentDto.builder()
+                    .accuracy(comment.getAccuracy())
+                    .checkIn(comment.getCheckIn())
+                    .cleanliness(comment.getCleanliness())
+                    .communication(comment.getCommunication())
+                    .description(comment.getDescription())
+                    .locationRate(comment.getLocationRate())
+                    .priceSatisfaction(comment.getPriceSatisfaction())
+                    .userImgUrl(comment.getUser().getImageUrl())
+                    .creatingDate(comment.getDate())
+                    .userName(comment.getUser().getName())
+                    .build();
             commentDtoList.add(commentDto);
         }
         return commentDtoList;
