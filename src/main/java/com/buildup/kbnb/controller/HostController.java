@@ -1,4 +1,3 @@
-/*
 package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.dto.reservation.ReservationDetailResponse;
@@ -64,6 +63,7 @@ public ResponseEntity<?> registerBasicRoom(@CurrentUser UserPrincipal userPrinci
         User user = userService.findById(userPrincipal.getId());
 
         Room room = roomService.createRoom(user, createRoomRequestDto);
+        roomService.save(room);
     CreateRoomResponseDto createRoomResponseDto = CreateRoomResponseDto.builder().roomId(room.getId()).msg("방 기본정보 등록 성공").build();
 
         EntityModel<CreateRoomResponseDto> model = EntityModel.of(createRoomResponseDto);
@@ -94,4 +94,3 @@ public ResponseEntity<?> addPhoto(@CurrentUser UserPrincipal userPrincipal, List
     System.out.println("===========================================");
 }
 }
-*/

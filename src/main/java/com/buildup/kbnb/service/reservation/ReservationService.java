@@ -1,7 +1,6 @@
 package com.buildup.kbnb.service.reservation;
 
 import com.buildup.kbnb.advice.exception.BadRequestException;
-<<<<<<< HEAD:src/main/java/com/buildup/kbnb/service/reservationService/ReservationService.java
 
 import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.dto.reservation.ReservationConfirmedResponse;
@@ -10,20 +9,14 @@ import com.buildup.kbnb.dto.room.detail.ReservationDate;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
 
-import com.buildup.kbnb.dto.reservation.CancelDto;
-=======
->>>>>>> 99164d59e6ff81f589192efa2b12870652cf6b52:src/main/java/com/buildup/kbnb/service/reservation/ReservationService.java
-import com.buildup.kbnb.dto.room.detail.ReservationDate;
-import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Payment;
 
 import com.buildup.kbnb.model.Reservation;
-<<<<<<< HEAD:src/main/java/com/buildup/kbnb/service/reservationService/ReservationService.java
+
 
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
-=======
->>>>>>> 99164d59e6ff81f589192efa2b12870652cf6b52:src/main/java/com/buildup/kbnb/service/reservation/ReservationService.java
+
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.reservation.ReservationRepository;
 import com.buildup.kbnb.service.PaymentService;

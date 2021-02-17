@@ -97,7 +97,7 @@ public class RoomService {
         room.setBathRoomList(createRoomRequestDto.getBathRoomDtoList());
         room.setBedRoomList(createRoomRequestDto.getBedRoomDtoList());
         room.setBedNum(getBedNum(room.getBedRoomList()));
-        return roomRepository.save(room);
+        return room;
     }
 
     public void createRoomDummyData(RoomController.RoomDummy roomDummy, UserPrincipal userPrincipal) {

@@ -565,7 +565,7 @@ class RoomControllerTest {
                         )
                 ));
     }
-  /*  @Test
+    @Test
     @DisplayName("호스트의 방 등록")
     public void hostRegisterRoom() throws Exception {
         User user = createUser();
@@ -573,6 +573,7 @@ class RoomControllerTest {
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
         given(userService.findById(any())).willReturn(user);
         given(roomService.createRoom(any(), any())).willReturn(room);
+        given(roomService.save(any())).willReturn(room);
         CreateRoomRequestDto req = new CreateRoomRequestDto(); req.setName("테스트");
 
 
@@ -600,5 +601,5 @@ class RoomControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .param("roomId", String.valueOf(1L)))
                 .andDo(print());
-    }*/
+    }
 }

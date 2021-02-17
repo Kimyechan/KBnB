@@ -77,7 +77,10 @@ public class Room {
     public void setBathRoomList(List<BathRoomDto> bathRoomDtoList) {
         List<BathRoom> bathRoomList = new ArrayList<>();
         for(BathRoomDto bathRoomDto: bathRoomDtoList) {
-            bathRoomList.add(BathRoom.builder().room(this).isPrivate(bathRoomDto.getIsPrivate()).build());
+            bathRoomList.add(BathRoom.builder()
+                    .room(this)
+                    .isPrivate(bathRoomDto.getIsPrivate())
+                    .build());
         }
         this.bathRoomList = bathRoomList;
     }
@@ -85,7 +88,12 @@ public class Room {
     public void setBedRoomList(List<BedRoomDto> bedRoomDtoList) {
         List<BedRoom> bedRoomList = new ArrayList<>();
         for(BedRoomDto bedRoomDto : bedRoomDtoList) {
-            bedRoomList.add(BedRoom.builder().doubleSize(bedRoomDto.getDoubleSize()).queenSize(bedRoomDto.getQueenSize()).singleSize(bedRoomDto.getSingleSize()).superSingleSize(bedRoomDto.getSuperSingleSize()).room(this).build());
+            bedRoomList.add(BedRoom.builder()
+                    .doubleSize(bedRoomDto.getDoubleSize())
+                    .queenSize(bedRoomDto.getQueenSize())
+                    .singleSize(bedRoomDto.getSingleSize())
+                    .superSingleSize(bedRoomDto.getSuperSingleSize())
+                    .room(this).build());
         }
         this.bedRoomList = bedRoomList;
     }
