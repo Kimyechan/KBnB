@@ -176,3 +176,4 @@ operation::host-registerBasicRoom[]
 [[resource-host-addPhoto]]
 === 호스트의 방 사진 추가
 operation::host-addPhoto[]
+
