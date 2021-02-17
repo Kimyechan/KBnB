@@ -219,7 +219,6 @@ class CommentControllerTest {
         map.put("None", "없음");
         mockMvc.perform(get("/comment")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .param("roomId", String.valueOf(1))
                 .param("page", String.valueOf(pageable.getPageNumber()))
                 .param("size", String.valueOf(pageable.getPageSize()))
