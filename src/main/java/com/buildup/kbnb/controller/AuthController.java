@@ -93,6 +93,7 @@ public class AuthController {
                 .email(signUpRequest.getEmail())
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
                 .provider(AuthProvider.local)
+                .emailVerified(false)
                 .imageUrl("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-16T12%3A11%3A25.400507.png")
                 .build();
     }
