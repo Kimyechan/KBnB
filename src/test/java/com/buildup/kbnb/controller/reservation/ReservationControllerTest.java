@@ -267,12 +267,9 @@ class ReservationControllerTest {
 
         given(reservationService.createResponseList(any())).willReturn(reservationConfirmedResponseList);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("None", "None");
         mockMvc.perform(get("/reservation")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + userToken)
-                .content(objectMapper.writeValueAsString(map))
                 .param("page", String.valueOf(reservationPage.getNumber()))
                 .param("size", String.valueOf(reservationPage.getSize()))
         ).andDo(print())
@@ -284,9 +281,6 @@ class ReservationControllerTest {
                         ),
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
-                        ),
-                        requestFields(
-                                fieldWithPath("None").description("없음")
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
@@ -348,12 +342,8 @@ class ReservationControllerTest {
         given(reservationService.createResponseList(any())).willReturn(reservationConfirmedResponseList);
         given(reservationService.judgeReservationIdUserHaveContainReservationId(any(), any())).willReturn(ReservationDetailResponse.builder().roomId(1L).roomName("테스트").build());
 
-        Map<String, String> map = new HashMap<>();
-        map.put("None", "None");
-
         mockMvc.perform(get("/reservation/detail")
                 .param("reservationId", String.valueOf(1L))
-                .content(objectMapper.writeValueAsString(map))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + userToken))
                 .andDo(print())
@@ -364,9 +354,6 @@ class ReservationControllerTest {
                         ),
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
-                        ),
-                        requestFields(
-                                fieldWithPath("None").description("없음")
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")

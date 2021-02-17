@@ -225,14 +225,12 @@ class CommentControllerTest {
         given(commentService.findAllByRoomId(any())).willReturn(commentList);
         given(commentService.getListByRoomIdWithUser(any(), any())).willReturn(commentPage);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("None", "없음");
+
         mockMvc.perform(get("/comment")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .param("roomId", String.valueOf(1))
                 .param("page", String.valueOf(pageable.getPageNumber()))
-                .param("size", String.valueOf(pageable.getPageSize()))
-                .content(objectMapper.writeValueAsString(map)))
+                .param("size", String.valueOf(pageable.getPageSize())))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("comment-list",
@@ -243,9 +241,6 @@ class CommentControllerTest {
                         ),
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
-                        ),
-                        requestFields(
-                                fieldWithPath("None").description("없음")
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
