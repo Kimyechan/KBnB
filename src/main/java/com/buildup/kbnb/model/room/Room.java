@@ -68,5 +68,4 @@ public class Room {
         this.checkIn = this.checkIn == null ? 0 : this.checkIn;
         this.priceSatisfaction = this.priceSatisfaction == null ? 0 : this.priceSatisfaction;
     }
-
 }
