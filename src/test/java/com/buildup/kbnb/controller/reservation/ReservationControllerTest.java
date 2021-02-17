@@ -264,12 +264,9 @@ class ReservationControllerTest {
         given(reservationService.findPageByUser(any(), any())).willReturn(reservationPage);
         given(reservationService.getHostName(any())).willReturn("this is host name");
 
-        Map<String, String> map = new HashMap<>();
-        map.put("None", "None");
         mockMvc.perform(get("/reservation")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + userToken)
-                .content(objectMapper.writeValueAsString(map))
                 .param("page", String.valueOf(reservationPage.getNumber()))
                 .param("size", String.valueOf(reservationPage.getSize()))
         ).andDo(print())
@@ -281,9 +278,6 @@ class ReservationControllerTest {
                         ),
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
-                        ),
-                        requestFields(
-                                fieldWithPath("None").description("없음")
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
@@ -299,7 +293,6 @@ class ReservationControllerTest {
                                 fieldWithPath("_embedded.reservationConfirmedResponseList[].roomId").description("방 식별자"),
                                 fieldWithPath("_embedded.reservationConfirmedResponseList[].imgUrl").description("방 imgUrl 리스트"),
                                 fieldWithPath("_embedded.reservationConfirmedResponseList[].imgUrl").description("방 imgUrl"),
-
                                 fieldWithPath("page.size").description("페이지 사이즈"),
                                 fieldWithPath("page.totalElements").description("요소의 총 개수"),
                                 fieldWithPath("page.totalPages").description("총 페이지 개수"),
