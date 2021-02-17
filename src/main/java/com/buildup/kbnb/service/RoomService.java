@@ -3,6 +3,8 @@ package com.buildup.kbnb.service;
 import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.controller.RoomController;
 
+import com.buildup.kbnb.dto.room.BathRoomDto;
+import com.buildup.kbnb.dto.room.BedRoomDto;
 import com.buildup.kbnb.dto.room.CreateRoomRequestDto;
 import com.buildup.kbnb.dto.comment.GradeInfo;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
@@ -33,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -94,8 +97,10 @@ public class RoomService {
                 .description(createRoomRequestDto.getDescription()).tax(createRoomRequestDto.getTax()).roomCost(createRoomRequestDto.getRoomCost()).isParking(createRoomRequestDto.getIsParking())
                 .isSmoking(createRoomRequestDto.getIsSmoking()).roomType(createRoomRequestDto.getRoomType()).build();
         room.setLocation(createLocation_InRoomService(createRoomRequestDto));
-        room.setBathRoomList(createRoomRequestDto.getBathRoomDtoList());
-        room.setBedRoomList(createRoomRequestDto.getBedRoomDtoList());
+
+        setBathRoomList(room,createRoomRequestDto.getBathRoomDtoList());
+        setBedRoomList(room, createRoomRequestDto.getBedRoomDtoList());
+
         room.setBedNum(getBedNum(room.getBedRoomList()));
         return room;
     }
@@ -194,5 +199,29 @@ public class RoomService {
             bedRoomRepository.save(bedRoom2);
         }
 
+    }
+    public List<BathRoom> setBathRoomList(Room room, List<BathRoomDto> bathRoomDtoList) {
+        List<BathRoom> bathRoomList = new ArrayList<>();
+        for(BathRoomDto bathRoomDto: bathRoomDtoList) {
+            bathRoomList.add(BathRoom.builder()
+                    .room(room)
+                    .isPrivate(bathRoomDto.getIsPrivate())
+                    .build());
+        }
+        return bathRoomList;
+    }
+
+
+    public List<BedRoom> setBedRoomList(Room room, List<BedRoomDto> bedRoomDtoList) {
+        List<BedRoom> bedRoomList = new ArrayList<>();
+        for(BedRoomDto bedRoomDto : bedRoomDtoList) {
+            bedRoomList.add(BedRoom.builder()
+                    .doubleSize(bedRoomDto.getDoubleSize())
+                    .queenSize(bedRoomDto.getQueenSize())
+                    .singleSize(bedRoomDto.getSingleSize())
+                    .superSingleSize(bedRoomDto.getSuperSingleSize())
+                    .room(room).build());
+        }
+        return bedRoomList;
     }
 }
