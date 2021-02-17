@@ -24,8 +24,9 @@ import com.buildup.kbnb.service.CommentService;
 import com.buildup.kbnb.service.RoomService;
 import com.buildup.kbnb.service.UserRoomService;
 import com.buildup.kbnb.service.UserService;
-import com.buildup.kbnb.service.reservationService.ReservationService;
 import com.buildup.kbnb.util.S3Uploader;
+import com.buildup.kbnb.service.reservation.ReservationService;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

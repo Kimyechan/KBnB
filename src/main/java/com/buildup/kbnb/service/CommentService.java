@@ -1,13 +1,13 @@
 package com.buildup.kbnb.service;
 
 import com.buildup.kbnb.dto.comment.CommentCreateReq;
-import com.buildup.kbnb.dto.comment.GradeDto;
+import com.buildup.kbnb.dto.comment.GradeInfo;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.CommentRepository;
-import com.buildup.kbnb.service.reservationService.ReservationService;
+import com.buildup.kbnb.service.reservation.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,8 +45,8 @@ public class CommentService {
         return comment;
     }
 
-    public Comment createCommentTx(CommentCreateReq req, Reservation reservation, Room room, GradeDto gradeDto) {
-        Room savedRoom = roomService.updateRoomGrade(room, gradeDto);
+    public Comment createCommentTx(CommentCreateReq req, Reservation reservation, Room room, GradeInfo gradeInfo) {
+        Room savedRoom = roomService.updateRoomGrade(room, gradeInfo);
         Comment comment = saveComment(req, reservation.getUser(), savedRoom);
         reservationService.updateWithComment(reservation, comment);
 

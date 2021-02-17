@@ -134,6 +134,7 @@ class UserControllerTest {
     }
 
 
+
     public UserUpdateRequest userUpdateRequest() {
         UserUpdateRequest userUpdateRequest = UserUpdateRequest.builder().password(passwordEncoder.encode("updatedPassword"))
                 .name("updatedName").email("updated@google.com").birth("2020-11-11").build();

@@ -2,7 +2,6 @@ package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.comment.CommentCreateReq;
-import com.buildup.kbnb.dto.comment.CommentCreateRes;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
@@ -13,7 +12,7 @@ import com.buildup.kbnb.security.TokenProvider;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.CommentService;
 import com.buildup.kbnb.service.RoomService;
-import com.buildup.kbnb.service.reservationService.ReservationService;
+import com.buildup.kbnb.service.reservation.ReservationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,7 +50,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -182,7 +180,17 @@ class CommentControllerTest {
     @Test
     @DisplayName("댓글 리스트 확인")
     public void getCommentList() throws Exception {
-        User user = createUser();
+        User user = User.builder()
+                .id(1L)
+                .name("test")
+                .birth(LocalDate.of(1999, 7, 18))
+                .email("test@gmail.com")
+                .password(passwordEncoder.encode("test"))
+                .imageUrl("Image URL")
+                .provider(AuthProvider.local)
+                .emailVerified(false)
+                .build();
+
         Room room = Room.builder()
                 .id(1L)
                 .cleanliness(4.5)
@@ -221,7 +229,6 @@ class CommentControllerTest {
         map.put("None", "없음");
         mockMvc.perform(get("/comment")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .param("roomId", String.valueOf(1))
                 .param("page", String.valueOf(pageable.getPageNumber()))
                 .param("size", String.valueOf(pageable.getPageSize()))

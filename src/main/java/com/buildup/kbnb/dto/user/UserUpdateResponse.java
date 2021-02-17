@@ -1,6 +1,5 @@
 package com.buildup.kbnb.dto.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.validation.constraints.Email;

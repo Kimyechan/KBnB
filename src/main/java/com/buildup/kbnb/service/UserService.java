@@ -28,6 +28,7 @@ public class UserService {
         }
         return false;
     }
+
     public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new ReservationException("해당 유저를 찾을 수 없습니다."));
     }

@@ -2,6 +2,7 @@ package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.advice.exception.EmailDuplicationException;
 import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
+import com.buildup.kbnb.advice.exception.UserFieldNotValidException;
 import com.buildup.kbnb.dto.AuthResponse;
 import com.buildup.kbnb.dto.user.LoginRequest;
 import com.buildup.kbnb.dto.user.SignUpRequest;
@@ -16,6 +17,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +40,11 @@ public class AuthController {
     private final TokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult error) {
+        if (error.hasErrors()) {
+            throw new UserFieldNotValidException();
+        }
+
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(EmailOrPassWrongException::new);
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new EmailOrPassWrongException();
@@ -47,40 +53,48 @@ public class AuthController {
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
 
         EntityModel<AuthResponse> model = EntityModel.of(new AuthResponse(token));
-        model.add(linkTo(methodOn(AuthController.class).authenticateUser(loginRequest)).withSelfRel());
+        model.add(linkTo(methodOn(AuthController.class).authenticateUser(loginRequest, error)).withSelfRel());
         model.add(Link.of("/docs/api.html#resource-user-login-email").withRel("profile"));
         return ResponseEntity.ok(model);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest, BindingResult error) {
+        if (error.hasErrors()) {
+            throw new UserFieldNotValidException();
+        }
+
         if(userRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new EmailDuplicationException();
         }
 
-        User user = new User();
-        user.setName(signUpRequest.getName());
-        user.setBirth(signUpRequest.getBirth());
-        user.setEmail(signUpRequest.getEmail());
-        user.setPassword(signUpRequest.getPassword());
-        user.setProvider(AuthProvider.local);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setImageUrl("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-16T12%3A11%3A25.400507.png");
-
+        User user = mapDtoToUser(signUpRequest);
         User savedUser = userRepository.save(user);
 
-        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+        String token = tokenProvider.createToken(String.valueOf(savedUser.getId()));
         SignUpResponse response = SignUpResponse.builder()
                     .accessToken(token)
                     .tokenType("Bearer")
                     .build();
 
-        EntityModel<SignUpResponse> model = EntityModel.of(response);
         URI location = linkTo(methodOn(UserController.class).getCurrentUser(UserPrincipal.create(savedUser))).toUri();
-        model.add(linkTo(methodOn(AuthController.class).registerUser(signUpRequest)).withSelfRel());
+        EntityModel<SignUpResponse> model = EntityModel.of(response);
+        model.add(linkTo(methodOn(AuthController.class).registerUser(signUpRequest, error)).withSelfRel());
         model.add(Link.of("/docs/api.html#resource-user-signup-email").withRel("profile"));
 
         return ResponseEntity.created(location)
                 .body(model);
+    }
+
+    private User mapDtoToUser(SignUpRequest signUpRequest) {
+        return User.builder()
+                .name(signUpRequest.getName())
+                .birth(signUpRequest.getBirth())
+                .email(signUpRequest.getEmail())
+                .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .provider(AuthProvider.local)
+                .emailVerified(false)
+                .imageUrl("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-16T12%3A11%3A25.400507.png")
+                .build();
     }
 }

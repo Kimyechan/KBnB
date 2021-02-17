@@ -14,7 +14,7 @@ import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.RoomService;
 import com.buildup.kbnb.service.UserService;
-import com.buildup.kbnb.service.reservationService.ReservationService;
+import com.buildup.kbnb.service.reservation.ReservationService;
 import com.buildup.kbnb.util.payment.model.request.Cancel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -72,6 +72,7 @@ public class ReservationController {
         URI location = linkTo(methodOn(ReservationController.class).registerReservation(reservationRegisterRequest, userPrincipal)).withSelfRel().toUri();
         model.add(Link.of("/docs/api.html#resource-reservation-register").withRel("profile"));
         model.add(linkTo(methodOn(ReservationController.class).registerReservation(reservationRegisterRequest, userPrincipal)).withSelfRel());
+
         return ResponseEntity.created(location)
                 .body(model);
     }
@@ -98,17 +99,23 @@ public class ReservationController {
     }
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> getConfirmedReservationLIst(@CurrentUser UserPrincipal userPrincipal, Pageable pageable, PagedResourcesAssembler<ReservationConfirmedResponse> assembler) {
+    public ResponseEntity<?> getConfirmedReservationLIst(@CurrentUser UserPrincipal userPrincipal,
+                                                         Pageable pageable,
+                                                         PagedResourcesAssembler<ReservationConfirmedResponse> assembler) {
         User user = userService.findById(userPrincipal.getId());
 
         Page<Reservation> reservationPage = reservationService.findPageByUser(user, pageable);
+
         List<Reservation> reservationList = reservationPage.getContent(); //해당 페이지의 모든 컨텐츠
         List<ReservationConfirmedResponse> reservation_confirmedResponseList = reservationService.createResponseList(reservationList);
         PagedModel<EntityModel<ReservationConfirmedResponse>> model = makePageModel(reservation_confirmedResponseList, pageable, reservationPage.getTotalElements(), assembler);
+
         return ResponseEntity.ok(model);
     }
 
-    private PagedModel<EntityModel<ReservationConfirmedResponse>> makePageModel(List<ReservationConfirmedResponse> reservation_confirmedResponseList, Pageable pageable, Long totalElements, PagedResourcesAssembler<ReservationConfirmedResponse> assembler) {
+    private PagedModel<EntityModel<ReservationConfirmedResponse>> makePageModel(List<ReservationConfirmedResponse> reservation_confirmedResponseList,
+                                                                                Pageable pageable, Long totalElements,
+                                                                                PagedResourcesAssembler<ReservationConfirmedResponse> assembler) {
         Page<ReservationConfirmedResponse> responsePage = new PageImpl<>(reservation_confirmedResponseList, pageable, totalElements);
         PagedModel<EntityModel<ReservationConfirmedResponse>> model = assembler.toModel(responsePage);
         model.add(Link.of("/docs/api.html#resource-reservation-lookupList").withRel("profile"));

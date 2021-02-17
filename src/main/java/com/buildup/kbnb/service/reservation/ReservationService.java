@@ -1,6 +1,7 @@
-package com.buildup.kbnb.service.reservationService;
+package com.buildup.kbnb.service.reservation;
 
 import com.buildup.kbnb.advice.exception.BadRequestException;
+<<<<<<< HEAD:src/main/java/com/buildup/kbnb/service/reservationService/ReservationService.java
 
 import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.dto.reservation.ReservationConfirmedResponse;
@@ -10,18 +11,21 @@ import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
 
 import com.buildup.kbnb.dto.reservation.CancelDto;
+=======
+>>>>>>> 99164d59e6ff81f589192efa2b12870652cf6b52:src/main/java/com/buildup/kbnb/service/reservation/ReservationService.java
 import com.buildup.kbnb.dto.room.detail.ReservationDate;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Payment;
 
 import com.buildup.kbnb.model.Reservation;
+<<<<<<< HEAD:src/main/java/com/buildup/kbnb/service/reservationService/ReservationService.java
 
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
+=======
+>>>>>>> 99164d59e6ff81f589192efa2b12870652cf6b52:src/main/java/com/buildup/kbnb/service/reservation/ReservationService.java
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.reservation.ReservationRepository;
-
-
 import com.buildup.kbnb.service.PaymentService;
 import com.buildup.kbnb.util.payment.BootPayApi;
 import com.buildup.kbnb.util.payment.model.request.Cancel;
@@ -30,7 +34,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -43,7 +46,6 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final PaymentService paymentService;
     private final BootPayApi bootPayApi;
-    private final RestTemplate restTemplate;
 
     public Reservation findById(Long reservationId) {
         return reservationRepository.findById(reservationId).orElseThrow(() -> new BadRequestException("there is no reservation which reservationId = " + reservationId));
@@ -80,7 +82,6 @@ public class ReservationService {
     public Reservation findByIdWithRoomAndUser(Long reservationId) {
         return reservationRepository.findByIdWithRoomAndUser(reservationId).orElseThrow();
     }
-
 
     public List<ReservationDate> findByRoomFilterDay(Long roomId, LocalDate date) {
         return reservationRepository.findByRoomFromCurrent(roomId, date);
