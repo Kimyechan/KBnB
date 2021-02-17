@@ -1,7 +1,7 @@
 package com.buildup.kbnb.service;
 
 import com.buildup.kbnb.dto.comment.CommentCreateReq;
-import com.buildup.kbnb.dto.comment.GradeDto;
+import com.buildup.kbnb.dto.comment.GradeInfo;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
@@ -45,8 +45,8 @@ public class CommentService {
         return comment;
     }
 
-    public Comment createCommentTx(CommentCreateReq req, Reservation reservation, Room room, GradeDto gradeDto) {
-        Room savedRoom = roomService.updateRoomGrade(room, gradeDto);
+    public Comment createCommentTx(CommentCreateReq req, Reservation reservation, Room room, GradeInfo gradeInfo) {
+        Room savedRoom = roomService.updateRoomGrade(room, gradeInfo);
         Comment comment = saveComment(req, reservation.getUser(), savedRoom);
         reservationService.updateWithComment(reservation, comment);
 

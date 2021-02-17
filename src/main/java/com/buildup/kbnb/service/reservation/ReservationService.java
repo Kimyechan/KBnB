@@ -5,11 +5,8 @@ import com.buildup.kbnb.dto.room.detail.ReservationDate;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Payment;
 import com.buildup.kbnb.model.Reservation;
-
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.reservation.ReservationRepository;
-
-
 import com.buildup.kbnb.service.PaymentService;
 import com.buildup.kbnb.util.payment.BootPayApi;
 import com.buildup.kbnb.util.payment.model.request.Cancel;
@@ -18,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,7 +26,6 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final PaymentService paymentService;
     private final BootPayApi bootPayApi;
-    private final RestTemplate restTemplate;
 
     public Reservation findById(Long reservationId) {
         return reservationRepository.findById(reservationId).orElseThrow(() -> new BadRequestException("there is no reservation which reservationId = " + reservationId));
@@ -67,7 +62,6 @@ public class ReservationService {
     public Reservation findByIdWithRoomAndUser(Long reservationId) {
         return reservationRepository.findByIdWithRoomAndUser(reservationId).orElseThrow();
     }
-
 
     public List<ReservationDate> findByRoomFilterDay(Long roomId, LocalDate date) {
         return reservationRepository.findByRoomFromCurrent(roomId, date);

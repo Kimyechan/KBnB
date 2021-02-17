@@ -1,9 +1,8 @@
 package com.buildup.kbnb.dto.comment;
 
-import com.buildup.kbnb.model.Comment;
 import lombok.*;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.PagedModel;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -29,5 +28,5 @@ public class CommentDto {
 
     private String userName;
 
-    private String creatingDate;
+    private LocalDate creatingDate;
 }

@@ -1,6 +1,5 @@
 package com.buildup.kbnb.repository.room;
 
-import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
