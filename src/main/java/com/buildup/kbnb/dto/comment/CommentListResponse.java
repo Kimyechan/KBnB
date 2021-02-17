@@ -1,11 +1,8 @@
 package com.buildup.kbnb.dto.comment;
 
-import com.buildup.kbnb.model.Comment;
 import lombok.*;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
-
-import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
