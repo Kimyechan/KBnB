@@ -331,12 +331,8 @@ class ReservationControllerTest {
         given(reservationService.findByUser(any())).willReturn(reservationList);
         given(reservationService.findById(any())).willReturn(reservation);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("None", "None");
-
         mockMvc.perform(get("/reservation/detail")
                 .param("reservationId", String.valueOf(1L))
-                .content(objectMapper.writeValueAsString(map))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + userToken))
                 .andDo(print())
@@ -347,9 +343,6 @@ class ReservationControllerTest {
                         ),
                         requestHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json 타입")
-                        ),
-                        requestFields(
-                                fieldWithPath("None").description("없음")
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
