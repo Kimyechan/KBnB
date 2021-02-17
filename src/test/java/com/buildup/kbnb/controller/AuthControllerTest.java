@@ -109,8 +109,6 @@ class AuthControllerTest {
                 .password("test")
                 .build();
 
-        given(userRepository.findByEmail(loginRequest.getEmail())).willThrow(EmailOrPassWrongException.class);
-
         mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
