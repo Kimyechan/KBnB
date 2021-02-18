@@ -40,8 +40,6 @@ public class User {
     @Column(nullable = false)
     private Boolean emailVerified = false;
 
-    private String role = Role.USER.getValue();
-
     @NotNull
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;

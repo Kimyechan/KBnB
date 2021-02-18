@@ -16,7 +16,7 @@ spring:
 cloud:
   aws:
     s3:
-      bucket: kbnbbucket
+      bucket: pungdong
     region:
       static: ap-northeast-2
     stack:

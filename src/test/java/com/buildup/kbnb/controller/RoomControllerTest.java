@@ -1,6 +1,8 @@
 package com.buildup.kbnb.controller;
 
+
 import com.buildup.kbnb.config.RestDocsConfiguration;
+import com.buildup.kbnb.dto.room.CreateRoomRequestDto;
 import com.buildup.kbnb.dto.room.check.CheckRoomReq;
 import com.buildup.kbnb.dto.room.detail.ReservationDate;
 import com.buildup.kbnb.dto.room.search.*;
@@ -21,6 +23,7 @@ import com.buildup.kbnb.service.RoomService;
 import com.buildup.kbnb.service.UserRoomService;
 import com.buildup.kbnb.service.UserService;
 import com.buildup.kbnb.service.reservation.ReservationService;
+import com.buildup.kbnb.util.S3Uploader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,12 +54,12 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -98,6 +101,8 @@ class RoomControllerTest {
     @MockBean
     UserRepository userRepository;
 
+    @MockBean
+    S3Uploader s3Uploader;
     public User createUser() {
         User user = User.builder()
                 .id(1L)
@@ -542,5 +547,90 @@ class RoomControllerTest {
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
                         )
                 ));
+    }
+    @Test
+    @DisplayName("호스트의 방 등록")
+    public void hostRegisterRoom() throws Exception {
+        User user = createUser();
+        Room room = Room.builder().name("테스트").id(1L).build();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+        given(userService.findById(any())).willReturn(user);
+        given(roomService.createRoom(any(), any())).willReturn(room);
+        given(roomService.save(any())).willReturn(room);
+        CreateRoomRequestDto req = new CreateRoomRequestDto(); req.setName("테스트");
+
+
+
+        mockMvc.perform(post("/host/registerBasicRoom")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .content(objectMapper.writeValueAsString(req)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("host-registerBasicRoom",
+                        requestFields(
+                                fieldWithPath("name").description("방이름"),
+                                fieldWithPath("roomType").description("룸타입"),
+                                fieldWithPath("roomCost").description("방비용"),
+                                fieldWithPath("cleaningCost").description("청소비용"),
+                                fieldWithPath("tax").description("세금"),
+                                fieldWithPath("peopleLimit").description("인원 제한"),
+                                fieldWithPath("description").description("설명"),
+                                fieldWithPath("checkOutTime").description("체크아웃 시간"),
+                                fieldWithPath("checkInTime").description("체크인 시간"),
+                                fieldWithPath("isSmoking").description("흡연 가능 여부"),
+                                fieldWithPath("isParking").description("주차 가능 여부"),
+                                fieldWithPath("country").description("나라"),
+                                fieldWithPath("city").description("시"),
+                                fieldWithPath("borough").description("구"),
+                                fieldWithPath("neighborhood").description("동"),
+                                fieldWithPath("detailAddress").description("상세 주소"),
+                                fieldWithPath("latitude").description("위도"),
+                                fieldWithPath("longitude").description("경도"),
+                                fieldWithPath("bedRoomDtoList.[]").description("침실 리스트"),
+                                fieldWithPath("bathRoomDtoList.[]").description("욕실 리스트")
+
+                        ),
+                        responseFields(
+                                fieldWithPath("msg").description("방 등록 여부"),
+                                fieldWithPath("roomId").description("방 식별자"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 주소")
+
+                        )
+                        ));
+    }
+    @Test
+    @DisplayName("방 등록_사진 추가")
+    public void addPhoto() throws Exception {
+        User user = createUser();
+        Room room = Room.builder().name("테스트방").build();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+        given(userService.findById(any())).willReturn(user);
+        given(roomService.findById(any())).willReturn(room);
+        given(s3Uploader.upload(any(),any(),any())).willReturn("test url");
+        given(roomService.save(any())).willReturn(room);
+
+        mockMvc.perform(fileUpload("/host/addPhoto")
+                .file("file", "example".getBytes())
+                .file("file", "example2".getBytes())
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .param("roomId", String.valueOf(1L))
+        ).andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("host-addPhoto",
+                        requestParts(
+                                partWithName("file").description("업로드될 파일 리스트")
+                        ),
+                        requestParameters(
+                                parameterWithName("roomId").description("방 식별자")
+                        ),
+                        responseFields(
+                                fieldWithPath("imgCount").description("등록된 사진의 갯수"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 주소")
+                        )
+                        )
+
+                );
     }
 }

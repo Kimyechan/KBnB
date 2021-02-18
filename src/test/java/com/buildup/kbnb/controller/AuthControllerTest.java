@@ -1,6 +1,5 @@
 package com.buildup.kbnb.controller;
 
-import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
 import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.user.LoginRequest;
 import com.buildup.kbnb.dto.user.SignUpRequest;

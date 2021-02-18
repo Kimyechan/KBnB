@@ -18,43 +18,24 @@ import java.util.List;
 public class Room {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
     private String roomType;
-
     private Double roomCost;
-
     private Double cleaningCost;
-
     private Double tax;
-
     private Integer peopleLimit;
-
     private String description;
-
     private LocalTime checkOutTime;
-
     private LocalTime checkInTime;
-
     private Boolean isSmoking;
-
     private Boolean isParking;
-
     private Double grade;
-
     private Double cleanliness;
-
     private Double accuracy;
-
     private Double communication;
-
     private Double locationRate;
-
     private Double checkIn;
-
     private Double priceSatisfaction;
-
     private Integer bedNum;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -87,4 +68,5 @@ public class Room {
         this.checkIn = this.checkIn == null ? 0 : this.checkIn;
         this.priceSatisfaction = this.priceSatisfaction == null ? 0 : this.priceSatisfaction;
     }
+
 }
