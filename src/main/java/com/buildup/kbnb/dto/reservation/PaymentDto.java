@@ -11,5 +11,4 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PaymentDto {
     private String receipt_id;
-    private Integer price;
 }

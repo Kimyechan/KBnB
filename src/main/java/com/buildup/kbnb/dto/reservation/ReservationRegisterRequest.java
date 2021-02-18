@@ -2,6 +2,7 @@ package com.buildup.kbnb.dto.reservation;
 
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter
@@ -10,12 +11,25 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class ReservationRegisterRequest {
+    @NotNull
     private Long roomId;
+
+    @NotNull
     private LocalDate checkIn;
+
+    @NotNull
     private LocalDate checkOut;
-    private int guestNumber;
-    private int infantNumber;
+
+    @NotNull
+    private Integer guestNumber;
+
+    @NotNull
+    private Integer infantNumber;
+
+    @NotNull
     private Long totalCost;
+
     private String message;
+
     private PaymentDto payment;
 }

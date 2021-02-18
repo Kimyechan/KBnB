@@ -25,6 +25,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -45,34 +46,49 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> registerReservation(@Valid @RequestBody ReservationRegisterRequest reservationRegisterRequest, @CurrentUser UserPrincipal userPrincipal) throws Exception {
+    public ResponseEntity<?> registerReservation(@CurrentUser UserPrincipal userPrincipal,
+                                                 @Valid @RequestBody ReservationRegisterRequest reservationRegisterRequest,
+                                                 BindingResult error) throws Exception {
+        if (error.hasErrors()) {
+            throw new ReservationException("예약 등록 입력값이 잘못되었습니다");
+        }
+
         User user = userService.findById(userPrincipal.getId());
         Room room = roomService.findById(reservationRegisterRequest.getRoomId());
         List<Reservation> reservationList = reservationService.findByRoomId(room.getId());
 
         LocalDate checkIn = reservationRegisterRequest.getCheckIn();
         LocalDate checkOut = reservationRegisterRequest.getCheckOut();
+        checkStrangeDate(checkIn, checkOut);
         checkAvailableDate(reservationList, checkIn, checkOut);
 
         Reservation reservation = mapToReservation(room, reservationRegisterRequest, user);
-        Payment payment = Payment.builder()
-                .receiptId(reservationRegisterRequest.getPayment().getReceipt_id())
-                .price(reservationRegisterRequest.getPayment().getPrice())
-                .build();
-        Reservation savedReservation = reservationService.saveWithPayment(reservation, payment);
+        Payment payment = mapToPayment(reservationRegisterRequest);
+        Reservation savedReservation = reservationService.processWithPayment(reservation, payment);
 
+        URI location = linkTo(methodOn(ReservationController.class).registerReservation(userPrincipal, reservationRegisterRequest, error)).withSelfRel().toUri();
+
+        ReservationRegisterResponse reservationResponse = mapToRegisterResponse(savedReservation);
+        EntityModel<ReservationRegisterResponse> model = EntityModel.of(reservationResponse);
+        model.add(Link.of("/docs/api.html#resource-reservation-register").withRel("profile"));
+        model.add(linkTo(methodOn(ReservationController.class).registerReservation(userPrincipal, reservationRegisterRequest, error)).withSelfRel());
+
+        return ResponseEntity.created(location)
+                .body(model);
+    }
+
+    private ReservationRegisterResponse mapToRegisterResponse(Reservation savedReservation) {
         ReservationRegisterResponse reservationResponse = ReservationRegisterResponse.builder()
                 .message("예약 성공")
                 .reservationId(savedReservation.getId())
                 .build();
+        return reservationResponse;
+    }
 
-        EntityModel<ReservationRegisterResponse> model = EntityModel.of(reservationResponse);
-        URI location = linkTo(methodOn(ReservationController.class).registerReservation(reservationRegisterRequest, userPrincipal)).withSelfRel().toUri();
-        model.add(Link.of("/docs/api.html#resource-reservation-register").withRel("profile"));
-        model.add(linkTo(methodOn(ReservationController.class).registerReservation(reservationRegisterRequest, userPrincipal)).withSelfRel());
-
-        return ResponseEntity.created(location)
-                .body(model);
+    private Payment mapToPayment(ReservationRegisterRequest reservationRegisterRequest) {
+        return Payment.builder()
+                .receiptId(reservationRegisterRequest.getPayment().getReceipt_id())
+                .build();
     }
 
     private Reservation mapToReservation(Room room, ReservationRegisterRequest reservationRegisterRequest, User user) {
@@ -86,15 +102,23 @@ public class ReservationController {
                 .build();
     }
 
+    private void checkStrangeDate(LocalDate checkIn, LocalDate checkOut) {
+        if (checkIn.isAfter(checkOut) || checkIn.isBefore(LocalDate.now()) || checkOut.isBefore(LocalDate.now())) {
+            throw new ReservationException("예약 날짜가 잘못되었습니다");
+        }
+    }
+
     private void checkAvailableDate(List<Reservation> reservationList, LocalDate checkIn, LocalDate checkOut) {
         for (Reservation reservation : reservationList) {
             if ((checkIn.isEqual(reservation.getCheckIn()) || checkIn.isAfter(reservation.getCheckIn()) && checkIn.isBefore(reservation.getCheckOut()))
                     || (checkIn.isBefore(reservation.getCheckIn()) && checkOut.isAfter(reservation.getCheckOut()))
                     || (checkOut.isAfter(reservation.getCheckIn()) && (checkOut.isBefore(reservation.getCheckOut()) || checkOut.isEqual(reservation.getCheckOut()))
-                    || (checkIn.isEqual(reservation.getCheckIn()) && checkOut.isEqual(reservation.getCheckOut()))))
+                    || (checkIn.isEqual(reservation.getCheckIn()) && checkOut.isEqual(reservation.getCheckOut())))) {
                 throw new ReservationException("예약이 불가능한 날짜입니다.");
+            }
         }
     }
+
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getConfirmedReservationLIst(@CurrentUser UserPrincipal userPrincipal,

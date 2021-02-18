@@ -74,7 +74,7 @@ public class BootPayApi {
         return restTemplate.exchange(URL_CANCEL, HttpMethod.POST, entity, CancelResult.class);
     }
 
-    public void verify(String token, String receipt_id, Integer price) throws Exception {
+    public void verify(String token, String receipt_id, Double price) throws Exception {
         ResponseEntity<Receipt> receiptResponseEntity = getReceiptInfo(receipt_id, token);
 
         Receipt receipt = receiptResponseEntity.getBody();
