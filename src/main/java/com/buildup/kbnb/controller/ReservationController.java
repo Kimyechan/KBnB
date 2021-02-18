@@ -25,6 +25,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -45,7 +46,13 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> registerReservation(@Valid @RequestBody ReservationRegisterRequest reservationRegisterRequest, @CurrentUser UserPrincipal userPrincipal) throws Exception {
+    public ResponseEntity<?> registerReservation(@CurrentUser UserPrincipal userPrincipal,
+                                                 @Valid @RequestBody ReservationRegisterRequest reservationRegisterRequest,
+                                                 BindingResult error) throws Exception {
+        if (error.hasErrors()) {
+            throw new ReservationException("예약 등록 입력값이 잘못되었습니다");
+        }
+
         User user = userService.findById(userPrincipal.getId());
         Room room = roomService.findById(reservationRegisterRequest.getRoomId());
         List<Reservation> reservationList = reservationService.findByRoomId(room.getId());
@@ -59,12 +66,12 @@ public class ReservationController {
         Payment payment = mapToPayment(reservationRegisterRequest);
         Reservation savedReservation = reservationService.saveWithPayment(reservation, payment);
 
-        URI location = linkTo(methodOn(ReservationController.class).registerReservation(reservationRegisterRequest, userPrincipal)).withSelfRel().toUri();
+        URI location = linkTo(methodOn(ReservationController.class).registerReservation(userPrincipal, reservationRegisterRequest, error)).withSelfRel().toUri();
 
         ReservationRegisterResponse reservationResponse = mapToRegisterResponse(savedReservation);
         EntityModel<ReservationRegisterResponse> model = EntityModel.of(reservationResponse);
         model.add(Link.of("/docs/api.html#resource-reservation-register").withRel("profile"));
-        model.add(linkTo(methodOn(ReservationController.class).registerReservation(reservationRegisterRequest, userPrincipal)).withSelfRel());
+        model.add(linkTo(methodOn(ReservationController.class).registerReservation(userPrincipal, reservationRegisterRequest, error)).withSelfRel());
 
         return ResponseEntity.created(location)
                 .body(model);
@@ -112,6 +119,7 @@ public class ReservationController {
             }
         }
     }
+
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getConfirmedReservationLIst(@CurrentUser UserPrincipal userPrincipal,
