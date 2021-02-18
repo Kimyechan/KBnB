@@ -55,24 +55,33 @@ public class ReservationController {
         checkAvailableDate(reservationList, checkIn, checkOut);
 
         Reservation reservation = mapToReservation(room, reservationRegisterRequest, user);
-        Payment payment = Payment.builder()
-                .receiptId(reservationRegisterRequest.getPayment().getReceipt_id())
-                .price(reservationRegisterRequest.getPayment().getPrice())
-                .build();
+        Payment payment = mapToPayment(reservationRegisterRequest);
         Reservation savedReservation = reservationService.saveWithPayment(reservation, payment);
 
-        ReservationRegisterResponse reservationResponse = ReservationRegisterResponse.builder()
-                .message("예약 성공")
-                .reservationId(savedReservation.getId())
-                .build();
-
-        EntityModel<ReservationRegisterResponse> model = EntityModel.of(reservationResponse);
         URI location = linkTo(methodOn(ReservationController.class).registerReservation(reservationRegisterRequest, userPrincipal)).withSelfRel().toUri();
+
+        ReservationRegisterResponse reservationResponse = mapToRegisterResponse(savedReservation);
+        EntityModel<ReservationRegisterResponse> model = EntityModel.of(reservationResponse);
         model.add(Link.of("/docs/api.html#resource-reservation-register").withRel("profile"));
         model.add(linkTo(methodOn(ReservationController.class).registerReservation(reservationRegisterRequest, userPrincipal)).withSelfRel());
 
         return ResponseEntity.created(location)
                 .body(model);
+    }
+
+    private ReservationRegisterResponse mapToRegisterResponse(Reservation savedReservation) {
+        ReservationRegisterResponse reservationResponse = ReservationRegisterResponse.builder()
+                .message("예약 성공")
+                .reservationId(savedReservation.getId())
+                .build();
+        return reservationResponse;
+    }
+
+    private Payment mapToPayment(ReservationRegisterRequest reservationRegisterRequest) {
+        return Payment.builder()
+                .receiptId(reservationRegisterRequest.getPayment().getReceipt_id())
+                .price(reservationRegisterRequest.getPayment().getPrice())
+                .build();
     }
 
     private Reservation mapToReservation(Room room, ReservationRegisterRequest reservationRegisterRequest, User user) {
@@ -91,8 +100,9 @@ public class ReservationController {
             if ((checkIn.isEqual(reservation.getCheckIn()) || checkIn.isAfter(reservation.getCheckIn()) && checkIn.isBefore(reservation.getCheckOut()))
                     || (checkIn.isBefore(reservation.getCheckIn()) && checkOut.isAfter(reservation.getCheckOut()))
                     || (checkOut.isAfter(reservation.getCheckIn()) && (checkOut.isBefore(reservation.getCheckOut()) || checkOut.isEqual(reservation.getCheckOut()))
-                    || (checkIn.isEqual(reservation.getCheckIn()) && checkOut.isEqual(reservation.getCheckOut()))))
+                    || (checkIn.isEqual(reservation.getCheckIn()) && checkOut.isEqual(reservation.getCheckOut())))) {
                 throw new ReservationException("예약이 불가능한 날짜입니다.");
+            }
         }
     }
 
