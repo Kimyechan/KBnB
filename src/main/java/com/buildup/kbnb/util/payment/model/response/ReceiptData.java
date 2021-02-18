@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReceiptData {
     private Integer price;
+    private Integer status;
 }
