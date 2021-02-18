@@ -18,6 +18,7 @@ import com.buildup.kbnb.util.payment.BootPayApi;
 import com.buildup.kbnb.util.payment.model.request.Cancel;
 import com.buildup.kbnb.util.payment.model.response.ResDefault;
 import lombok.RequiredArgsConstructor;
+import org.joda.time.Days;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 @RequiredArgsConstructor
@@ -134,8 +137,8 @@ public class ReservationService {
 
     public Reservation processWithPayment(Reservation reservation, Payment payment) throws Exception {
         String token = bootPayApi.getAccessToken();
-
-        bootPayApi.verify(token, payment.getReceiptId(), payment.getPrice());
+        Double reservationCost = calcCost(reservation.getRoom(), reservation.getCheckIn(), reservation.getCheckOut());
+        bootPayApi.verify(token, payment.getReceiptId(), reservationCost);
 
         Payment savedPayment = paymentService.savePayment(payment);
         reservation.setPayment(savedPayment);
@@ -144,6 +147,11 @@ public class ReservationService {
         ResponseEntity<ResDefault> res = bootPayApi.confirm(token, payment.getReceiptId());
         bootPayApi.checkConfirm(res);
         return savedReservation;
+    }
+
+    private Double calcCost(Room room, LocalDate checkIn, LocalDate checkOut) {
+        Long period = checkIn.until(checkOut, DAYS);
+        return room.getTax() + room.getCleaningCost() + room.getRoomCost() * 1.1 * period;
     }
 
     public void cancelReservation(Long reservationId, Cancel cancel) throws Exception {

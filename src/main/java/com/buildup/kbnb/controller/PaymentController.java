@@ -37,7 +37,7 @@ public class PaymentController {
     @NoArgsConstructor
     public static class PaymentDto {
         private String receipt_id;
-        private Integer price;
+        private Double price;
     }
 
     @PostMapping("/cancel")
