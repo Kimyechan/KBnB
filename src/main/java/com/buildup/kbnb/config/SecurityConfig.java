@@ -105,6 +105,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css",
                         "/**/*.js")
                         .permitAll()
+/*                .antMatchers("/host")
+                .hasRole("HOST")*/
                     .antMatchers("/auth/**", "/oauth2/**", "/room/list", "/room/detail", "/comment/getCommentList")
                         .permitAll()
                     .mvcMatchers(HttpMethod.GET, "/comment")

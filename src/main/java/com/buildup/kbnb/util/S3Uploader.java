@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Slf4j
@@ -29,7 +28,6 @@ public class S3Uploader {
     public String upload(MultipartFile multipartFile, String dirName, String userEmail) throws IOException {
         File uploadFile = convert(multipartFile, userEmail)
                 .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
-
         return upload(uploadFile, dirName);
     }
 
@@ -54,7 +52,7 @@ public class S3Uploader {
     }
 
     private Optional<File> convert(MultipartFile file, String userEmail) throws IOException {
-        String uniqueFileName = userEmail + LocalDateTime.now() + ".png"; //해당 구문에서 오류
+        String uniqueFileName = userEmail + ".png"; //해당 구문에서 오류
 //        String uniqueFileName = userEmail + ".png";
         File convertFile = new File(uniqueFileName);
         if(convertFile.createNewFile()) {
@@ -63,11 +61,8 @@ public class S3Uploader {
             }
             return Optional.of(convertFile);
         }
-
         return Optional.empty();
     }
-
-
 
     public void deleteFileFromS3(String fileURL) {
         amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileURL));

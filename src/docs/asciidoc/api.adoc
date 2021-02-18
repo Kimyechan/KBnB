@@ -113,16 +113,14 @@ operation::auth-login-email[]
 operation::user-get-me[]
 
 
-////
-[[resource-user-before-update]]
-=== 유저 정보 수정 전 본인 확인
-operation::user-before-update[]
-////
-
 
 [[resource-user-update]]
 === 유저 정보 수정
 operation::user-update[]
+
+[[resource-user-updatePhoto]]
+=== 유저 사진 수정
+operation::user-updatePhoto[]
 
 [[resource-room]]
 == 숙소
@@ -170,3 +168,12 @@ operation::comment-create[]
 [[resource-comment-list]]
 === 댓글 리스트 조회
 operation::comment-list[]
+
+[[resource-host-registerBasicRoom]]
+=== 호스트의 방 기본정보 등록
+operation::host-registerBasicRoom[]
+
+[[resource-host-addPhoto]]
+=== 호스트의 방 사진 추가
+operation::host-addPhoto[]
+
