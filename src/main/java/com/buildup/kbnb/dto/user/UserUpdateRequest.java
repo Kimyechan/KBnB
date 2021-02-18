@@ -12,7 +12,6 @@ import javax.validation.constraints.Email;
 @Builder
 public class UserUpdateRequest {
 
-    private Long id;
     private String name;
     private String birth;
     @Email

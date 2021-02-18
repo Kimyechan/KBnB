@@ -18,16 +18,18 @@ class RoomServiceTest {
 
     @Mock
     RoomRepository roomRepository;
+    @Mock
+    LocationRepository locationRepository;
 
     @Mock BedRoomRepository bedRoomRepository;
     @Mock BathRoomRepository bathRoomRepository;
-    @Mock LocationRepository locationRepository;
     @Mock UserRepository userRepository;
     @Mock RoomImgRepository roomImgRepository;;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        roomService = new RoomService(roomRepository, bedRoomRepository, bathRoomRepository, locationRepository, userRepository, roomImgRepository);
+
+        roomService = new RoomService(roomRepository, locationRepository, bedRoomRepository, bathRoomRepository, userRepository, roomImgRepository);
     }
 
     @Test
