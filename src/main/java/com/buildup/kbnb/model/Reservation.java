@@ -22,11 +22,19 @@ public class Reservation {
 
     private Integer guestNum;
 
-    private Double totalCost;
+    private Long totalCost;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY )
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY )
     private Room room;
+
+    private Boolean commentExisted;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Comment comment;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Payment payment;
 }

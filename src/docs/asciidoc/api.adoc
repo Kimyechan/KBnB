@@ -1,4 +1,4 @@
-= DIVING REST API Guide
+= KBnB REST API Guide
 김예찬;
 :doctype: book
 :icons: font
@@ -65,11 +65,14 @@
 
 에러 응답이 발생했을 때 (상태 코드 >= 400), 본문에 해당 문제를 기술한 JSON 객체가 담겨있다. 에러 객체는 다음의 구조를 따른다.
 
-
-
 예를 들어, 잘못된 요청으로 이벤트를 만들려고 했을 때 다음과 같은 `400 Bad Request` 응답을 받는다.
 
+[[errors-email-duplication]]
+=== 이메일 중복 예외
+operation::exception-emailDuplication[snippets='response-body,response-fields']
 
+=== 이메일 패스워드 틀림 예외
+operation::exception-emailOrPasswordWrong[snippets='response-body,response-fields']
 
 [[overview-hypermedia]]
 == 하이퍼미디어
@@ -104,3 +107,66 @@ operation::auth-signup-email[]
 [[resource-user-login-email]]
 === 이메일 로그인
 operation::auth-login-email[]
+
+[[resource-user-get-me]]
+=== 유저 정보 조회
+operation::user-get-me[]
+
+
+////
+[[resource-user-before-update]]
+=== 유저 정보 수정 전 본인 확인
+operation::user-before-update[]
+////
+
+
+[[resource-user-update]]
+=== 유저 정보 수정
+operation::user-update[]
+
+[[resource-room]]
+== 숙소
+
+숙소에 대한 상세조회, 리스트 조회, 등록, 삭제, 찜하기등을 할때 사용한다
+
+[[resource-room-get-list-by-condition]]
+=== 숙소 리스트 조건 검색
+operation::room-get-roomList-by-condition[]
+
+[[resource-room-get-detail]]
+=== 숙소 상세 검색
+operation::room-get-detail[]
+
+[[resource-room-check]]
+=== 찜하기 찜하기 취소
+operation::room-check[]
+
+[[resource-reservation]]
+== 예약
+
+[[resource-reservation-register]]
+=== 예약 등록
+operation::reservation-register[]
+
+[[resource-reservation-lookupList]]
+=== 예약 리스트 조회
+operation::reservation-lookupList[]
+
+[[resource-reservation-delete]]
+=== 예약 취소
+operation::reservation-delete[]
+
+[[resource-reservation-detail]]
+=== 예약 상세
+operation::reservation-detail[]
+
+[[resource-comment]]
+== 댓글
+
+[[resource-comment-create]]
+=== 댓글 생성
+operation::comment-create[]
+
+[[resource-comment-list]]
+=== 댓글 리스트 조회
+operation::comment-list[]

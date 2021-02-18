@@ -1,4 +1,6 @@
 package com.buildup.kbnb.model.user;
+
+import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.UserRoom;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -38,12 +40,17 @@ public class User {
     @Column(nullable = false)
     private Boolean emailVerified = false;
 
+    private String role = Role.USER.getValue();
+
     @NotNull
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
 
     private String providerId;
 
-    @OneToMany(mappedBy = "room",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private List<UserRoom> checkRoomList;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Reservation> reservationList;
 }
