@@ -1,9 +1,7 @@
 package com.buildup.kbnb.controller.reservation;
 
 import com.buildup.kbnb.config.RestDocsConfiguration;
-import com.buildup.kbnb.dto.reservation.CancelDto;
-import com.buildup.kbnb.dto.reservation.PaymentDto;
-import com.buildup.kbnb.dto.reservation.ReservationRegisterRequest;
+import com.buildup.kbnb.dto.reservation.*;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BathRoom;
@@ -260,9 +258,13 @@ class ReservationControllerTest {
         Page<Reservation> reservationPage = new PageImpl<>(
                 reservationList,
                 pageable,
-                getReservationList(user, location).size());
+                getReservationList(user, location).size()); List<ReservationConfirmedResponse> reservationConfirmedResponseList = new ArrayList<>();
+        ReservationConfirmedResponse reservationConfirmedResponse = ReservationConfirmedResponse.builder().reservationId(1L).build();
+        reservationConfirmedResponseList.add(reservationConfirmedResponse);
+
         given(reservationService.findPageByUser(any(), any())).willReturn(reservationPage);
         given(reservationService.getHostName(any())).willReturn("this is host name");
+        given(reservationService.createResponseList(any())).willReturn(reservationConfirmedResponseList);
 
         mockMvc.perform(get("/reservation")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -325,11 +327,18 @@ class ReservationControllerTest {
         Room room = createRoom(user);
 
         Reservation reservation = createReservation(room, createReservation_RegisterRequest(room), user);
-        List<Reservation> reservationList = new ArrayList<>();
+
+        List<Reservation> reservationList = new ArrayList<>(); reservationList.add(reservation);
+        List<ReservationConfirmedResponse> reservationConfirmedResponseList = new ArrayList<>();
+        ReservationConfirmedResponse reservationConfirmedResponse = ReservationConfirmedResponse.builder().reservationId(1L).build();
+        reservationConfirmedResponseList.add(reservationConfirmedResponse);
         reservationList.add(reservation);
+
         given(userService.findById(any())).willReturn(user);
         given(reservationService.findByUser(any())).willReturn(reservationList);
         given(reservationService.findById(any())).willReturn(reservation);
+        given(reservationService.createResponseList(any())).willReturn(reservationConfirmedResponseList);
+        given(reservationService.judgeReservationIdUserHaveContainReservationId(any(), any())).willReturn(ReservationDetailResponse.builder().roomId(1L).roomName("테스트").build());
 
         mockMvc.perform(get("/reservation/detail")
                 .param("reservationId", String.valueOf(1L))

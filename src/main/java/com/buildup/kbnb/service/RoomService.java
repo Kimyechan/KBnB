@@ -2,6 +2,12 @@ package com.buildup.kbnb.service;
 
 import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.controller.RoomController;
+
+
+import com.buildup.kbnb.dto.room.BathRoomDto;
+import com.buildup.kbnb.dto.room.BedRoomDto;
+import com.buildup.kbnb.dto.room.CreateRoomRequestDto;
+
 import com.buildup.kbnb.dto.comment.GradeInfo;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
 import com.buildup.kbnb.model.Location;
@@ -20,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,9 +34,9 @@ import java.util.List;
 @Transactional
 public class RoomService {
     private final RoomRepository roomRepository;
+    private final LocationRepository locationRepository;
     private final BedRoomRepository bedRoomRepository;
     private final BathRoomRepository bathRoomRepository;
-    private final LocationRepository locationRepository;
     private final UserRepository userRepository;
     private final RoomImgRepository roomImgRepository;;
 
@@ -68,6 +75,26 @@ public class RoomService {
         room.setGrade(gradeInfo.getTotalGrade());
 
         return roomRepository.save(room);
+    }
+
+
+    public Location createLocation_InRoomService(CreateRoomRequestDto createRoomRequestDto) {
+        Location location = Location.builder().latitude(createRoomRequestDto.getLatitude()).longitude(createRoomRequestDto.getLongitude()).detailAddress(createRoomRequestDto.getDetailAddress())
+                .neighborhood(createRoomRequestDto.getNeighborhood()).borough(createRoomRequestDto.getBorough()).country(createRoomRequestDto.getCountry()).city(createRoomRequestDto.getCity()).build();
+        return locationRepository.save(location);
+    }
+
+    public Room createRoom(User user, CreateRoomRequestDto createRoomRequestDto) {
+        Room room = Room.builder().name(createRoomRequestDto.getName()).cleaningCost(createRoomRequestDto.getCleaningCost()).host(user).checkInTime(createRoomRequestDto.getCheckInTime()).peopleLimit(createRoomRequestDto.getPeopleLimit())
+                .description(createRoomRequestDto.getDescription()).tax(createRoomRequestDto.getTax()).roomCost(createRoomRequestDto.getRoomCost()).isParking(createRoomRequestDto.getIsParking())
+                .isSmoking(createRoomRequestDto.getIsSmoking()).roomType(createRoomRequestDto.getRoomType()).build();
+        room.setLocation(createLocation_InRoomService(createRoomRequestDto));
+
+        setBathRoomList(room,createRoomRequestDto.getBathRoomDtoList());
+        setBedRoomList(room, createRoomRequestDto.getBedRoomDtoList());
+
+        room.setBedNum(getBedNum(room.getBedRoomList()));
+        return room;
     }
 
     public void createRoomDummyData(RoomController.RoomDummy roomDummy, UserPrincipal userPrincipal) {
@@ -163,5 +190,30 @@ public class RoomService {
                     .build();
             bedRoomRepository.save(bedRoom2);
         }
+
+    }
+    public List<BathRoom> setBathRoomList(Room room, List<BathRoomDto> bathRoomDtoList) {
+        List<BathRoom> bathRoomList = new ArrayList<>();
+        for(BathRoomDto bathRoomDto: bathRoomDtoList) {
+            bathRoomList.add(BathRoom.builder()
+                    .room(room)
+                    .isPrivate(bathRoomDto.getIsPrivate())
+                    .build());
+        }
+        return bathRoomList;
+    }
+
+
+    public List<BedRoom> setBedRoomList(Room room, List<BedRoomDto> bedRoomDtoList) {
+        List<BedRoom> bedRoomList = new ArrayList<>();
+        for(BedRoomDto bedRoomDto : bedRoomDtoList) {
+            bedRoomList.add(BedRoom.builder()
+                    .doubleSize(bedRoomDto.getDoubleSize())
+                    .queenSize(bedRoomDto.getQueenSize())
+                    .singleSize(bedRoomDto.getSingleSize())
+                    .superSingleSize(bedRoomDto.getSuperSingleSize())
+                    .room(room).build());
+        }
+        return bedRoomList;
     }
 }
