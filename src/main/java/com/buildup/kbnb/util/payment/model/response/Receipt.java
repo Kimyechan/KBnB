@@ -8,5 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Receipt {
+    private Integer status;
+    private Integer code;
+    private String message;
     private ReceiptData data;
 }

@@ -16,9 +16,11 @@ import com.buildup.kbnb.repository.reservation.ReservationRepository;
 import com.buildup.kbnb.service.PaymentService;
 import com.buildup.kbnb.util.payment.BootPayApi;
 import com.buildup.kbnb.util.payment.model.request.Cancel;
+import com.buildup.kbnb.util.payment.model.response.ResDefault;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -130,12 +132,18 @@ public class ReservationService {
         return reservation_detail_response;
     }
 
-        public Reservation saveWithPayment(Reservation reservation, Payment payment) throws Exception {
-        bootPayApi.verify(payment.getReceiptId(), payment.getPrice());
+    public Reservation saveWithPayment(Reservation reservation, Payment payment) throws Exception {
+        String token = bootPayApi.getAccessToken();
+
+        bootPayApi.verify(token, payment.getReceiptId(), payment.getPrice());
 
         Payment savedPayment = paymentService.savePayment(payment);
         reservation.setPayment(savedPayment);
-        return save(reservation);
+        Reservation savedReservation = save(reservation);
+
+        ResponseEntity<ResDefault> res = bootPayApi.confirm(token, payment.getReceiptId());
+        bootPayApi.checkConfirm(res);
+        return savedReservation;
     }
 
     public void cancelReservation(Long reservationId, Cancel cancel) throws Exception {
