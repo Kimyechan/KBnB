@@ -1,10 +1,9 @@
 package com.buildup.kbnb.util.payment;
 
 import com.buildup.kbnb.util.payment.model.request.Cancel;
+import com.buildup.kbnb.util.payment.model.request.Confirm;
 import com.buildup.kbnb.util.payment.model.request.Token;
-import com.buildup.kbnb.util.payment.model.response.CancelResult;
-import com.buildup.kbnb.util.payment.model.response.Receipt;
-import com.buildup.kbnb.util.payment.model.response.ResToken;
+import com.buildup.kbnb.util.payment.model.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -21,6 +20,7 @@ public class BootPayApi {
 
     private final String BASE_URL = "https://api.bootpay.co.kr/";
     private final String URL_ACCESS_TOKEN = BASE_URL + "request/token.json";
+    private final String URL_CONFIRM = BASE_URL + "submit.json";
     private final String URL_VERIFY = BASE_URL + "receipt";
     private final String URL_CANCEL = BASE_URL + "cancel.json";
 
@@ -74,13 +74,33 @@ public class BootPayApi {
         return restTemplate.exchange(URL_CANCEL, HttpMethod.POST, entity, CancelResult.class);
     }
 
-    public void verify(String receipt_id, Integer price) throws Exception {
-        String token = getAccessToken();
+    public void verify(String token, String receipt_id, Integer price) throws Exception {
         ResponseEntity<Receipt> receiptResponseEntity = getReceiptInfo(receipt_id, token);
 
         Receipt receipt = receiptResponseEntity.getBody();
-        if (!receipt.getData().getPrice().equals(price)) {
-            throw new Exception("금액이 변조 되었습니다");
+        if (receipt.getStatus() == 200) {
+            ReceiptData data = receipt.getData();
+            if (!data.getPrice().equals(price) || data.getStatus() != 2) {
+                throw new Exception("잘못된 정보로 결제 승인이 되지 않습니다");
+            }
+        }
+    }
+
+    public ResponseEntity<ResDefault> confirm(String token, String receipt_id) throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.AUTHORIZATION, token);
+
+        Confirm confirm = Confirm.builder()
+                .receipt_id(receipt_id)
+                .build();
+
+        HttpEntity<Confirm> entity = new HttpEntity<>(confirm, headers);
+        return restTemplate.exchange(URL_CONFIRM, HttpMethod.POST, entity, ResDefault.class);
+    }
+
+    public void checkConfirm(ResponseEntity<ResDefault> res) throws Exception {
+        if(res.getBody().getStatus() != 200) {
+            throw new Exception("잘못된 정보로 결제 승인이 되지 않습니다");
         }
     }
 }
