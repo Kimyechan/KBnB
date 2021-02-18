@@ -53,7 +53,7 @@ app:
     authorizedRedirectUris:
       - http://localhost:3000/oauth2/redirect
 
-#cloud:
+cloud:
 #  aws:
 #    s3:
 #      bucket: kbnbbucket
