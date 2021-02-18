@@ -54,7 +54,7 @@ app:
       - http://localhost:3000/oauth2/redirect
 
 cloud:
-#  aws:
+  aws:
 #    s3:
 #      bucket: kbnbbucket
 #    region:

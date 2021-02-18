@@ -155,4 +155,7 @@ public class ReservationService {
         bootPayApi.cancel(cancel, token);
 
     }
+//
+//    public Reservation findbyHostWithPayment() {
+//    }
 }
