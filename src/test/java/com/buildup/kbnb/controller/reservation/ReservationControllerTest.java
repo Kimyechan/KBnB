@@ -170,7 +170,6 @@ class ReservationControllerTest {
     public ReservationRegisterRequest createReservation_RegisterRequest(Room room) {
         PaymentDto payment = PaymentDto.builder()
                 .receipt_id("receipt_id")
-                .price((int) (room.getRoomCost() + room.getTax() + room.getTax()))
                 .build();
 
         return ReservationRegisterRequest.builder()
@@ -179,8 +178,8 @@ class ReservationControllerTest {
                 .message("사장님 잘생겼어요")
                 .infantNumber(2)
                 .guestNumber(2)
-                .checkIn(LocalDate.of(2021, 2, 1))
-                .checkOut(LocalDate.of(2021, 2, 3))
+                .checkIn(LocalDate.now().plusDays(1))
+                .checkOut(LocalDate.now().plusDays(2))
                 .payment(payment)
                 .build();
     }
@@ -230,8 +229,7 @@ class ReservationControllerTest {
                                 fieldWithPath("infantNumber").description("유아 수"),
                                 fieldWithPath("totalCost").description("총 금액"),
                                 fieldWithPath("message").description("호스트에게 보내는 메시지"),
-                                fieldWithPath("payment.receipt_id").description("영수증 식별자 값"),
-                                fieldWithPath("payment.price").description("결제된 비용")
+                                fieldWithPath("payment.receipt_id").description("영수증 식별자 값")
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
