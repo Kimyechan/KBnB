@@ -210,7 +210,7 @@ class ReservationControllerTest {
         Reservation reservation = createReservation(room, reservation_registerRequest, user);
 
         given(userService.findById(any())).willReturn(user);
-        given(reservationService.saveWithPayment(any(), any())).willReturn(reservation);
+        given(reservationService.processWithPayment(any(), any())).willReturn(reservation);
 
         mockMvc.perform(post("/reservation")
                 .contentType(MediaType.APPLICATION_JSON)

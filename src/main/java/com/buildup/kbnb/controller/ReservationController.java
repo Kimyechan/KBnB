@@ -64,7 +64,7 @@ public class ReservationController {
 
         Reservation reservation = mapToReservation(room, reservationRegisterRequest, user);
         Payment payment = mapToPayment(reservationRegisterRequest);
-        Reservation savedReservation = reservationService.saveWithPayment(reservation, payment);
+        Reservation savedReservation = reservationService.processWithPayment(reservation, payment);
 
         URI location = linkTo(methodOn(ReservationController.class).registerReservation(userPrincipal, reservationRegisterRequest, error)).withSelfRel().toUri();
 

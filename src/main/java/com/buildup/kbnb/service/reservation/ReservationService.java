@@ -132,7 +132,7 @@ public class ReservationService {
         return reservation_detail_response;
     }
 
-    public Reservation saveWithPayment(Reservation reservation, Payment payment) throws Exception {
+    public Reservation processWithPayment(Reservation reservation, Payment payment) throws Exception {
         String token = bootPayApi.getAccessToken();
 
         bootPayApi.verify(token, payment.getReceiptId(), payment.getPrice());
