@@ -52,6 +52,7 @@ public class ReservationController {
 
         LocalDate checkIn = reservationRegisterRequest.getCheckIn();
         LocalDate checkOut = reservationRegisterRequest.getCheckOut();
+        checkStrangeDate(checkIn, checkOut);
         checkAvailableDate(reservationList, checkIn, checkOut);
 
         Reservation reservation = mapToReservation(room, reservationRegisterRequest, user);
@@ -93,6 +94,12 @@ public class ReservationController {
                 .totalCost(reservationRegisterRequest.getTotalCost())
                 .user(user)
                 .build();
+    }
+
+    private void checkStrangeDate(LocalDate checkIn, LocalDate checkOut) {
+        if (checkIn.isAfter(checkOut) || checkIn.isBefore(LocalDate.now()) || checkOut.isBefore(LocalDate.now())) {
+            throw new ReservationException("예약 날짜가 잘못되었습니다");
+        }
     }
 
     private void checkAvailableDate(List<Reservation> reservationList, LocalDate checkIn, LocalDate checkOut) {
