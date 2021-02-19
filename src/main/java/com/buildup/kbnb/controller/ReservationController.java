@@ -157,39 +157,6 @@ public class ReservationController {
         return ResponseEntity.ok(model);
     }
 
-
-    public ReservationDetailResponse ifReservationIdExist(Long reservationId) {
-        Reservation reservation = reservationService.findById(reservationId);
-        List<BedRoom> bedRoomList = reservation.getRoom().getBedRoomList();
-        int bedRoomNum = bedRoomList.size();
-        int bedNum = reservation.getRoom().getBedNum();
-        ReservationDetailResponse reservation_detail_response = ReservationDetailResponse.builder()
-                .hostImage("this is demo host Image URL")
-                .roomImage("this is demo room Image URL")
-                .bedRoomNum(bedRoomNum)
-                .bedNum(bedNum)
-                .bathRoomNum(reservation.getRoom().getBathRoomList().size())
-                .address(
-                        reservation.getRoom().getLocation().getCountry() + " "
-                                + reservation.getRoom().getLocation().getCity() + " "
-                                + reservation.getRoom().getLocation().getBorough() + " "
-                                + reservation.getRoom().getLocation().getNeighborhood() + " "
-                                + reservation.getRoom().getLocation().getDetailAddress())
-                .latitude(reservation.getRoom().getLocation().getLatitude())
-                .longitude(reservation.getRoom().getLocation().getLongitude())
-                .checkIn(reservation.getCheckIn())
-                .checkOut(reservation.getCheckOut())
-                .guestNum(reservation.getGuestNum())
-                .hostName(reservation.getRoom().getHost().getName())
-                .roomName(reservation.getRoom().getName())
-                .isParking(reservation.getRoom().getIsParking())
-                .isSmoking(reservation.getRoom().getIsSmoking())
-                .roomId(reservation.getRoom().getId())
-                .totalCost(reservation.getTotalCost())
-                .build();
-        return reservation_detail_response;
-    }
-
     @DeleteMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> deleteReservation(@CurrentUser UserPrincipal userPrincipal,
                                                @RequestBody CancelDto cancelDto) throws Exception {

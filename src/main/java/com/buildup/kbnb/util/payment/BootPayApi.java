@@ -1,5 +1,6 @@
 package com.buildup.kbnb.util.payment;
 
+import com.buildup.kbnb.advice.exception.PaymentException;
 import com.buildup.kbnb.util.payment.model.request.Cancel;
 import com.buildup.kbnb.util.payment.model.request.Confirm;
 import com.buildup.kbnb.util.payment.model.request.Token;
@@ -81,7 +82,7 @@ public class BootPayApi {
         if (receipt.getStatus() == 200) {
             ReceiptData data = receipt.getData();
             if (!data.getPrice().equals(price) || data.getStatus() != 2) {
-                throw new Exception("잘못된 정보로 결제 승인이 되지 않습니다");
+                throw new PaymentException("잘못된 정보로 결제 승인이 되지 않습니다");
             }
         }
     }
@@ -100,7 +101,7 @@ public class BootPayApi {
 
     public void checkConfirm(ResponseEntity<ResDefault> res) throws Exception {
         if(res.getBody().getStatus() != 200) {
-            throw new Exception("잘못된 정보로 결제 승인이 되지 않습니다");
+            throw new PaymentException("잘못된 정보로 결제 승인이 되지 않습니다");
         }
     }
 }
