@@ -49,7 +49,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/host")
 @RequiredArgsConstructor
-public class HostController {
+public class RegisterRoomController {
     @Autowired
     UserService userService;
     @Autowired

@@ -1,10 +1,9 @@
-package com.buildup.kbnb.dto.host.Income;
+package com.buildup.kbnb.dto.host.income;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 @Data
 @NoArgsConstructor

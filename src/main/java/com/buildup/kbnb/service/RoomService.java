@@ -65,6 +65,10 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
+    public Page<Room> findByHost(User host, Pageable pageable) {
+        return roomRepository.findByHost(host, pageable);
+    }
+
     public Room updateRoomGrade(Room room, GradeInfo gradeInfo) {
         room.setCleanliness(gradeInfo.getCleanliness());
         room.setAccuracy(gradeInfo.getAccuracy());

@@ -50,7 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @Import(RestDocsConfiguration.class)
 @Transactional
-public class HostControllerTest {
+public class RegisterRoomControllerTest {
     @Autowired
     MockMvc mockMvc;
 

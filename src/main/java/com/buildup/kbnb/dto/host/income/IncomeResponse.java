@@ -1,4 +1,4 @@
-package com.buildup.kbnb.dto.host.Income;
+package com.buildup.kbnb.dto.host.income;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
