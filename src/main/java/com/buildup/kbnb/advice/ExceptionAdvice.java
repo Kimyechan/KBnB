@@ -48,9 +48,18 @@ public class ExceptionAdvice {
 
     @ExceptionHandler(ReservationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ExceptionResponse emailOrPassWrong(ReservationException e) {
+    protected ExceptionResponse reservation(ReservationException e) {
         return ExceptionResponse.builder()
                 .code(-2001)
+                .msg(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(PaymentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ExceptionResponse payment(PaymentException e) {
+        return ExceptionResponse.builder()
+                .code(-3001)
                 .msg(e.getMessage())
                 .build();
     }

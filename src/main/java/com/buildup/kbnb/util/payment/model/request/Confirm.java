@@ -1,4 +1,4 @@
-package com.buildup.kbnb.dto.reservation;
+package com.buildup.kbnb.util.payment.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PaymentDto {
+public class Confirm {
     private String receipt_id;
 }

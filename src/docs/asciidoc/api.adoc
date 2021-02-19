@@ -169,6 +169,8 @@ operation::comment-create[]
 === 댓글 리스트 조회
 operation::comment-list[]
 
+[[resource-host]]
+== 호스트
 [[resource-host-registerBasicRoom]]
 === 호스트의 방 기본정보 등록
 operation::host-registerBasicRoom[]

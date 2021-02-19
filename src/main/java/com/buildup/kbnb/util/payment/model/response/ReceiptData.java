@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReceiptData {
-    private Integer price;
+    private Double price;
+    private Integer status;
 }
