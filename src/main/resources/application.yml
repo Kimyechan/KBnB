@@ -3,18 +3,18 @@ spring:
 #    url: jdbc:mysql://3.34.198.174:3306/kbnb?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
 #    username: root
 #    password: jbs
-  datasource:
-    url: jdbc:mysql://mysql-1.cfmbtwavrtjc.ap-northeast-2.rds.amazonaws.com:3306/kbnb?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
-    username: root
-    password: jbs12341234
+#  datasource:
+#    url: jdbc:mysql://mysql-1.cfmbtwavrtjc.ap-northeast-2.rds.amazonaws.com:3306/kbnb?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+#    username: root
+#    password: jbs12341234
 #  datasource:
 #    url: jdbc:mysql://localhost:3306/kbnb2?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
 #    username: root
 #    password: 12341234
-#  datasource:
-#    url: jdbc:mysql://database-1.css6lpgasmef.ap-northeast-2.rds.amazonaws.com:3306/kbnb
-#    username: admin
-#    password: gksthf135!
+  datasource:
+    url: jdbc:mysql://database-1.css6lpgasmef.ap-northeast-2.rds.amazonaws.com:3306/kbnb
+    username: admin
+    password: gksthf135!
 
   jpa:
     show-sql: true
@@ -55,22 +55,22 @@ app:
 
 cloud:
   aws:
-#    s3:
-#      bucket: kbnbbucket
-#    region:
-#      static: ap-northeast-2
-#    stack:
-#      auto: false
-#    credentials:
-#      instanceProfile: true
     s3:
-      bucket: pungdong
+      bucket: kbnbbucket
     region:
       static: ap-northeast-2
     stack:
       auto: false
     credentials:
       instanceProfile: true
+#    s3:
+#      bucket: pungdong
+#    region:
+#      static: ap-northeast-2
+#    stack:
+#      auto: false
+#    credentials:
+#      instanceProfile: true
 
 bootPay:
   applicationId: 6024e5ee5b2948001d52037e
