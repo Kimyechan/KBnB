@@ -23,6 +23,9 @@ public class CommentService {
     private final RoomService roomService;
     private final ReservationService reservationService;
 
+    public Comment save(Comment comment) {
+        return commentRepository.save(comment);
+    }
     public Page<Comment> getListByRoomIdWithUser(Room room, Pageable pageable) {
         return commentRepository.findByRoom(room, pageable);
     }
