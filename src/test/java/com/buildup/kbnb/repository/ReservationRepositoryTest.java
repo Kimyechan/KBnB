@@ -25,21 +25,23 @@ public class ReservationRepositoryTest {
     @Autowired
     ReservationRepository reservationRepository;
 
+    User savedHost;
     @BeforeEach
     public void setUp() {
-        Payment payment = Payment.builder()
-                .price(1000)
-                .receiptId(String.valueOf(1))
-                .build();
-        em.persist(payment);
-
         User host = User.builder()
                 .name("테스트 호스트")
                 .email("shn03014@naver.com")
                 .provider(AuthProvider.google)
                 .emailVerified(false)
                 .build();
-        em.persist(host);
+        savedHost = em.persist(host);
+
+        Payment payment = Payment.builder()
+                .price(1000)
+                .receiptId(String.valueOf(1))
+                .build();
+        em.persist(payment);
+
 
         Reservation reservation = Reservation.builder()
                 .host(host)
@@ -47,14 +49,14 @@ public class ReservationRepositoryTest {
                 .build();
         em.persist(reservation);
     }
+
     @Test
-    @DisplayName("호스트를 통해 예약정보를 Payment와 함께 가져오기")
+    @DisplayName("호스트를 통해 예약정보를 Payment 와 함께 가져오기")
     public void findByHostWithPayment() {
-        User host = em.find(User.class, 1L);
+
+        User host = em.find(User.class, savedHost.getId());
 
         List<Reservation> hostReservation = reservationRepository.findByHostWithPayment(host);
         assertThat(hostReservation.size()).isEqualTo(1);
-        assertThat(hostReservation.get(0).getHost().getName()).isEqualTo("테스트 호스트");
-        assertThat(hostReservation.get(0).getPayment().getPrice()).isEqualTo(1000);
     }
 }
