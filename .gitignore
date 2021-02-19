@@ -37,4 +37,4 @@ out/
 .vscode/
 
 secret.yml
-api.html
+#src/main/resources/static/docs/api.html
