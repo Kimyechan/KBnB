@@ -3,7 +3,7 @@ package com.buildup.kbnb.controller;
 import com.buildup.kbnb.util.payment.BootPayApi;
 import com.buildup.kbnb.util.payment.model.request.Cancel;
 import com.buildup.kbnb.util.payment.model.response.CancelResult;
-import com.buildup.kbnb.util.payment.model.response.Receipt;
+import com.buildup.kbnb.util.payment.model.response.ResDefault;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,17 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/payment")
 @RequiredArgsConstructor
 public class PaymentController {
-    private final BootPayApi bootPayApi2;
+    private final BootPayApi bootPayApi;
 
     @PostMapping
-    public String paymentVerify(@RequestBody PaymentDto paymentDto) throws Exception {
-        String token = bootPayApi2.getAccessToken();
-        ResponseEntity<Receipt> receiptResponseEntity = bootPayApi2.getReceiptInfo(paymentDto.getReceipt_id(), token);
-        
-        Receipt receipt = receiptResponseEntity.getBody();
-        if (!receipt.getData().getPrice().equals(paymentDto.getPrice())) {
-            throw new Exception("금액이 변조 되었습니다");
-        }
+    public String confirmPayment(@RequestBody PaymentDto paymentDto) throws Exception {
+        String token = bootPayApi.getAccessToken();
+
+        bootPayApi.verify(token, paymentDto.getReceipt_id(), paymentDto.getPrice());
+
+        ResponseEntity<ResDefault> res = bootPayApi.confirm(token, paymentDto.getReceipt_id());
+        bootPayApi.checkConfirm(res);
         
         return  "Ok";
     }
@@ -38,13 +37,13 @@ public class PaymentController {
     @NoArgsConstructor
     public static class PaymentDto {
         private String receipt_id;
-        private Integer price;
+        private Double price;
     }
 
     @PostMapping("/cancel")
     public ResponseEntity<CancelResult> cancelPayment(@RequestBody Cancel cancel) throws Exception {
-        String token = bootPayApi2.getAccessToken();
+        String token = bootPayApi.getAccessToken();
 
-        return bootPayApi2.cancel(cancel, token);
+        return bootPayApi.cancel(cancel, token);
     }
 }

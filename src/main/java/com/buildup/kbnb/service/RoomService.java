@@ -2,13 +2,10 @@ package com.buildup.kbnb.service;
 
 import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.controller.RoomController;
-
-
+import com.buildup.kbnb.dto.comment.GradeInfo;
 import com.buildup.kbnb.dto.room.BathRoomDto;
 import com.buildup.kbnb.dto.room.BedRoomDto;
 import com.buildup.kbnb.dto.room.CreateRoomRequestDto;
-
-import com.buildup.kbnb.dto.comment.GradeInfo;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.room.BathRoom;

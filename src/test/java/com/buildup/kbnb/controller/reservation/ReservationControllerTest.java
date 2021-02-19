@@ -36,9 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -172,7 +170,6 @@ class ReservationControllerTest {
     public ReservationRegisterRequest createReservation_RegisterRequest(Room room) {
         PaymentDto payment = PaymentDto.builder()
                 .receipt_id("receipt_id")
-                .price((int) (room.getRoomCost() + room.getTax() + room.getTax()))
                 .build();
 
         return ReservationRegisterRequest.builder()
@@ -181,8 +178,8 @@ class ReservationControllerTest {
                 .message("사장님 잘생겼어요")
                 .infantNumber(2)
                 .guestNumber(2)
-                .checkIn(LocalDate.of(2021, 2, 1))
-                .checkOut(LocalDate.of(2021, 2, 3))
+                .checkIn(LocalDate.now().plusDays(1))
+                .checkOut(LocalDate.now().plusDays(2))
                 .payment(payment)
                 .build();
     }
@@ -212,7 +209,7 @@ class ReservationControllerTest {
         Reservation reservation = createReservation(room, reservation_registerRequest, user);
 
         given(userService.findById(any())).willReturn(user);
-        given(reservationService.saveWithPayment(any(), any())).willReturn(reservation);
+        given(reservationService.processWithPayment(any(), any())).willReturn(reservation);
 
         mockMvc.perform(post("/reservation")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -232,8 +229,7 @@ class ReservationControllerTest {
                                 fieldWithPath("infantNumber").description("유아 수"),
                                 fieldWithPath("totalCost").description("총 금액"),
                                 fieldWithPath("message").description("호스트에게 보내는 메시지"),
-                                fieldWithPath("payment.receipt_id").description("영수증 식별자 값"),
-                                fieldWithPath("payment.price").description("결제된 비용")
+                                fieldWithPath("payment.receipt_id").description("영수증 식별자 값")
                         ),
                         responseHeaders(
                                 headerWithName(HttpHeaders.CONTENT_TYPE).description("HAL JSON 타입")
@@ -264,7 +260,6 @@ class ReservationControllerTest {
 
         given(reservationService.findPageByUser(any(), any())).willReturn(reservationPage);
         given(reservationService.getHostName(any())).willReturn("this is host name");
-
         given(reservationService.createResponseList(any())).willReturn(reservationConfirmedResponseList);
 
         mockMvc.perform(get("/reservation")
@@ -296,7 +291,6 @@ class ReservationControllerTest {
                                 fieldWithPath("_embedded.reservationConfirmedResponseList[].roomId").description("방 식별자"),
                                 fieldWithPath("_embedded.reservationConfirmedResponseList[].imgUrl").description("방 imgUrl 리스트"),
                                 fieldWithPath("_embedded.reservationConfirmedResponseList[].imgUrl").description("방 imgUrl"),
-
                                 fieldWithPath("page.size").description("페이지 사이즈"),
                                 fieldWithPath("page.totalElements").description("요소의 총 개수"),
                                 fieldWithPath("page.totalPages").description("총 페이지 개수"),

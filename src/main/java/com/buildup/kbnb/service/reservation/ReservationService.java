@@ -1,29 +1,26 @@
 package com.buildup.kbnb.service.reservation;
 
 import com.buildup.kbnb.advice.exception.BadRequestException;
-
 import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.dto.reservation.ReservationConfirmedResponse;
 import com.buildup.kbnb.dto.reservation.ReservationDetailResponse;
 import com.buildup.kbnb.dto.room.detail.ReservationDate;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
-
 import com.buildup.kbnb.model.Payment;
 import com.buildup.kbnb.model.Reservation;
-
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
-
-
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.reservation.ReservationRepository;
 import com.buildup.kbnb.service.PaymentService;
 import com.buildup.kbnb.util.payment.BootPayApi;
 import com.buildup.kbnb.util.payment.model.request.Cancel;
+import com.buildup.kbnb.util.payment.model.response.ResDefault;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +28,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 @RequiredArgsConstructor
@@ -137,12 +136,23 @@ public class ReservationService {
         return reservation_detail_response;
     }
 
-        public Reservation saveWithPayment(Reservation reservation, Payment payment) throws Exception {
-        bootPayApi.verify(payment.getReceiptId(), payment.getPrice());
+    public Reservation processWithPayment(Reservation reservation, Payment payment) throws Exception {
+        String token = bootPayApi.getAccessToken();
+        Double reservationCost = calcCost(reservation.getRoom(), reservation.getCheckIn(), reservation.getCheckOut());
+        bootPayApi.verify(token, payment.getReceiptId(), reservationCost);
 
         Payment savedPayment = paymentService.savePayment(payment);
         reservation.setPayment(savedPayment);
-        return save(reservation);
+        Reservation savedReservation = save(reservation);
+
+        ResponseEntity<ResDefault> res = bootPayApi.confirm(token, payment.getReceiptId());
+        bootPayApi.checkConfirm(res);
+        return savedReservation;
+    }
+
+    private Double calcCost(Room room, LocalDate checkIn, LocalDate checkOut) {
+        Long period = checkIn.until(checkOut, DAYS);
+        return room.getTax() + room.getCleaningCost() + room.getRoomCost() * 1.1 * period;
     }
 
     public void cancelReservation(Long reservationId, Cancel cancel) throws Exception {

@@ -1,6 +1,5 @@
 package com.buildup.kbnb.controller;
 
-import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
 import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.user.LoginRequest;
 import com.buildup.kbnb.dto.user.SignUpRequest;
@@ -108,8 +107,6 @@ class AuthControllerTest {
                 .email("test@gmail.com")
                 .password("test")
                 .build();
-
-        given(userRepository.findByEmail(loginRequest.getEmail())).willThrow(EmailOrPassWrongException.class);
 
         mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
