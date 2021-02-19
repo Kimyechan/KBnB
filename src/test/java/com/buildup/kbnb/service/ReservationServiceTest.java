@@ -92,7 +92,6 @@ public class ReservationServiceTest {
         assertThat(reservationList.size()).isEqualTo(1);
         reservationList = reservationService.findByHostWithPaymentFilterByYear(host,afterYear);
         assertThat(reservationList.size()).isEqualTo(0);
+
     }
-
-
 }
