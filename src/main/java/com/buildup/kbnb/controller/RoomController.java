@@ -7,6 +7,7 @@ import com.buildup.kbnb.dto.room.detail.CommentDetail;
 import com.buildup.kbnb.dto.room.detail.LocationDetail;
 import com.buildup.kbnb.dto.room.detail.ReservationDate;
 import com.buildup.kbnb.dto.room.detail.RoomDetail;
+import com.buildup.kbnb.dto.room.recommend.RecommendResponse;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
@@ -240,7 +241,15 @@ public class   RoomController {
     @GetMapping("/recommend")
     public ResponseEntity<?> recommend(@RequestParam Long roomId) {
         Boolean isRecommendedRoom = reservationService.checkRecommendedRoom(roomId);
-        return ResponseEntity.ok().build();
+
+        RecommendResponse response = RecommendResponse.builder()
+                .isRecommendedRoom(isRecommendedRoom)
+                .build();
+
+        EntityModel<RecommendResponse> model = EntityModel.of(response);
+        model.add(linkTo(methodOn(RoomController.class).recommend(roomId)).withSelfRel());
+        model.add(Link.of("/docs/api.html#resource-room-recommend").withRel("profile"));
+        return ResponseEntity.ok().body(model);
     }
 
     @PostMapping("/upload")

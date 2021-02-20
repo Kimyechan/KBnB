@@ -642,6 +642,8 @@ class RoomControllerTest {
     public void recommendRoom() throws Exception {
         Long roomId = 1L;
 
+        given(reservationService.checkRecommendedRoom(roomId)).willReturn(true);
+
         mockMvc.perform(get("/room/recommend")
                 .param("roomId", String.valueOf(roomId)))
                 .andDo(print())
