@@ -16,6 +16,4 @@ public class UserUpdateRequest {
     private String birth;
     @Email
     private String email;
-    @JsonIgnore
-    private String password;
 }

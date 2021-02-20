@@ -88,8 +88,6 @@ public class UserController {
         user.setEmail(userUpdateRequest.getEmail());
         user.setName(userUpdateRequest.getName());
         user.setBirth(LocalDate.parse(userUpdateRequest.getBirth()));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userService.save(user);
 
         return UserUpdateResponse.builder()
                 .email(user.getEmail()).birth(user.getBirth()).name(user.getName()).build();
