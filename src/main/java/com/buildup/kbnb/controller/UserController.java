@@ -32,7 +32,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
     private final S3Uploader s3Uploader;
 
     @GetMapping("/me")
@@ -88,6 +87,8 @@ public class UserController {
         user.setEmail(userUpdateRequest.getEmail());
         user.setName(userUpdateRequest.getName());
         user.setBirth(LocalDate.parse(userUpdateRequest.getBirth()));
+
+        userService.save(user);
 
         return UserUpdateResponse.builder()
                 .email(user.getEmail()).birth(user.getBirth()).name(user.getName()).build();
