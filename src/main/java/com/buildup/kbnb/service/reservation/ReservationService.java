@@ -196,4 +196,10 @@ public class ReservationService {
 
         return reservationDates / (double) totalMonthDates;
     }
+
+    public Boolean checkRecommendedRoom(Long roomId) {
+        Double reservationRate = getBeforeMonthReservationRate(roomId);
+
+        return reservationRate >= 0.9;
+    }
 }

@@ -18,11 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationServiceTest {
@@ -62,7 +60,7 @@ class ReservationServiceTest {
         Long roomId = 1L;
         List<Reservation> reservations = getReservations();
 
-        given(reservationService.getBeforeMonthReservation(roomId)).willReturn(reservations);
+        doReturn(reservations).when(reservationService).getBeforeMonthReservation(roomId);
 
         Double reservationRate = reservationService.getBeforeMonthReservationRate(roomId);
 
@@ -90,5 +88,15 @@ class ReservationServiceTest {
             reservations.add(reservation);
         }
         return reservations;
+    }
+
+    @Test
+    @DisplayName("예약률로 추천 숙소인지 확인")
+    public void checkRecommendedRoom() {
+        doReturn(0.9).when(reservationService).getBeforeMonthReservationRate(1L);
+
+        Boolean isRecommendedRoom = reservationService.checkRecommendedRoom(1L);
+
+        assertTrue(isRecommendedRoom);
     }
 }
