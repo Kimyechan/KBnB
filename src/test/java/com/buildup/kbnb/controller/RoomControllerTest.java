@@ -104,6 +104,7 @@ class RoomControllerTest {
 
     @MockBean
     S3Uploader s3Uploader;
+
     public User createUser() {
         User user = User.builder()
                 .id(1L)
@@ -338,7 +339,7 @@ class RoomControllerTest {
         List<ReservationDate> reservationDates = new ArrayList<>();
         ReservationDate reservationDate = ReservationDate.builder()
                 .checkIn(LocalDate.of(2021, 2, 20))
-                .checkOut(LocalDate.of(2021,2, 22))
+                .checkOut(LocalDate.of(2021, 2, 22))
                 .build();
         reservationDates.add(reservationDate);
 
@@ -559,8 +560,8 @@ class RoomControllerTest {
         given(userService.findById(any())).willReturn(user);
         given(roomService.createRoom(any(), any())).willReturn(room);
         given(roomService.save(any())).willReturn(room);
-        CreateRoomRequestDto req = new CreateRoomRequestDto(); req.setName("테스트");
-
+        CreateRoomRequestDto req = new CreateRoomRequestDto();
+        req.setName("테스트");
 
 
         mockMvc.perform(post("/host/registerBasicRoom")
@@ -599,7 +600,7 @@ class RoomControllerTest {
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 주소")
 
                         )
-                        ));
+                ));
     }
 
     @Test
@@ -610,7 +611,7 @@ class RoomControllerTest {
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
         given(userService.findById(any())).willReturn(user);
         given(roomService.findById(any())).willReturn(room);
-        given(s3Uploader.upload(any(),any(),any())).willReturn("test url");
+        given(s3Uploader.upload(any(), any(), any())).willReturn("test url");
         given(roomService.save(any())).willReturn(room);
 
         mockMvc.perform(fileUpload("/host/addPhoto")
@@ -647,6 +648,16 @@ class RoomControllerTest {
         mockMvc.perform(get("/room/recommend")
                 .param("roomId", String.valueOf(roomId)))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("room-recommend",
+                        requestParameters(
+                                parameterWithName("roomId").description("숙소 식별자 값")
+                        ),
+                        responseFields(
+                                fieldWithPath("isRecommendedRoom").description("숙소 추천 여부"),
+                                fieldWithPath("_links.self.href").description("해당 API URL"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
+                        )
+                ));
     }
 }

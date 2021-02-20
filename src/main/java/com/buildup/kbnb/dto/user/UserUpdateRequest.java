@@ -15,5 +15,4 @@ public class UserUpdateRequest {
     private String birth;
     @Email
     private String email;
-    private String password;
 }
