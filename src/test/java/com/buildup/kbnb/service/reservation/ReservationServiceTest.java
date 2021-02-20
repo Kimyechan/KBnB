@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -43,11 +42,11 @@ class ReservationServiceTest {
         LocalDate previousStartDate = previous.withDayOfMonth(1);
         LocalDate previousEndDate = now.withDayOfMonth(1).minusDays(1);
 
-        given(reservationRepository.findBeforeMonthReservation(1L, previousStartDate, previousEndDate))
+        given(reservationRepository.findByBetweenDateAndRoomId(1L, previousStartDate, previousEndDate))
                 .willReturn(new ArrayList<>());
 
         reservationService.getBeforeMonthReservation(1L);
 
-        verify(reservationRepository, times(1)).findBeforeMonthReservation(1L, previousStartDate, previousEndDate);
+        verify(reservationRepository, times(1)).findByBetweenDateAndRoomId(1L, previousStartDate, previousEndDate);
     }
 }

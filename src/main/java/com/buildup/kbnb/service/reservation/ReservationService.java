@@ -173,6 +173,6 @@ public class ReservationService {
         LocalDate previousStartDate = previous.withDayOfMonth(1);
         LocalDate previousEndDate = now.withDayOfMonth(1).minusDays(1);
 
-        return reservationRepository.findBeforeMonthReservation(roomId, previousStartDate, previousEndDate);
+        return reservationRepository.findByBetweenDateAndRoomId(roomId, previousStartDate, previousEndDate);
     }
 }
