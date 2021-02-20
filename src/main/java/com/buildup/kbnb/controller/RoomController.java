@@ -239,7 +239,8 @@ public class   RoomController {
 
     @GetMapping("/recommend")
     public ResponseEntity<?> recommend(@RequestParam Long roomId) {
-        List<Reservation> reservations = reservationService.getBeforeMonthReservation(roomId);
+        Double reservationRate = reservationService.getBeforeMonthReservationRate(roomId);
+
         return ResponseEntity.ok().build();
     }
 

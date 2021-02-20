@@ -8,6 +8,7 @@ import com.buildup.kbnb.dto.room.detail.ReservationDate;
 import com.buildup.kbnb.dto.room.search.*;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
+import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;

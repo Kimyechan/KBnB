@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -167,12 +168,32 @@ public class ReservationService {
     }
 
     public List<Reservation> getBeforeMonthReservation(Long roomId) {
-        LocalDate now = LocalDate.now();
-        LocalDate previous = now.minusMonths(1);
-
-        LocalDate previousStartDate = previous.withDayOfMonth(1);
-        LocalDate previousEndDate = now.withDayOfMonth(1).minusDays(1);
+        LocalDate previousStartDate = getPreviousMonthStartDate();
+        LocalDate previousEndDate = getPreviousMonthEndDate();
 
         return reservationRepository.findByBetweenDateAndRoomId(roomId, previousStartDate, previousEndDate);
+    }
+
+    private LocalDate getPreviousMonthStartDate() {
+        LocalDate previous = LocalDate.now().minusMonths(1);
+        return previous.withDayOfMonth(1);
+    }
+
+    private LocalDate getPreviousMonthEndDate() {
+        LocalDate now = LocalDate.now();
+        return now.withDayOfMonth(1).minusDays(1);
+    }
+
+    public Double getBeforeMonthReservationRate(Long roomId) {
+        List<Reservation> reservations = getBeforeMonthReservation(roomId);
+
+        Long totalMonthDates = ChronoUnit.DAYS.between(getPreviousMonthStartDate(), getPreviousMonthEndDate());
+        Long reservationDates = 0L;
+
+        for (Reservation reservation : reservations) {
+            reservationDates += ChronoUnit.DAYS.between(reservation.getCheckIn(), reservation.getCheckOut());
+        }
+
+        return reservationDates / (double) totalMonthDates;
     }
 }
