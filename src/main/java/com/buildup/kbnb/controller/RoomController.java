@@ -10,6 +10,7 @@ import com.buildup.kbnb.dto.room.detail.RoomDetail;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
+import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.room.RoomImg;
 import com.buildup.kbnb.security.CurrentUser;
@@ -236,6 +237,11 @@ public class   RoomController {
         return ResponseEntity.ok().body(model);
     }
 
+    @GetMapping("/recommend")
+    public ResponseEntity<?> recommend(@RequestParam Long roomId) {
+        List<Reservation> reservations = reservationService.getBeforeMonthReservation(roomId);
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping("/upload")
     public String upload(@CurrentUser UserPrincipal userPrincipal, @RequestParam("file") MultipartFile file) throws IOException {

@@ -548,6 +548,7 @@ class RoomControllerTest {
                         )
                 ));
     }
+
     @Test
     @DisplayName("호스트의 방 등록")
     public void hostRegisterRoom() throws Exception {
@@ -599,6 +600,7 @@ class RoomControllerTest {
                         )
                         ));
     }
+
     @Test
     @DisplayName("방 등록_사진 추가")
     public void addPhoto() throws Exception {
@@ -632,5 +634,16 @@ class RoomControllerTest {
                         )
 
                 );
+    }
+
+    @Test
+    @DisplayName("숙소 지난달 예약률로 숙소 추천")
+    public void recommendRoom() throws Exception {
+        Long roomId = 1L;
+
+        mockMvc.perform(get("/room/recommend")
+                .param("roomId", String.valueOf(roomId)))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

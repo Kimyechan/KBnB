@@ -165,4 +165,14 @@ public class ReservationService {
         bootPayApi.cancel(cancel, token);
 
     }
+
+    public List<Reservation> getBeforeMonthReservation(Long roomId) {
+        LocalDate now = LocalDate.now();
+        LocalDate previous = now.minusMonths(1);
+
+        LocalDate previousStartDate = previous.withDayOfMonth(1);
+        LocalDate previousEndDate = now.withDayOfMonth(1).minusDays(1);
+
+        return reservationRepository.findBeforeMonthReservation(roomId, previousStartDate, previousEndDate);
+    }
 }

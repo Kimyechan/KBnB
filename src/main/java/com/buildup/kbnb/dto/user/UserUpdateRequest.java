@@ -11,11 +11,9 @@ import javax.validation.constraints.Email;
 @AllArgsConstructor
 @Builder
 public class UserUpdateRequest {
-
     private String name;
     private String birth;
     @Email
     private String email;
-    @JsonIgnore
     private String password;
 }
