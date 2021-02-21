@@ -8,12 +8,8 @@ import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.reservation.ReservationRepository;
 import com.buildup.kbnb.service.reservation.ReservationService;
-import net.bytebuddy.asm.Advice;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -86,11 +82,11 @@ public class ReservationServiceTest {
 
 
         int beforeYear = 2020; int year = 2021; int afterYear = 2022;
-        List<Reservation> reservationList = reservationService.findByHostWithPaymentFilterByYear(host,beforeYear);
+        List<Reservation> reservationList = reservationService.findByHostFilterByYear(host,beforeYear);
         assertThat(reservationList.size()).isEqualTo(0);
-        reservationList = reservationService.findByHostWithPaymentFilterByYear(host,year);
+        reservationList = reservationService.findByHostFilterByYear(host,year);
         assertThat(reservationList.size()).isEqualTo(1);
-        reservationList = reservationService.findByHostWithPaymentFilterByYear(host,afterYear);
+        reservationList = reservationService.findByHostFilterByYear(host,afterYear);
         assertThat(reservationList.size()).isEqualTo(0);
     }
 }

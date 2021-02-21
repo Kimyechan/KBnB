@@ -1,5 +1,6 @@
 package com.buildup.kbnb.controller.host;
 
+import com.buildup.kbnb.dto.host.income.IncomeResponse;
 import com.buildup.kbnb.model.Payment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.config.RestDocsConfiguration;
@@ -93,6 +94,13 @@ public class RegisterRoomControllerTest {
             list.add(reservation1); list.add(reservation2);
             return list;
     }
+    public IncomeResponse createIncomeResponse() {
+        IncomeResponse incomeResponse = IncomeResponse.builder()
+                .Feb(2000)
+                .yearlyIncome(2000)
+                .build();
+        return incomeResponse;
+    }
     @Test
     @DisplayName("수입 테스트 통과")
     public void incomeTest() throws Exception {
@@ -100,7 +108,8 @@ public class RegisterRoomControllerTest {
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
 
         given(userService.findById(any())).willReturn(user);
-        given(reservationService.findByHostWithPaymentFilterByYear(any(), anyInt())).willReturn(createReservationList());
+        given(reservationService.findByHostFilterByYear(any(), anyInt())).willReturn(createReservationList());
+        given(reservationService.separateByMonth(any())).willReturn(createIncomeResponse());
         mockMvc.perform(get("/host/income")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token)
@@ -142,7 +151,8 @@ public class RegisterRoomControllerTest {
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
 
         given(userService.findById(any())).willReturn(user);
-        given(reservationService.findByHostWithPaymentFilterByYear(any(), anyInt())).willReturn(createReservationList());
+        given(reservationService.findByHostFilterByYear(any(), anyInt())).willReturn(createReservationList());
+        given(reservationService.separateByMonth(any())).willReturn(createIncomeResponse());
         mockMvc.perform(get("/host/income")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token)

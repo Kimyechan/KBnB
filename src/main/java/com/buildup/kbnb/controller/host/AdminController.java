@@ -16,6 +16,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -32,25 +33,9 @@ public class AdminController {
         User host = userService.findById(userPrincipal.getId());
 
         //호스트가 가진 예약정보를 reservation - findbyhost 사용해서
-        List<Reservation> byYear = reservationService.findByHostWithPaymentFilterByYear(host, incomeRequest.getYear());
+        List<Reservation> byYear = reservationService.findByHostFilterByYear(host, incomeRequest.getYear());
+        IncomeResponse incomeResponse = reservationService.separateByMonth(byYear);
 
-
-        IncomeResponse incomeResponse = new IncomeResponse();
-        for(Reservation reservation : byYear) {
-            for(int i = 1; i < 10; i++) {
-                if (String.valueOf(reservation.getCheckIn()).contains(incomeRequest.getYear() + "-0" + i)) {
-                    incomeResponse.add(reservation.getPayment().getPrice(), i);
-                    break;
-                }
-            }
-            for(int i = 10; i < 13; i++) {
-                if (String.valueOf(reservation.getCheckIn()).contains(incomeRequest.getYear() + "-" + i)) {
-                    incomeResponse.add(reservation.getPayment().getPrice(), i);
-                    break;
-                }
-            }
-
-        }
             incomeResponse.setYearlyIncome();
         EntityModel<IncomeResponse> model = EntityModel.of(incomeResponse);
         model.add(Link.of("/docs/api.html#resource-host-income").withRel("profile"));

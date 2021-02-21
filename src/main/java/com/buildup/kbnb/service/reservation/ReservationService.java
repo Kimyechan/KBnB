@@ -2,6 +2,7 @@ package com.buildup.kbnb.service.reservation;
 
 import com.buildup.kbnb.advice.exception.BadRequestException;
 import com.buildup.kbnb.advice.exception.ReservationException;
+import com.buildup.kbnb.dto.host.income.IncomeResponse;
 import com.buildup.kbnb.dto.reservation.ReservationConfirmedResponse;
 import com.buildup.kbnb.dto.reservation.ReservationDetailResponse;
 import com.buildup.kbnb.dto.room.detail.ReservationDate;
@@ -168,7 +169,7 @@ public class ReservationService {
 
     }
 
-    public List<Reservation> findByHostWithPaymentFilterByYear(User host, int year) {
+    public List<Reservation> findByHostFilterByYear(User host, int year) {
         List<Reservation> reservationList = reservationRepository.findByHostWithPayment(host);
         List<Reservation> filterByYear = new ArrayList<>();
         Calendar cal = Calendar.getInstance(); cal.set(year,12,1);
@@ -181,4 +182,17 @@ public class ReservationService {
         }
         return filterByYear;
     }
+
+    public IncomeResponse separateByMonth(List<Reservation> byYear) {
+        IncomeResponse incomeResponse = new IncomeResponse();
+        for (Reservation reservation : byYear) {
+            for (int i = 1; i < 13; i++) {
+                if (String.valueOf(reservation.getCheckIn().getMonth()).equals(String.valueOf(i))) {
+                    incomeResponse.add(reservation.getPayment().getPrice(), i);
+                }
+            }
+        }
+        return incomeResponse;
+    }
+
 }

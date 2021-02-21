@@ -35,4 +35,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query("select r from Reservation r join fetch r.payment where r.host = :host")
     List<Reservation> findByHostWithPayment(@Param("host") User host);
+
 }
