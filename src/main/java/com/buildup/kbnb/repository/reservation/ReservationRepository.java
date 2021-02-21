@@ -35,4 +35,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query("select r from Reservation r where r.room.id = :roomId and r.checkIn >= :startDate and r.checkIn <= :endDate")
     List<Reservation> findByBetweenDateAndRoomId(@Param("roomId") Long roomId,@Param("startDate") LocalDate startDate,@Param("endDate") LocalDate endDate);
+
+    @Query("select r from Reservation r join fetch r.payment where r.room.host = :host")
+    List<Reservation> findByHostWithPayment(@Param("host") User host);
 }
