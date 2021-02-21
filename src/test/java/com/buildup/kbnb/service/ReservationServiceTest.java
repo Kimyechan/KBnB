@@ -60,18 +60,13 @@ public class ReservationServiceTest {
 
     public List<Reservation> createReservationList() {
         List<Reservation> list = new ArrayList<>();
-        /*Reservation reservation1 = Reservation.builder()
-                .id(1L)
-                .payment(new Payment(1L,"1",1000))
-                .checkIn(LocalDate.of(2020,2,2))
-                .build();*/
         Reservation reservation2 = Reservation.builder()
                 .id(2L)
                 .payment(new Payment(2L,"2",2000))
                 .checkIn(LocalDate.of(2021,2,2))
                 .build();
 
-        /*list.add(reservation1); */ list.add(reservation2);
+        list.add(reservation2);
         return list;
     }
 

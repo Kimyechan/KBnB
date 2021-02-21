@@ -27,9 +27,6 @@ public class Reservation {
     @ManyToOne(fetch = FetchType.LAZY )
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User host;
-
     @ManyToOne(fetch = FetchType.LAZY )
     private Room room;
 

@@ -2,6 +2,7 @@ package com.buildup.kbnb.repository;
 
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.Payment;
+import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.reservation.ReservationRepository;
@@ -42,9 +43,12 @@ public class ReservationRepositoryTest {
                 .build();
         em.persist(payment);
 
+        Room room = Room.builder()
+                .host(host).build();
+        em.persist(room);
 
         Reservation reservation = Reservation.builder()
-                .host(host)
+                .room(room)
                 .payment(payment)
                 .build();
         em.persist(reservation);
