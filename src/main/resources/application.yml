@@ -37,6 +37,10 @@ spring:
             scope:
               - email
               - profile
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
 logging:
   level:
     org:
@@ -55,6 +59,14 @@ app:
 
 cloud:
   aws:
+#    s3:
+#      bucket: kbnbbucket
+#    region:
+#      static: ap-northeast-2
+#    stack:
+#      auto: false
+#    credentials:
+#      instanceProfile: true
     s3:
       bucket: pungdong
     region:

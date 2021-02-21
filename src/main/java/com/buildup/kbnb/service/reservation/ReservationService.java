@@ -2,6 +2,7 @@ package com.buildup.kbnb.service.reservation;
 
 import com.buildup.kbnb.advice.exception.BadRequestException;
 import com.buildup.kbnb.advice.exception.ReservationException;
+import com.buildup.kbnb.dto.host.income.IncomeResponse;
 import com.buildup.kbnb.dto.reservation.ReservationConfirmedResponse;
 import com.buildup.kbnb.dto.reservation.ReservationDetailResponse;
 import com.buildup.kbnb.dto.room.detail.ReservationDate;
@@ -25,7 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -44,6 +47,7 @@ public class ReservationService {
     public List<Reservation> findByRoomId(Long roomId) {
         return reservationRepository.findByRoomId(roomId);
     }
+    @Transactional
     public Reservation save(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
@@ -164,5 +168,65 @@ public class ReservationService {
         String token = bootPayApi.getAccessToken();
         bootPayApi.cancel(cancel, token);
 
+    }
+
+    public List<Reservation> getBeforeMonthReservation(Long roomId) {
+        LocalDate previousStartDate = getPreviousMonthStartDate();
+        LocalDate previousEndDate = getPreviousMonthEndDate();
+
+        return reservationRepository.findByBetweenDateAndRoomId(roomId, previousStartDate, previousEndDate);
+    }
+
+    private LocalDate getPreviousMonthStartDate() {
+        LocalDate previous = LocalDate.now().minusMonths(1);
+        return previous.withDayOfMonth(1);
+    }
+
+    private LocalDate getPreviousMonthEndDate() {
+        LocalDate now = LocalDate.now();
+        return now.withDayOfMonth(1).minusDays(1);
+    }
+
+    public Double getBeforeMonthReservationRate(Long roomId) {
+        List<Reservation> reservations = getBeforeMonthReservation(roomId);
+
+        Long totalMonthDates = ChronoUnit.DAYS.between(getPreviousMonthStartDate(), getPreviousMonthEndDate());
+        Long reservationDates = 0L;
+
+        for (Reservation reservation : reservations) {
+            reservationDates += ChronoUnit.DAYS.between(reservation.getCheckIn(), reservation.getCheckOut());
+        }
+
+        return reservationDates / (double) totalMonthDates;
+    }
+
+    public Boolean checkRecommendedRoom(Long roomId) {
+        Double reservationRate = getBeforeMonthReservationRate(roomId);
+
+        return reservationRate >= 0.9;
+    }
+
+    public List<Reservation> findByHostFilterByYear(User host, int year) {
+        List<Reservation> reservationList = reservationRepository.findByHostWithPayment(host);
+        List<Reservation> filterByYear = new ArrayList<>();
+        Calendar cal = Calendar.getInstance(); cal.set(year,12,1);
+        int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        for(Reservation reservation : reservationList) {
+            if(reservation.getCheckIn().isBefore(LocalDate.of(year + 1,1,1)) && reservation.getCheckIn().isAfter(LocalDate.of(year - 1,12,lastDay)))
+            filterByYear.add(reservation);
+        }
+        return filterByYear;
+    }
+
+    public IncomeResponse separateByMonth(List<Reservation> byYear) {
+        IncomeResponse incomeResponse = new IncomeResponse();
+        for (Reservation reservation : byYear) {
+            for (int i = 1; i < 13; i++) {
+                if (String.valueOf(reservation.getCheckIn().getMonth()).equals(String.valueOf(i))) {
+                    incomeResponse.add(reservation.getPayment().getPrice(), i);
+                }
+            }
+        }
+        return incomeResponse;
     }
 }

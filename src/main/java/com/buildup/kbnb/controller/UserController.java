@@ -16,7 +16,6 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,7 +31,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
     private final S3Uploader s3Uploader;
 
     @GetMapping("/me")
@@ -84,15 +82,13 @@ public class UserController {
 
 
     public UserUpdateResponse updateUserAndReturnResponseDto(User user, UserUpdateRequest userUpdateRequest) {
-
         user.setEmail(userUpdateRequest.getEmail());
         user.setName(userUpdateRequest.getName());
         user.setBirth(LocalDate.parse(userUpdateRequest.getBirth()));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         userService.save(user);
 
         return UserUpdateResponse.builder()
                 .email(user.getEmail()).birth(user.getBirth()).name(user.getName()).build();
     }
-
 }
