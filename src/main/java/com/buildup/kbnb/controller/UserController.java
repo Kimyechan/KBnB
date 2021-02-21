@@ -1,10 +1,7 @@
 package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
-import com.buildup.kbnb.dto.user.UserDto;
-import com.buildup.kbnb.dto.user.UserImgUpdateResponse;
-import com.buildup.kbnb.dto.user.UserUpdateRequest;
-import com.buildup.kbnb.dto.user.UserUpdateResponse;
+import com.buildup.kbnb.dto.user.*;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.CurrentUser;
@@ -16,7 +13,6 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -93,4 +89,16 @@ public class UserController {
         return UserUpdateResponse.builder()
                 .email(user.getEmail()).birth(user.getBirth()).name(user.getName()).build();
     }
+
+    @GetMapping(value = "/photo" , produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> getPhoto(@CurrentUser UserPrincipal userPrincipal) {
+        User user = userService.findById(userPrincipal.getId());
+        GetPhotoResponse getPhotoResponse = GetPhotoResponse.builder()
+                .url(user.getImageUrl())
+                .build();
+        EntityModel<GetPhotoResponse> model = EntityModel.of(getPhotoResponse);
+        model.add(Link.of("/docs/api.html#resource-user-getPhoto").withRel("profile"));
+        return ResponseEntity.ok(model);
+    }
+
 }
