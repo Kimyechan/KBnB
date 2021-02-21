@@ -3,18 +3,18 @@ spring:
 #    url: jdbc:mysql://3.34.198.174:3306/kbnb?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
 #    username: root
 #    password: jbs
-  datasource:
-    url: jdbc:mysql://mysql-1.cfmbtwavrtjc.ap-northeast-2.rds.amazonaws.com:3306/kbnb?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
-    username: root
-    password: jbs12341234
+#  datasource:
+#    url: jdbc:mysql://mysql-1.cfmbtwavrtjc.ap-northeast-2.rds.amazonaws.com:3306/kbnb?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+#    username: root
+#    password: jbs12341234
 #  datasource:
 #    url: jdbc:mysql://localhost:3306/kbnb2?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
 #    username: root
 #    password: 12341234
-#  datasource:
-#    url: jdbc:mysql://database-1.css6lpgasmef.ap-northeast-2.rds.amazonaws.com:3306/kbnb
-#    username: admin
-#    password: gksthf135!
+  datasource:
+    url: jdbc:mysql://database-1.css6lpgasmef.ap-northeast-2.rds.amazonaws.com:3306/kbnb
+    username: admin
+    password: gksthf135!
 
   jpa:
     show-sql: true

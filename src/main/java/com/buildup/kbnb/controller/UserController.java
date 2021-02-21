@@ -70,7 +70,8 @@ public class UserController {
         else {
             newImgUrl = s3Uploader.upload(file, "userImg", user.getName());
         }
-
+        user.setImageUrl(newImgUrl);
+        userService.save(user);
         UserImgUpdateResponse userImgUpdateResponse = UserImgUpdateResponse.builder().newImgUrl(newImgUrl).build();
         EntityModel<UserImgUpdateResponse> model = EntityModel.of(userImgUpdateResponse);
         model.add(Link.of("/docs/api.html#resource-user-updatePhoto").withRel("profile"));
