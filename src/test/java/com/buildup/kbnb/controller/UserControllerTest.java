@@ -194,5 +194,24 @@ class UserControllerTest {
                         )
                         ));
     }
+    @Test
+    @DisplayName("유저 사진 가져오기 테스트")
+    public void getPhoto() throws Exception {
+        User user = createUser();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+        given(userService.findById(any())).willReturn(user);
+
+        mockMvc.perform(get("/user/photo")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("user-getPhoto",
+                        responseFields(
+                                fieldWithPath("url").description("사용자 사진 url"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
+                        )
+                        ));
+    }
 
 }
