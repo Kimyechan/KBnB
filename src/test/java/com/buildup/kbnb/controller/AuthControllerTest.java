@@ -1,5 +1,6 @@
 package com.buildup.kbnb.controller;
 
+import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
 import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.user.LoginRequest;
 import com.buildup.kbnb.dto.user.SignUpRequest;
@@ -7,6 +8,7 @@ import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.TokenProvider;
+import com.buildup.kbnb.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,7 @@ import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -54,6 +57,9 @@ class AuthControllerTest {
     PasswordEncoder passwordEncoder;
 
     @MockBean
+    UserService userService;
+
+    @MockBean
     UserRepository userRepository;
 
     @Test
@@ -73,7 +79,7 @@ class AuthControllerTest {
                 .emailVerified(false)
                 .build();
 
-        given(userRepository.findByEmail(user.getEmail())).willReturn(java.util.Optional.of(user));
+        given(userService.getUserByEmail(user.getEmail())).willReturn(user);
 
         mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -101,12 +107,14 @@ class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("로그인 - 이메일 or 비밀번호 불일치")
-    public void loginFail() throws Exception {
+    @DisplayName("로그인 - 이메일 없음")
+    public void loginEmailNotFound() throws Exception {
         LoginRequest loginRequest = LoginRequest.builder()
                 .email("test@gmail.com")
                 .password("test")
                 .build();
+
+        given(userService.getUserByEmail(loginRequest.getEmail())).willThrow(EmailOrPassWrongException.class);
 
         mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -120,6 +128,33 @@ class AuthControllerTest {
                                 fieldWithPath("msg").description("exception 메세지")
                         )
                 ));
+    }
+
+    @Test
+    @DisplayName("로그인 - 비밀번호 불일치")
+    public void loginPasswordNotCorrect() throws Exception {
+        LoginRequest loginRequest = LoginRequest.builder()
+                .email("test@gmail.com")
+                .password("test")
+                .build();
+
+        User user = User.builder()
+                .id(1L)
+                .name("test")
+                .email(loginRequest.getEmail())
+                .password(passwordEncoder.encode(loginRequest.getPassword()))
+                .provider(AuthProvider.local)
+                .emailVerified(false)
+                .build();
+
+        given(userService.getUserByEmail(user.getEmail())).willReturn(user);
+        doThrow(EmailOrPassWrongException.class).when(userService).checkCorrectPassword(any(), any());
+
+        mockMvc.perform(post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginRequest)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test

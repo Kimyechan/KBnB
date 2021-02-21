@@ -11,7 +11,6 @@ import com.buildup.kbnb.dto.room.recommend.RecommendResponse;
 import com.buildup.kbnb.dto.room.search.RoomSearchCondition;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
-import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.room.RoomImg;
 import com.buildup.kbnb.security.CurrentUser;
