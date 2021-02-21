@@ -41,6 +41,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(EmailOrPassWrongException::new);
+    }
+
     public void checkCorrectPassword(String decodingPassword, String encodingPassword) {
         if (!passwordEncoder.matches(decodingPassword, encodingPassword)) {
             throw new EmailOrPassWrongException();

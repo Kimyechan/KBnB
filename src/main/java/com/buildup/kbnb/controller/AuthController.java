@@ -47,7 +47,7 @@ public class AuthController {
             throw new UserFieldNotValidException();
         }
 
-        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(EmailOrPassWrongException::new);
+        User user = userService.getUserByEmail(loginRequest.getEmail());
         userService.checkCorrectPassword(loginRequest.getPassword(), user.getPassword());
 
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
