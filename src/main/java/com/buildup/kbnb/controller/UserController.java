@@ -87,10 +87,10 @@ public class UserController {
         user.setEmail(userUpdateRequest.getEmail());
         user.setName(userUpdateRequest.getName());
         user.setBirth(LocalDate.parse(userUpdateRequest.getBirth()));
+
         userService.save(user);
 
         return UserUpdateResponse.builder()
                 .email(user.getEmail()).birth(user.getBirth()).name(user.getName()).build();
     }
-
 }

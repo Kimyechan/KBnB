@@ -2,6 +2,7 @@ package com.buildup.kbnb.service.reservation;
 
 import com.buildup.kbnb.advice.exception.BadRequestException;
 import com.buildup.kbnb.advice.exception.ReservationException;
+import com.buildup.kbnb.dto.host.income.IncomeResponse;
 import com.buildup.kbnb.dto.reservation.ReservationConfirmedResponse;
 import com.buildup.kbnb.dto.reservation.ReservationDetailResponse;
 import com.buildup.kbnb.dto.room.detail.ReservationDate;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -44,6 +46,7 @@ public class ReservationService {
     public List<Reservation> findByRoomId(Long roomId) {
         return reservationRepository.findByRoomId(roomId);
     }
+    @Transactional
     public Reservation save(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
@@ -165,4 +168,31 @@ public class ReservationService {
         bootPayApi.cancel(cancel, token);
 
     }
+
+    public List<Reservation> findByHostFilterByYear(User host, int year) {
+        List<Reservation> reservationList = reservationRepository.findByHostWithPayment(host);
+        List<Reservation> filterByYear = new ArrayList<>();
+        Calendar cal = Calendar.getInstance(); cal.set(year,12,1);
+        int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        LocalDate before = LocalDate.of(year + 1,1,1);
+        LocalDate after = LocalDate.of(year - 1,12,lastDay);
+        for(Reservation reservation : reservationList) {
+            if(reservation.getCheckIn().isBefore(LocalDate.of(year + 1,1,1)) && reservation.getCheckIn().isAfter(LocalDate.of(year - 1,12,lastDay)))
+            filterByYear.add(reservation);
+        }
+        return filterByYear;
+    }
+
+    public IncomeResponse separateByMonth(List<Reservation> byYear) {
+        IncomeResponse incomeResponse = new IncomeResponse();
+        for (Reservation reservation : byYear) {
+            for (int i = 1; i < 13; i++) {
+                if (String.valueOf(reservation.getCheckIn().getMonth()).equals(String.valueOf(i))) {
+                    incomeResponse.add(reservation.getPayment().getPrice(), i);
+                }
+            }
+        }
+        return incomeResponse;
+    }
+
 }
