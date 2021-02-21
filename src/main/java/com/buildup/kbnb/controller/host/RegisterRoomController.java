@@ -1,4 +1,4 @@
-package com.buildup.kbnb.controller;
+package com.buildup.kbnb.controller.host;
 
 import com.buildup.kbnb.dto.host.HostPhotoResponse;
 import com.buildup.kbnb.dto.room.CreateRoomRequestDto;
@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/host")
 @RequiredArgsConstructor
-public class HostController {
+public class RegisterRoomController {
     @Autowired
     UserService userService;
     @Autowired
@@ -42,7 +42,7 @@ public class HostController {
     RoomImgRepository roomImgRepository;
 
 
-@PostMapping(value = "/registerBasicRoom", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")//멀티파트만 추가하면 이상하게 안됨
+@PostMapping(value = "/registerBasicRoom", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
 public ResponseEntity<?> registerBasicRoom(@CurrentUser UserPrincipal userPrincipal, CreateRoomRequestDto createRoomRequestDto) {
         User user = userService.findById(userPrincipal.getId());
 

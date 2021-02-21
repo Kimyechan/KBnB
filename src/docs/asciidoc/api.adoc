@@ -139,6 +139,10 @@ operation::room-get-detail[]
 === 찜하기 찜하기 취소
 operation::room-check[]
 
+[[resource-room-recommend]]
+=== 숙소 추천
+operation::room-recommend[]
+
 [[resource-reservation]]
 == 예약
 
@@ -178,4 +182,8 @@ operation::host-registerBasicRoom[]
 [[resource-host-addPhoto]]
 === 호스트의 방 사진 추가
 operation::host-addPhoto[]
+
+[[resource-host-income]]
+=== 호스트의 수입 차트
+operation::host-income[]
 
