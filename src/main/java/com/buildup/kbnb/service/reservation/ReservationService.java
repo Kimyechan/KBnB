@@ -174,8 +174,6 @@ public class ReservationService {
         List<Reservation> filterByYear = new ArrayList<>();
         Calendar cal = Calendar.getInstance(); cal.set(year,12,1);
         int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        LocalDate before = LocalDate.of(year + 1,1,1);
-        LocalDate after = LocalDate.of(year - 1,12,lastDay);
         for(Reservation reservation : reservationList) {
             if(reservation.getCheckIn().isBefore(LocalDate.of(year + 1,1,1)) && reservation.getCheckIn().isAfter(LocalDate.of(year - 1,12,lastDay)))
             filterByYear.add(reservation);
