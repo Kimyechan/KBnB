@@ -12,6 +12,7 @@ import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.TokenProvider;
 import com.buildup.kbnb.security.UserPrincipal;
+import com.buildup.kbnb.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -38,6 +39,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
 
     private final TokenProvider tokenProvider;
+    private final UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult error) {
@@ -46,9 +48,7 @@ public class AuthController {
         }
 
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(EmailOrPassWrongException::new);
-        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new EmailOrPassWrongException();
-        }
+        userService.checkCorrectPassword(loginRequest.getPassword(), user.getPassword());
 
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
 

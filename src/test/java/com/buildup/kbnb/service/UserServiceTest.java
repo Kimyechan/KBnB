@@ -1,5 +1,6 @@
 package com.buildup.kbnb.service;
 
+import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
 import com.buildup.kbnb.model.UserRoom;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.AuthProvider;
@@ -8,25 +9,45 @@ import com.buildup.kbnb.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
+    @InjectMocks
     UserService userService;
 
     @Mock
     UserRepository userRepository;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        userService = new UserService(userRepository);
+    @Mock
+    PasswordEncoder passwordEncoder;
+
+    @Test
+    @DisplayName("로그인 비밀번호 일치")
+    public void correctPassword() {
+        given(passwordEncoder.matches(any(), any())).willReturn(false);
+
+        assertThrows(EmailOrPassWrongException.class,
+                () -> userService.checkCorrectPassword("test", "test"));
+    }
+
+    @Test
+    @DisplayName("로그인 비밀번호 불일치")
+    public void incorrectPassword() {
+        given(passwordEncoder.matches(any(), any())).willReturn(true);
+
+        assertDoesNotThrow(() -> userService.checkCorrectPassword("test", "test"));
     }
 
     @Test
