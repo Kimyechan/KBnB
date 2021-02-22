@@ -397,7 +397,6 @@ class ReservationControllerTest {
         given(reservationService.findByUser(any())).willReturn(reservationList);
 
         mockMvc.perform(delete("/reservation")
-                .param("reservationId", String.valueOf(1L))
                 .content(objectMapper.writeValueAsString(cancelDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token))
