@@ -1,5 +1,6 @@
 package com.buildup.kbnb.service;
 
+import com.buildup.kbnb.advice.exception.EmailDuplicationException;
 import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
 import com.buildup.kbnb.model.UserRoom;
 import com.buildup.kbnb.model.room.Room;
@@ -47,6 +48,23 @@ class UserServiceTest {
 
         assertDoesNotThrow(() -> userService.checkCorrectPassword("test", "test"));
     }
+
+    @Test
+    @DisplayName("이메일 중복 아닐 때")
+    public void emailNotExisted() {
+        given(userRepository.existsByEmail(any())).willReturn(false);
+
+        assertDoesNotThrow(() -> userService.checkEmailExisted(any()));
+    }
+
+    @Test
+    @DisplayName("이메일 중복 발생 했을 때")
+    public void emailExisted() {
+        given(userRepository.existsByEmail(any())).willReturn(true);
+
+        assertThrows(EmailDuplicationException.class, () -> userService.checkEmailExisted(any()));
+    }
+
 
     @Test
     @DisplayName("유저가 찜한 숙소 일 때")

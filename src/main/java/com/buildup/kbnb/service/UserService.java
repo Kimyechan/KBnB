@@ -1,5 +1,6 @@
 package com.buildup.kbnb.service;
 
+import com.buildup.kbnb.advice.exception.EmailDuplicationException;
 import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
 import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.dto.user.LoginRequest;
@@ -48,6 +49,12 @@ public class UserService {
     public void checkCorrectPassword(String decodingPassword, String encodingPassword) {
         if (!passwordEncoder.matches(decodingPassword, encodingPassword)) {
             throw new EmailOrPassWrongException();
+        }
+    }
+
+    public void checkEmailExisted(String email) {
+        if(userRepository.existsByEmail(email)) {
+            throw new EmailDuplicationException();
         }
     }
 }

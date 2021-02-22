@@ -1,7 +1,6 @@
 package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.advice.exception.EmailDuplicationException;
-import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
 import com.buildup.kbnb.advice.exception.UserFieldNotValidException;
 import com.buildup.kbnb.dto.AuthResponse;
 import com.buildup.kbnb.dto.user.LoginRequest;
@@ -34,8 +33,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     private final TokenProvider tokenProvider;
@@ -64,12 +61,10 @@ public class AuthController {
             throw new UserFieldNotValidException();
         }
 
-        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new EmailDuplicationException();
-        }
+        userService.checkEmailExisted(signUpRequest.getEmail());
 
         User user = mapDtoToUser(signUpRequest);
-        User savedUser = userRepository.save(user);
+        User savedUser = userService.save(user);
 
         String token = tokenProvider.createToken(String.valueOf(savedUser.getId()));
         SignUpResponse response = SignUpResponse.builder()

@@ -1,5 +1,6 @@
 package com.buildup.kbnb.controller;
 
+import com.buildup.kbnb.advice.exception.EmailDuplicationException;
 import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
 import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.user.LoginRequest;
@@ -177,8 +178,7 @@ class AuthControllerTest {
                 .emailVerified(false)
                 .build();
 
-        given(userRepository.existsByEmail(signUpRequest.getEmail())).willReturn(false);
-        given(userRepository.save(any())).willReturn(user);
+        given(userService.save(any())).willReturn(user);
 
         mockMvc.perform(post("/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -217,7 +217,7 @@ class AuthControllerTest {
                 .password("test")
                 .build();
 
-        given(userRepository.existsByEmail(signUpRequest.getEmail())).willReturn(true);
+        doThrow(EmailDuplicationException.class).when(userService).checkEmailExisted(signUpRequest.getEmail());
 
         mockMvc.perform(post("/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
