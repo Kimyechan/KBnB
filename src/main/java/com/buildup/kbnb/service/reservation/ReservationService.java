@@ -138,6 +138,23 @@ public class ReservationService {
         return reservation_detail_response;
     }
 
+    public void checkStrangeDate(LocalDate checkIn, LocalDate checkOut) {
+        if (checkIn.isAfter(checkOut) || checkIn.isBefore(LocalDate.now()) || checkOut.isBefore(LocalDate.now())) {
+            throw new ReservationException("예약 날짜가 잘못되었습니다");
+        }
+    }
+
+    public void checkAvailableDate(List<Reservation> reservationList, LocalDate checkIn, LocalDate checkOut) {
+        for (Reservation reservation : reservationList) {
+            if ((checkIn.isEqual(reservation.getCheckIn()) || checkIn.isAfter(reservation.getCheckIn()) && checkIn.isBefore(reservation.getCheckOut()))
+                    || (checkIn.isBefore(reservation.getCheckIn()) && checkOut.isAfter(reservation.getCheckOut()))
+                    || (checkOut.isAfter(reservation.getCheckIn()) && (checkOut.isBefore(reservation.getCheckOut()) || checkOut.isEqual(reservation.getCheckOut()))
+                    || (checkIn.isEqual(reservation.getCheckIn()) && checkOut.isEqual(reservation.getCheckOut())))) {
+                throw new ReservationException("예약이 불가능한 날짜입니다.");
+            }
+        }
+    }
+
     public Reservation processWithPayment(Reservation reservation, Payment payment) throws Exception {
         String token = bootPayApi.getAccessToken();
         Double reservationCost = calcCost(reservation.getRoom(), reservation.getCheckIn(), reservation.getCheckOut());
