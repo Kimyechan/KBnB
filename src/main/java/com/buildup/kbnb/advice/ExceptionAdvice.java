@@ -64,6 +64,15 @@ public class ExceptionAdvice {
                 .build();
     }
 
+    @ExceptionHandler(RoomFieldNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ExceptionResponse RoomFieldNotValid(RoomFieldNotValidException e) {
+        return ExceptionResponse.builder()
+                .code(-4001)
+                .msg(e.getMessage())
+                .build();
+    }
+
 //    @ExceptionHandler(Exception.class)
 //    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 //    protected ExceptionResponse entireException(Exception e) {

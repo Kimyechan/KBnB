@@ -2,6 +2,8 @@ package com.buildup.kbnb.controller;
 
 
 import com.buildup.kbnb.config.RestDocsConfiguration;
+import com.buildup.kbnb.dto.room.BathRoomDto;
+import com.buildup.kbnb.dto.room.BedRoomDto;
 import com.buildup.kbnb.dto.room.CreateRoomRequestDto;
 import com.buildup.kbnb.dto.room.check.CheckRoomReq;
 import com.buildup.kbnb.dto.room.detail.ReservationDate;
@@ -510,6 +512,25 @@ class RoomControllerTest {
         }
         return roomImgList;
     }
+    private CreateRoomRequestDto createRoomRequestDtoList() {
+        List<BathRoomDto> bathRoomDtoList = new ArrayList<>(); bathRoomDtoList.add(new BathRoomDto());
+        List<BedRoomDto> bedRoomDtoList = new ArrayList<>(); bedRoomDtoList.add(new BedRoomDto());
+        return CreateRoomRequestDto.builder()
+                .bathRoomDtoList(bathRoomDtoList)
+                .bedRoomDtoList(bedRoomDtoList)
+                .checkInTime(LocalTime.now())
+                .checkOutTime(LocalTime.now())
+                .cleaningCost(1.0)
+                .isParking(true)
+                .isSmoking(true)
+                .name("방이름")
+                .peopleLimit(2)
+                .roomCost(2000.0)
+                .roomType("룸타입")
+                .tax(1.0)
+                .description("설명 설명")
+                .build();
+    }
 
     @Test
     @DisplayName("숙소 찜하기")
@@ -557,9 +578,7 @@ class RoomControllerTest {
         given(userService.findById(any())).willReturn(user);
         given(roomService.createRoom(any(), any())).willReturn(room);
         given(roomService.save(any())).willReturn(room);
-        CreateRoomRequestDto req = new CreateRoomRequestDto(); req.setName("테스트");
-
-
+        CreateRoomRequestDto req = createRoomRequestDtoList();
 
         mockMvc.perform(post("/host/registerBasicRoom")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -587,17 +606,45 @@ class RoomControllerTest {
                                 fieldWithPath("detailAddress").description("상세 주소"),
                                 fieldWithPath("latitude").description("위도"),
                                 fieldWithPath("longitude").description("경도"),
-                                fieldWithPath("bedRoomDtoList.[]").description("침실 리스트"),
-                                fieldWithPath("bathRoomDtoList.[]").description("욕실 리스트")
-
+                                fieldWithPath("bedRoomDtoList[].queenSize").description("침실 리스트 퀸사이즈"),
+                                fieldWithPath("bedRoomDtoList[].doubleSize").description("침실 리스트 더블사이즈"),
+                                fieldWithPath("bedRoomDtoList[].singleSize").description("침실 리스트 싱글사이즈"),
+                                fieldWithPath("bedRoomDtoList[].superSingleSize").description("침실 리스트 슈퍼싱글 사이즈"),
+                                fieldWithPath("bathRoomDtoList[].isPrivate").description("개인 욕실 여부")
                         ),
                         responseFields(
                                 fieldWithPath("msg").description("방 등록 여부"),
                                 fieldWithPath("roomId").description("방 식별자"),
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 주소")
-
                         )
                         ));
+    }
+    @Test
+    @DisplayName("호스트의 방 등록 실패")
+    public void hostRegisterRoomFail() throws Exception {
+        User user = createUser();
+        Room room = Room.builder().name("테스트").id(1L).build();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+        given(userService.findById(any())).willReturn(user);
+        given(roomService.createRoom(any(), any())).willReturn(room);
+        given(roomService.save(any())).willReturn(room);
+        CreateRoomRequestDto req = new CreateRoomRequestDto(); req.setName("테스트");
+
+
+
+        mockMvc.perform(post("/host/registerBasicRoom")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .content(objectMapper.writeValueAsString(req)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andDo(document("exception-hostRegisterRoom",
+                        responseFields(
+                                fieldWithPath("success").description("성공 실패 여부"),
+                                fieldWithPath("code").description("exception 코드 번호"),
+                                fieldWithPath("msg").description("exception 메시지")
+                        )
+                ));
     }
     @Test
     @DisplayName("방 등록_사진 추가")

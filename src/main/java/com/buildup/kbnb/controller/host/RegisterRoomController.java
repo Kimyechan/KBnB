@@ -1,5 +1,6 @@
 package com.buildup.kbnb.controller.host;
 
+import com.buildup.kbnb.advice.exception.RoomFieldNotValidException;
 import com.buildup.kbnb.dto.host.HostPhotoResponse;
 import com.buildup.kbnb.dto.room.CreateRoomRequestDto;
 import com.buildup.kbnb.dto.room.CreateRoomResponseDto;
@@ -19,9 +20,11 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +46,9 @@ public class RegisterRoomController {
 
 
     @PostMapping(value = "/registerBasicRoom", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> registerBasicRoom(@CurrentUser UserPrincipal userPrincipal, CreateRoomRequestDto createRoomRequestDto) {
+    public ResponseEntity<?> registerBasicRoom(@CurrentUser UserPrincipal userPrincipal, @RequestBody @Valid CreateRoomRequestDto createRoomRequestDto, BindingResult error) {
+        if (error.hasErrors())
+            throw new RoomFieldNotValidException("match request field type or check NotNull Elements");
         User user = userService.findById(userPrincipal.getId());
 
         Room room = roomService.createRoom(user, createRoomRequestDto);
