@@ -3,7 +3,6 @@ package com.buildup.kbnb.service;
 import com.buildup.kbnb.advice.exception.EmailDuplicationException;
 import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
 import com.buildup.kbnb.advice.exception.ReservationException;
-import com.buildup.kbnb.dto.user.LoginRequest;
 import com.buildup.kbnb.model.UserRoom;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;

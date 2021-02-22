@@ -1,8 +1,8 @@
 package com.buildup.kbnb.controller.host;
 
-import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.dto.host.income.IncomeRequest;
 import com.buildup.kbnb.dto.host.income.IncomeResponse;
+import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.security.CurrentUser;
 import com.buildup.kbnb.security.UserPrincipal;
@@ -14,9 +14,10 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController

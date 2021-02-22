@@ -6,7 +6,6 @@ import com.buildup.kbnb.dto.ApiResponse;
 import com.buildup.kbnb.dto.reservation.*;
 import com.buildup.kbnb.model.Payment;
 import com.buildup.kbnb.model.Reservation;
-import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.security.CurrentUser;
