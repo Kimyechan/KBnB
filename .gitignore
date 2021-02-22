@@ -37,4 +37,5 @@ out/
 .vscode/
 
 secret.yml
-#src/main/resources/static/docs/api.html
+src/main/resources/database.yml
+src/main/resources/oauth2.yml
