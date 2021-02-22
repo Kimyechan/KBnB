@@ -1,6 +1,7 @@
 package com.buildup.kbnb.controller;
 
 
+import com.buildup.kbnb.advice.exception.BadRequestException;
 import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.dto.ApiResponse;
 import com.buildup.kbnb.dto.reservation.*;
@@ -49,7 +50,7 @@ public class ReservationController {
                                                  @Valid @RequestBody ReservationRegisterRequest reservationRegisterRequest,
                                                  BindingResult error) throws Exception {
         if (error.hasErrors()) {
-            throw new ReservationException("예약 등록 입력값이 잘못되었습니다");
+            throw new BadRequestException("예약 등록 입력값이 잘못되었습니다");
         }
 
         User user = userService.findById(userPrincipal.getId());

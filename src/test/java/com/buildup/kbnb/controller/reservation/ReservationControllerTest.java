@@ -1,5 +1,6 @@
 package com.buildup.kbnb.controller.reservation;
 
+import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.reservation.*;
 import com.buildup.kbnb.model.Location;
@@ -40,6 +41,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -47,6 +49,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -101,7 +104,6 @@ class ReservationControllerTest {
                 .host(user)
                 .bedNum(3)
                 .build();
-        given(roomService.findById(any())).willReturn(room);
 
         return room;
     }
@@ -209,6 +211,7 @@ class ReservationControllerTest {
         Reservation reservation = createReservation(room, reservation_registerRequest, user);
 
         given(userService.findById(any())).willReturn(user);
+        given(roomService.findById(any())).willReturn(room);
         given(reservationService.processWithPayment(any(), any())).willReturn(reservation);
 
         mockMvc.perform(post("/reservation")
@@ -241,6 +244,52 @@ class ReservationControllerTest {
                                 fieldWithPath("_links.profile.href").description("해당 API문서 URL")
                         )
                 ));
+    }
+
+    @Test
+    @DisplayName("예약 등록 테스트시 예약 예외 발생1")
+    public void registerWithReservationException1() throws Exception {
+        User user = createUser();
+        String userToken = tokenProvider.createToken(String.valueOf(user.getId()));
+
+        Location location = createLocation();
+        Room room = createRoom(user, location);
+        ReservationRegisterRequest reservation_registerRequest = createReservation_RegisterRequest(room);
+
+        given(userService.findById(any())).willReturn(user);
+        given(roomService.findById(any())).willReturn(room);
+        doThrow(ReservationException.class).when(reservationService).checkStrangeDate(any(), any());
+
+        mockMvc.perform(post("/reservation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + userToken)
+                .content(objectMapper.writeValueAsString(reservation_registerRequest)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("code").value("-2001"));
+    }
+
+    @Test
+    @DisplayName("예약 등록 테스트시 예약 예외 발생2")
+    public void registerWithReservationException2() throws Exception {
+        User user = createUser();
+        String userToken = tokenProvider.createToken(String.valueOf(user.getId()));
+
+        Location location = createLocation();
+        Room room = createRoom(user, location);
+        ReservationRegisterRequest reservation_registerRequest = createReservation_RegisterRequest(room);
+
+        given(userService.findById(any())).willReturn(user);
+        given(roomService.findById(any())).willReturn(room);
+        doThrow(ReservationException.class).when(reservationService).checkAvailableDate(any(), any(), any());
+
+        mockMvc.perform(post("/reservation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + userToken)
+                .content(objectMapper.writeValueAsString(reservation_registerRequest)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("code").value("-2001"));
     }
 
     @Test
