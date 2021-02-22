@@ -141,12 +141,18 @@ class UserControllerTest {
 
     public UserUpdateRequest userUpdateRequest() {
         UserUpdateRequest userUpdateRequest = UserUpdateRequest.builder()
-                .name("updatedName").email("updated@google.com").birth("2020-11-11").build();
+                .name("updatedName")
+                .email("updated@google.com")
+                .birth("2020-11-11")
+                .build();
         return userUpdateRequest;
     }
     public UserUpdateRequest userUpdateRequestFail() {
         UserUpdateRequest userUpdateRequest = UserUpdateRequest.builder()
-                .name("test").email("test@gmail.com").birth("2020-11-11").build();
+                .name("test")
+                .email("test@gmail.com")
+                .birth("2020-11-11")
+                .build();
         return userUpdateRequest;
     }
 
@@ -237,6 +243,21 @@ class UserControllerTest {
                         )
                         ));
     }
+
+/*    @Test
+    @DisplayName("유저 이미지 변경 실패 테스트")
+    public void updatePhotoFail() throws Exception {
+        User user = createUser();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+        User notMultipartFile = new User();
+        mockMvc.perform(post("/user/update/photo")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .content(objectMapper.writeValueAsString(notMultipartFile))
+        ).andDo(print())
+                .andExpect(status().isBadRequest());
+
+    }*/
 
     @Test
     @DisplayName("유저 사진 가져오기 테스트")

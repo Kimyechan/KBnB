@@ -2,6 +2,7 @@ package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.advice.exception.EmailDuplicationException;
 import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
+import com.buildup.kbnb.advice.exception.TypeMissMatchException;
 import com.buildup.kbnb.advice.exception.UserFieldNotValidException;
 import com.buildup.kbnb.dto.user.*;
 import com.buildup.kbnb.model.user.User;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.time.LocalDate;
 
@@ -66,7 +68,8 @@ public class UserController {
     }
 
     @PostMapping(value = "/update/photo", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal, @RequestPart MultipartFile file) throws IOException {
+    public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal, @Nullable  @RequestPart MultipartFile file) throws IOException {
+
         User user = userService.findById((userPrincipal.getId()));
         String newImgUrl;
         if (file == null)
