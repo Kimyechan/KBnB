@@ -55,12 +55,11 @@ public class ReservationController {
 
         User user = userService.findById(userPrincipal.getId());
         Room room = roomService.findById(reservationRegisterRequest.getRoomId());
-        List<Reservation> reservationList = reservationService.findByRoomId(room.getId());
 
         LocalDate checkIn = reservationRegisterRequest.getCheckIn();
         LocalDate checkOut = reservationRegisterRequest.getCheckOut();
         reservationService.checkStrangeDate(checkIn, checkOut);
-        reservationService.checkAvailableDate(reservationList, checkIn, checkOut);
+        reservationService.checkAvailableDate(room.getId(), checkIn, checkOut);
 
         Reservation reservation = mapToReservation(room, reservationRegisterRequest, user);
         Payment payment = mapToPayment(reservationRegisterRequest);

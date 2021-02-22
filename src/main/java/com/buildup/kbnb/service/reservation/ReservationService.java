@@ -144,7 +144,9 @@ public class ReservationService {
         }
     }
 
-    public void checkAvailableDate(List<Reservation> reservationList, LocalDate checkIn, LocalDate checkOut) {
+    public void checkAvailableDate(Long roomId, LocalDate checkIn, LocalDate checkOut) {
+        List<Reservation> reservationList = findByRoomId(roomId);
+
         for (Reservation reservation : reservationList) {
             if ((checkIn.isEqual(reservation.getCheckIn()) || checkIn.isAfter(reservation.getCheckIn()) && checkIn.isBefore(reservation.getCheckOut()))
                     || (checkIn.isBefore(reservation.getCheckIn()) && checkOut.isAfter(reservation.getCheckOut()))
