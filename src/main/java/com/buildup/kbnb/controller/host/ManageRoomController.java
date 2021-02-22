@@ -19,6 +19,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,13 +29,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("host")
+@RequestMapping("/host")
 public class ManageRoomController {
     @Autowired
     UserService userService;
     @Autowired
     RoomService roomService;
-    @PostMapping(value = "/roomList" , produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    @GetMapping(value = "/roomList" , produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity getRoomList(@CurrentUser UserPrincipal userPrincipal, Pageable pageable,
                             PagedResourcesAssembler<HostGetRoomRes> assembler) {
         User host = userService.findById(userPrincipal.getId());
@@ -48,11 +49,7 @@ public class ManageRoomController {
     }
         Page<HostGetRoomRes> listPage = new PageImpl<>(hostGetRoomList, pageable, hostRoomPage.getTotalElements());
         PagedModel<EntityModel<HostGetRoomRes>> model = assembler.toModel(listPage);
-
-        model.add(Link.of("/docs/api.html#resource-room-get-list-by-condition").withRel("profile"));
+        model.add(Link.of("/docs/api.html#resource-host-getRoomList").withRel("profile"));
         return ResponseEntity.ok(model);
     }
-
-
-
 }
