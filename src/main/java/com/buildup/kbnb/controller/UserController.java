@@ -84,7 +84,6 @@ public class UserController {
 
 
     public UserUpdateResponse updateUserAndReturnResponseDto(User user, UserUpdateRequest userUpdateRequest) {
-
         user.setEmail(userUpdateRequest.getEmail());
         user.setName(userUpdateRequest.getName());
         user.setBirth(LocalDate.parse(userUpdateRequest.getBirth()));

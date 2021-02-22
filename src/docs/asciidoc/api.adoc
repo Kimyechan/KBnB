@@ -146,6 +146,10 @@ operation::room-get-detail[]
 === 찜하기 찜하기 취소
 operation::room-check[]
 
+[[resource-room-recommend]]
+=== 숙소 추천
+operation::room-recommend[]
+
 [[resource-reservation]]
 == 예약
 

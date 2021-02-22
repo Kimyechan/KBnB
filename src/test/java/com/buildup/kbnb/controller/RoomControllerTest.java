@@ -10,6 +10,7 @@ import com.buildup.kbnb.dto.room.detail.ReservationDate;
 import com.buildup.kbnb.dto.room.search.*;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
+import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
@@ -105,6 +106,7 @@ class RoomControllerTest {
 
     @MockBean
     S3Uploader s3Uploader;
+
     public User createUser() {
         User user = User.builder()
                 .id(1L)
@@ -339,7 +341,7 @@ class RoomControllerTest {
         List<ReservationDate> reservationDates = new ArrayList<>();
         ReservationDate reservationDate = ReservationDate.builder()
                 .checkIn(LocalDate.of(2021, 2, 20))
-                .checkOut(LocalDate.of(2021,2, 22))
+                .checkOut(LocalDate.of(2021, 2, 22))
                 .build();
         reservationDates.add(reservationDate);
 
@@ -569,6 +571,7 @@ class RoomControllerTest {
                         )
                 ));
     }
+
     @Test
     @DisplayName("호스트의 방 등록")
     public void hostRegisterRoom() throws Exception {
@@ -578,6 +581,7 @@ class RoomControllerTest {
         given(userService.findById(any())).willReturn(user);
         given(roomService.createRoom(any(), any())).willReturn(room);
         given(roomService.save(any())).willReturn(room);
+
         CreateRoomRequestDto req = createRoomRequestDtoList();
 
         mockMvc.perform(post("/host/registerBasicRoom")
@@ -617,8 +621,9 @@ class RoomControllerTest {
                                 fieldWithPath("roomId").description("방 식별자"),
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 주소")
                         )
-                        ));
+                ));
     }
+
     @Test
     @DisplayName("호스트의 방 등록 실패")
     public void hostRegisterRoomFail() throws Exception {
@@ -654,7 +659,7 @@ class RoomControllerTest {
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
         given(userService.findById(any())).willReturn(user);
         given(roomService.findById(any())).willReturn(room);
-        given(s3Uploader.upload(any(),any(),any())).willReturn("test url");
+        given(s3Uploader.upload(any(), any(), any())).willReturn("test url");
         given(roomService.save(any())).willReturn(room);
 
         mockMvc.perform(fileUpload("/host/addPhoto")
@@ -679,5 +684,28 @@ class RoomControllerTest {
                         )
 
                 );
+    }
+
+    @Test
+    @DisplayName("숙소 지난달 예약률로 숙소 추천")
+    public void recommendRoom() throws Exception {
+        Long roomId = 1L;
+
+        given(reservationService.checkRecommendedRoom(roomId)).willReturn(true);
+
+        mockMvc.perform(get("/room/recommend")
+                .param("roomId", String.valueOf(roomId)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("room-recommend",
+                        requestParameters(
+                                parameterWithName("roomId").description("숙소 식별자 값")
+                        ),
+                        responseFields(
+                                fieldWithPath("isRecommendedRoom").description("숙소 추천 여부"),
+                                fieldWithPath("_links.self.href").description("해당 API URL"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
+                        )
+                ));
     }
 }
