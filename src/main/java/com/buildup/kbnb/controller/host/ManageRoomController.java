@@ -35,18 +35,19 @@ public class ManageRoomController {
     UserService userService;
     @Autowired
     RoomService roomService;
-    @GetMapping(value = "/roomList" , produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+
+    @GetMapping(value = "/roomList", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity getRoomList(@CurrentUser UserPrincipal userPrincipal, Pageable pageable,
-                            PagedResourcesAssembler<HostGetRoomRes> assembler) {
+                                      PagedResourcesAssembler<HostGetRoomRes> assembler) {
         User host = userService.findById(userPrincipal.getId());
         Page<Room> hostRoomPage = roomService.findByHost(host, pageable);
         List<Room> hostRoomList = hostRoomPage.getContent();
         List<HostGetRoomRes> hostGetRoomList = new ArrayList<>();
 
-    for(Room room : hostRoomList) {
-        HostGetRoomRes hostGetRoomRes = new HostGetRoomRes();
-        hostGetRoomList.add(hostGetRoomRes.createDto(room));
-    }
+        for (Room room : hostRoomList) {
+            HostGetRoomRes hostGetRoomRes = new HostGetRoomRes();
+            hostGetRoomList.add(hostGetRoomRes.createDto(room));
+        }
 
         Page<HostGetRoomRes> listPage = new PageImpl<>(hostGetRoomList, pageable, hostRoomPage.getTotalElements());
         PagedModel<EntityModel<HostGetRoomRes>> model = assembler.toModel(listPage);

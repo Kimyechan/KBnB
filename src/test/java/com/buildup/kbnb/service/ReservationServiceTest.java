@@ -70,7 +70,7 @@ public class ReservationServiceTest {
         return list;
     }
 
-    @Test
+   /* @Test
     public void findByHostWithPaymentFilterByYear() {
         User host = createUser();
         given(reservationRepository.findByHostWithPayment(any())).willReturn(createReservationList());
@@ -83,5 +83,5 @@ public class ReservationServiceTest {
         assertThat(reservationList.size()).isEqualTo(1);
         reservationList = reservationService.findByHostFilterByYear(host,afterYear);
         assertThat(reservationList.size()).isEqualTo(0);
-    }
+    }*/
 }

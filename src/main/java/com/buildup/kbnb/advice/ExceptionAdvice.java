@@ -64,12 +64,13 @@ public class ExceptionAdvice {
                 .build();
     }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    protected ExceptionResponse entireException(Exception e) {
-        return ExceptionResponse.builder()
-                .code(-1000)
-                .msg(e.getMessage())
-                .build();
-    }
+//    @ExceptionHandler(Exception.class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    protected ExceptionResponse entireException(Exception e) {
+//        return ExceptionResponse.builder()
+//                .code(-1000)
+//                .msg(e.getMessage())
+//                .build();
+//    }
+
 }

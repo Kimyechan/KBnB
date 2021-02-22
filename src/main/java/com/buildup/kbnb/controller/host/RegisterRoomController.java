@@ -42,37 +42,40 @@ public class RegisterRoomController {
     RoomImgRepository roomImgRepository;
 
 
-@PostMapping(value = "/registerBasicRoom", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-public ResponseEntity<?> registerBasicRoom(@CurrentUser UserPrincipal userPrincipal, CreateRoomRequestDto createRoomRequestDto) {
+    @PostMapping(value = "/registerBasicRoom", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> registerBasicRoom(@CurrentUser UserPrincipal userPrincipal, CreateRoomRequestDto createRoomRequestDto) {
         User user = userService.findById(userPrincipal.getId());
 
         Room room = roomService.createRoom(user, createRoomRequestDto);
         roomService.save(room);
-    CreateRoomResponseDto createRoomResponseDto = CreateRoomResponseDto.builder().roomId(room.getId()).msg("방 기본정보 등록 성공").build();
+        CreateRoomResponseDto createRoomResponseDto = CreateRoomResponseDto.builder().roomId(room.getId()).msg("방 기본정보 등록 성공").build();
 
         EntityModel<CreateRoomResponseDto> model = EntityModel.of(createRoomResponseDto);
-    model.add(Link.of("/docs/api.html#resource-host-registerBasicRoom").withRel("profile"));
+        model.add(Link.of("/docs/api.html#resource-host-registerBasicRoom").withRel("profile"));
         return ResponseEntity.ok(model);
     }
-    @PostMapping(value = "/addPhoto" , produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal, @RequestParam Long roomId, @RequestPart List<MultipartFile> file) throws IOException {
-    User user = userService.findById(userPrincipal.getId());
-    Room room = roomService.findById(roomId);
-    List<RoomImg> roomImgList = new ArrayList<>();
-    int i = 0;
-    for(MultipartFile file1 : file) {
-        String newUrl = s3Uploader.upload(file1,"roomImg", user.getName() + i++);
-        RoomImg roomImg = RoomImg.builder().room(room).url(newUrl).build();
-        roomImgRepository.save(roomImg);
-        roomImgList.add(roomImg);
-    }
-    room.setRoomImgList(roomImgList);
-    roomService.save(room);
 
-    HostPhotoResponse hostPhotoResponse = HostPhotoResponse.builder()
-            .imgCount(file.size()).build();
-    EntityModel<HostPhotoResponse> model = EntityModel.of(hostPhotoResponse);
+    @PostMapping(value = "/addPhoto", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal, @RequestParam Long roomId, @RequestPart List<MultipartFile> file) throws IOException {
+        User user = userService.findById(userPrincipal.getId());
+        Room room = roomService.findById(roomId);
+        List<RoomImg> roomImgList = new ArrayList<>();
+        int i = 0;
+        for (MultipartFile file1 : file) {
+            String newUrl = s3Uploader.upload(file1, "roomImg", user.getName() + i++);
+            RoomImg roomImg = RoomImg.builder().room(room).url(newUrl).build();
+            roomImgRepository.save(roomImg);
+            roomImgList.add(roomImg);
+        }
+        room.setRoomImgList(roomImgList);
+        roomService.save(room);
+
+        HostPhotoResponse hostPhotoResponse = HostPhotoResponse
+                .builder()
+                .imgCount(file.size())
+                .build();
+        EntityModel<HostPhotoResponse> model = EntityModel.of(hostPhotoResponse);
         model.add(Link.of("/docs/api.html#resource-host-addPhoto").withRel("profile"));
-    return ResponseEntity.ok(model);
+        return ResponseEntity.ok(model);
     }
 }

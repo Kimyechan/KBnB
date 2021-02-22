@@ -28,8 +28,8 @@ public class PaymentController {
 
         ResponseEntity<ResDefault> res = bootPayApi.confirm(token, paymentDto.getReceipt_id());
         bootPayApi.checkConfirm(res);
-        
-        return  "Ok";
+
+        return "Ok";
     }
 
     @Data

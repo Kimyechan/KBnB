@@ -87,6 +87,22 @@ class UserControllerTest {
 
         return user;
     }
+    public User createUserFail() {
+        User user = User.builder()
+                .id(1L)
+                .name("test")
+                .birth(LocalDate.of(1999, 7, 18))
+                .email("test@gmail.com")
+                .password(passwordEncoder.encode("test"))
+                .provider(AuthProvider.local)
+                .emailVerified(false)
+                .build();
+
+        given(customUserDetailsService.loadUserById(user.getId()))
+                .willReturn(UserPrincipal.create(user));
+
+        return user;
+    }
 
     @Test
     @DisplayName("유저 개인정보 확인")
@@ -128,18 +144,19 @@ class UserControllerTest {
                 .name("updatedName").email("updated@google.com").birth("2020-11-11").build();
         return userUpdateRequest;
     }
+    public UserUpdateRequest userUpdateRequestFail() {
+        UserUpdateRequest userUpdateRequest = UserUpdateRequest.builder()
+                .name("test").email("test@gmail.com").birth("2020-11-11").build();
+        return userUpdateRequest;
+    }
 
     @Test
     @DisplayName("유저 정보 수정")
     public void updateUserInfo() throws Exception {
-
-
         User user = createUser();
         given(userService.findById(any())).willReturn(user);
         given(userService.save(any())).willReturn(user);
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
-
-
 
         mockMvc.perform(post("/user/update")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
@@ -170,6 +187,32 @@ class UserControllerTest {
                         )
                 ));
     }
+
+    @Test
+    @DisplayName("유저 정보 수정 실패-이메일 중복")
+    public void updateUserInfoFail() throws Exception {
+        User user = createUser();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+
+        given(userService.findById(any())).willReturn(user);
+        given(userRepository.existsByEmail(any())).willReturn(true);
+
+        mockMvc.perform(post("/user/update")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .content(objectMapper.writeValueAsString(userUpdateRequestFail()))
+        ).andDo(print())
+                .andExpect(status().isBadRequest())
+                .andDo(document("exception-userUpdateEmailDuplication",
+
+                        responseFields(
+                                fieldWithPath("success").description("성공 실패 여부"),
+                                fieldWithPath("code").description("exception 코드 번호"),
+                                fieldWithPath("msg").description("exception 메세지")
+                        )
+                ));
+    }
+
     @Test
     @DisplayName("유저 이미지 변경 테스트")
     public void updatePhoto() throws Exception {
@@ -194,6 +237,7 @@ class UserControllerTest {
                         )
                         ));
     }
+
     @Test
     @DisplayName("유저 사진 가져오기 테스트")
     public void getPhoto() throws Exception {
@@ -212,5 +256,26 @@ class UserControllerTest {
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
                         )
                         ));
+    }
+
+    @Test
+    @DisplayName("유저 사진 가져오기 실패 테스트")
+    public void getPhotoFail() throws Exception {
+        User user = createUserFail();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+        given(userService.findById(any())).willReturn(user);
+
+        mockMvc.perform(get("/user/photo")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andDo(document("exception-urlNotExist",
+                        responseFields(
+                                fieldWithPath("success").description("성공 실패 여부"),
+                                fieldWithPath("code").description("exception 코드 번호"),
+                                fieldWithPath("msg").description("exception 메시지")
+                        )
+                ));
     }
 }
