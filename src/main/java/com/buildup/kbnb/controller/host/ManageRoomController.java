@@ -47,6 +47,7 @@ public class ManageRoomController {
         HostGetRoomRes hostGetRoomRes = new HostGetRoomRes();
         hostGetRoomList.add(hostGetRoomRes.createDto(room));
     }
+
         Page<HostGetRoomRes> listPage = new PageImpl<>(hostGetRoomList, pageable, hostRoomPage.getTotalElements());
         PagedModel<EntityModel<HostGetRoomRes>> model = assembler.toModel(listPage);
         model.add(Link.of("/docs/api.html#resource-host-getRoomList").withRel("profile"));
