@@ -1,5 +1,6 @@
 package com.buildup.kbnb.controller;
 
+import com.buildup.kbnb.advice.exception.EmailDuplicationException;
 import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
 import com.buildup.kbnb.dto.user.*;
 import com.buildup.kbnb.model.user.User;
@@ -53,7 +54,9 @@ public class UserController {
     @PostMapping(value = "/update", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> update(@CurrentUser UserPrincipal userPrincipal, @RequestBody UserUpdateRequest userUpdateRequest) {
         User user = userService.findById(userPrincipal.getId());
-
+        if(userRepository.existsByEmail(userUpdateRequest.getEmail())) {
+            throw new EmailDuplicationException();
+        }
         UserUpdateResponse userUpdateResponse = updateUserAndReturnResponseDto(user, userUpdateRequest);
         EntityModel<UserUpdateResponse> model = EntityModel.of(userUpdateResponse);
         model.add(linkTo(methodOn(UserController.class).update(userPrincipal, userUpdateRequest)).withSelfRel());
