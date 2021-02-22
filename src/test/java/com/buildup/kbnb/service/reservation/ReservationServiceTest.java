@@ -140,6 +140,30 @@ class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("제대로된 날짜 예약3")
+    public void checkAvailableDate3() {
+        int period = 3;
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = LocalDate.now().plusDays(period);
+
+        List<Reservation> reservationList = createReservationList(startDate, endDate);
+
+        assertDoesNotThrow(() ->reservationService.checkAvailableDate(reservationList, startDate.minusDays(1), startDate));
+    }
+
+    @Test
+    @DisplayName("제대로된 날짜 예약4")
+    public void checkAvailableDate4() {
+        int period = 3;
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = LocalDate.now().plusDays(period);
+
+        List<Reservation> reservationList = createReservationList(startDate, endDate);
+
+        assertDoesNotThrow(() ->reservationService.checkAvailableDate(reservationList, endDate, endDate.plusDays(1)));
+    }
+
+    @Test
     @DisplayName("지난달 예약내역 조회")
     public void getPreviousMonth() {
         LocalDate now = LocalDate.now();
