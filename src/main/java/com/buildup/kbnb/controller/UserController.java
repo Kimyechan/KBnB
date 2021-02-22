@@ -1,10 +1,8 @@
 package com.buildup.kbnb.controller;
 
+import com.buildup.kbnb.advice.exception.EmailDuplicationException;
 import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
-import com.buildup.kbnb.dto.user.UserDto;
-import com.buildup.kbnb.dto.user.UserImgUpdateResponse;
-import com.buildup.kbnb.dto.user.UserUpdateRequest;
-import com.buildup.kbnb.dto.user.UserUpdateResponse;
+import com.buildup.kbnb.dto.user.*;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.CurrentUser;
@@ -56,7 +54,9 @@ public class UserController {
     @PostMapping(value = "/update", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> update(@CurrentUser UserPrincipal userPrincipal, @RequestBody UserUpdateRequest userUpdateRequest) {
         User user = userService.findById(userPrincipal.getId());
-
+        if(userRepository.existsByEmail(userUpdateRequest.getEmail())) {
+            throw new EmailDuplicationException();
+        }
         UserUpdateResponse userUpdateResponse = updateUserAndReturnResponseDto(user, userUpdateRequest);
         EntityModel<UserUpdateResponse> model = EntityModel.of(userUpdateResponse);
         model.add(linkTo(methodOn(UserController.class).update(userPrincipal, userUpdateRequest)).withSelfRel());
@@ -73,7 +73,8 @@ public class UserController {
         else {
             newImgUrl = s3Uploader.upload(file, "userImg", user.getName());
         }
-
+        user.setImageUrl(newImgUrl);
+        userService.save(user);
         UserImgUpdateResponse userImgUpdateResponse = UserImgUpdateResponse.builder().newImgUrl(newImgUrl).build();
         EntityModel<UserImgUpdateResponse> model = EntityModel.of(userImgUpdateResponse);
         model.add(Link.of("/docs/api.html#resource-user-updatePhoto").withRel("profile"));
@@ -91,4 +92,16 @@ public class UserController {
         return UserUpdateResponse.builder()
                 .email(user.getEmail()).birth(user.getBirth()).name(user.getName()).build();
     }
+
+    @GetMapping(value = "/photo" , produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> getPhoto(@CurrentUser UserPrincipal userPrincipal) {
+        User user = userService.findById(userPrincipal.getId());
+        GetPhotoResponse getPhotoResponse = GetPhotoResponse.builder()
+                .url(user.getImageUrl())
+                .build();
+        EntityModel<GetPhotoResponse> model = EntityModel.of(getPhotoResponse);
+        model.add(Link.of("/docs/api.html#resource-user-getPhoto").withRel("profile"));
+        return ResponseEntity.ok(model);
+    }
+
 }
