@@ -1,6 +1,5 @@
 package com.buildup.kbnb.controller;
 
-import com.buildup.kbnb.advice.exception.EmailDuplicationException;
 import com.buildup.kbnb.advice.exception.UserFieldNotValidException;
 import com.buildup.kbnb.dto.AuthResponse;
 import com.buildup.kbnb.dto.user.LoginRequest;
@@ -8,7 +7,6 @@ import com.buildup.kbnb.dto.user.SignUpRequest;
 import com.buildup.kbnb.dto.user.SignUpResponse;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
-import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.TokenProvider;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.UserService;
@@ -34,7 +32,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 public class AuthController {
     private final PasswordEncoder passwordEncoder;
-
     private final TokenProvider tokenProvider;
     private final UserService userService;
 

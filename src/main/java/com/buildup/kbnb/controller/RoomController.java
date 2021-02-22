@@ -63,8 +63,7 @@ public class   RoomController {
                                          @CurrentUser UserPrincipal userPrincipal) {
         Page<Room> roomPage = roomService.searchListByCondition(roomSearchCondition, pageable);
         Long userId = getUserIdAndCheckNull(userPrincipal);
-
-        List<RoomDto> roomList = getRoomDtoList(userId, roomPage.getContent());
+        List<RoomDto> roomList = mapToRoomDtoList(userId, roomPage.getContent());
 
         Page<RoomDto> result = new PageImpl<>(roomList, pageable, roomPage.getTotalElements());
 
@@ -84,10 +83,11 @@ public class   RoomController {
         return userId;
     }
 
-    private List<RoomDto> getRoomDtoList(Long userId, List<Room> roomList) {
+    private List<RoomDto> mapToRoomDtoList(Long userId, List<Room> roomList) {
         List<RoomDto> roomDtoList = new ArrayList<>();
         for (Room room : roomList) {
             int bedNum = roomService.getBedNum(room.getBedRoomList());
+            boolean isCheckedRoom = userService.checkRoomByUser(userId, room.getId());
             List<String> roomImgUrlList = getRoomImgUrlList(room);
 
             RoomDto roomDto = RoomDto.builder()
@@ -110,7 +110,7 @@ public class   RoomController {
                     .latitude(room.getLocation().getLatitude())
                     .longitude(room.getLocation().getLongitude())
                     .commentCount(room.getCommentList().size())
-                    .isCheck(userService.checkRoomByUser(userId, room.getId()))
+                    .isCheck(isCheckedRoom)
                     .roomImgUrlList(roomImgUrlList)
                     .build();
 
