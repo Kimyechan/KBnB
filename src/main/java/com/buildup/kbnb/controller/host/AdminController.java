@@ -29,6 +29,7 @@ public class AdminController {
 
     @Autowired
     UserService userService;
+
     @GetMapping(value = "/income", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> yearMonthIncome(@CurrentUser UserPrincipal userPrincipal, IncomeRequest incomeRequest) {
         User host = userService.findById(userPrincipal.getId());
@@ -37,7 +38,7 @@ public class AdminController {
         List<Reservation> byYear = reservationService.findByHostFilterByYear(host, incomeRequest.getYear());
         IncomeResponse incomeResponse = reservationService.separateByMonth(byYear);
 
-            incomeResponse.setYearlyIncome();
+        incomeResponse.setYearlyIncome();
         EntityModel<IncomeResponse> model = EntityModel.of(incomeResponse);
         model.add(Link.of("/docs/api.html#resource-host-income").withRel("profile"));
         return ResponseEntity.ok(model);

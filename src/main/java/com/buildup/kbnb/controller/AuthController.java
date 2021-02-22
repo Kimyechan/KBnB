@@ -65,9 +65,9 @@ public class AuthController {
 
         String token = tokenProvider.createToken(String.valueOf(savedUser.getId()));
         SignUpResponse response = SignUpResponse.builder()
-                    .accessToken(token)
-                    .tokenType("Bearer")
-                    .build();
+                .accessToken(token)
+                .tokenType("Bearer")
+                .build();
 
         URI location = linkTo(methodOn(UserController.class).getCurrentUser(UserPrincipal.create(savedUser))).toUri();
         EntityModel<SignUpResponse> model = EntityModel.of(response);

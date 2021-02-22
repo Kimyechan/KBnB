@@ -115,7 +115,7 @@ public class CommentController {
 
     public List<CommentDto> mapToCommentDtoList(List<Comment> commentList) {
         List<CommentDto> commentDtoList = new ArrayList<>();
-        for(Comment comment : commentList) {
+        for (Comment comment : commentList) {
             CommentDto commentDto = CommentDto.builder()
                     .accuracy(comment.getAccuracy())
                     .checkIn(comment.getCheckIn())
