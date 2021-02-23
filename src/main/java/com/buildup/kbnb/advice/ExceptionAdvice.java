@@ -64,12 +64,32 @@ public class ExceptionAdvice {
                 .build();
     }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    protected ExceptionResponse entireException(Exception e) {
+    @ExceptionHandler(RoomFieldNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ExceptionResponse RoomFieldNotValid(RoomFieldNotValidException e) {
         return ExceptionResponse.builder()
-                .code(-1000)
+                .code(-4001)
                 .msg(e.getMessage())
                 .build();
     }
+
+    @ExceptionHandler(WrongDateFormatException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ExceptionResponse DateFormatWrong(WrongDateFormatException e) {
+        return ExceptionResponse.builder()
+                .code(-5001)
+                .msg(e.getMessage())
+                .build();
+    }
+
+
+//    @ExceptionHandler(Exception.class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    protected ExceptionResponse entireException(Exception e) {
+//        return ExceptionResponse.builder()
+//                .code(-1000)
+//                .msg(e.getMessage())
+//                .build();
+//    }
+
 }

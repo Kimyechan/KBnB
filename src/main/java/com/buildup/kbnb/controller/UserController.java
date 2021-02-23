@@ -1,7 +1,7 @@
 package com.buildup.kbnb.controller;
 
-import com.buildup.kbnb.advice.exception.EmailDuplicationException;
-import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
+import com.buildup.kbnb.advice.exception.*;
+import com.buildup.kbnb.dto.user.BirthDto;
 import com.buildup.kbnb.dto.user.*;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
@@ -14,11 +14,16 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Nullable;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -54,7 +59,7 @@ public class UserController {
     @PostMapping(value = "/update", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> update(@CurrentUser UserPrincipal userPrincipal, @RequestBody UserUpdateRequest userUpdateRequest) {
         User user = userService.findById(userPrincipal.getId());
-        if(userRepository.existsByEmail(userUpdateRequest.getEmail())) {
+        if (userRepository.existsByEmail(userUpdateRequest.getEmail())) {
             throw new EmailDuplicationException();
         }
         UserUpdateResponse userUpdateResponse = updateUserAndReturnResponseDto(user, userUpdateRequest);
@@ -64,8 +69,58 @@ public class UserController {
         return ResponseEntity.ok(model);
     }
 
-    @PostMapping(value = "/update/photo" , produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal,  @RequestPart MultipartFile file) throws IOException {
+    @PostMapping(value = "/update/email", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> updateEmail(@CurrentUser UserPrincipal userPrincipal, @Valid @RequestBody EmailDto emailDto, BindingResult error) {
+        User user = userService.findById(userPrincipal.getId());
+        if (error.hasErrors())
+            throw new EmailOrPassWrongException("email양식에 맞지 않습니다.");
+        if (userRepository.existsByEmail(emailDto.getEmail()))
+            throw new EmailDuplicationException();
+
+        user.setEmail(emailDto.getEmail());
+        userService.save(user);
+
+        EntityModel<EmailDto> model = EntityModel.of(emailDto);
+        model.add(Link.of("/docs/api.html#resource-user-update-email").withRel("profile"));
+        return ResponseEntity.ok(model);
+    }
+
+    @PostMapping(value = "/update/name", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> updateName(@CurrentUser UserPrincipal userPrincipal, @Valid @RequestBody NameDto nameDto, BindingResult error) {
+        if (error.hasFieldErrors("name"))
+            throw new UserFieldNotValidException("변경될 이름을 기입해주세요");
+        User user = userService.findById(userPrincipal.getId());
+
+        user.setName(nameDto.getName());
+        userService.save(user);
+
+        EntityModel<NameDto> model = EntityModel.of(nameDto);
+        model.add(Link.of("/docs/api.html#resource-user-update-email").withRel("profile"));
+        return ResponseEntity.ok(model);
+    }
+
+    @PostMapping(value = "/update/birth", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> updateBirth(@CurrentUser UserPrincipal userPrincipal, @RequestBody BirthDto birthDto) {
+        LocalDate newBirth;
+        try {
+            newBirth = LocalDate.parse(birthDto.getBirth(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        } catch (DateTimeParseException e) {
+            throw new WrongDateFormatException();
+        }
+        User user = userService.findById(userPrincipal.getId());
+
+        user.setBirth(newBirth);
+        userService.save(user);
+
+        EntityModel<BirthDto> model = EntityModel.of(birthDto);
+        model.add(Link.of("/docs/api.html#resource-user-update-email").withRel("profile"));
+        return ResponseEntity.ok(model);
+
+    }
+
+    @PostMapping(value = "/update/photo", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal, @Nullable @RequestPart MultipartFile file) throws IOException {
+
         User user = userService.findById((userPrincipal.getId()));
         String newImgUrl;
         if (file == null)
@@ -81,7 +136,6 @@ public class UserController {
         return ResponseEntity.ok(model);
     }
 
-
     public UserUpdateResponse updateUserAndReturnResponseDto(User user, UserUpdateRequest userUpdateRequest) {
         user.setEmail(userUpdateRequest.getEmail());
         user.setName(userUpdateRequest.getName());
@@ -93,15 +147,18 @@ public class UserController {
                 .email(user.getEmail()).birth(user.getBirth()).name(user.getName()).build();
     }
 
-    @GetMapping(value = "/photo" , produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    @GetMapping(value = "/photo", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getPhoto(@CurrentUser UserPrincipal userPrincipal) {
         User user = userService.findById(userPrincipal.getId());
+
+        if (user.getImageUrl() == null)
+            throw new UserFieldNotValidException("url not exist");
         GetPhotoResponse getPhotoResponse = GetPhotoResponse.builder()
                 .url(user.getImageUrl())
                 .build();
+
         EntityModel<GetPhotoResponse> model = EntityModel.of(getPhotoResponse);
         model.add(Link.of("/docs/api.html#resource-user-getPhoto").withRel("profile"));
         return ResponseEntity.ok(model);
     }
-
 }

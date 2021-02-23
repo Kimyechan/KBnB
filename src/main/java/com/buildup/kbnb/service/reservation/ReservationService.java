@@ -220,9 +220,10 @@ public class ReservationService {
 
     public IncomeResponse separateByMonth(List<Reservation> byYear) {
         IncomeResponse incomeResponse = new IncomeResponse();
+        int month = Integer.valueOf(String.valueOf(byYear.get(0).getCheckIn().getMonth()));
         for (Reservation reservation : byYear) {
             for (int i = 1; i < 13; i++) {
-                if (String.valueOf(reservation.getCheckIn().getMonth()).equals(String.valueOf(i))) {
+                if (Integer.valueOf(String.valueOf(reservation.getCheckIn().getMonth())).equals(i)) {
                     incomeResponse.add(reservation.getPayment().getPrice(), i);
                 }
             }

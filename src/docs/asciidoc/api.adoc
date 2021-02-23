@@ -66,7 +66,6 @@
 에러 응답이 발생했을 때 (상태 코드 >= 400), 본문에 해당 문제를 기술한 JSON 객체가 담겨있다. 에러 객체는 다음의 구조를 따른다.
 
 예를 들어, 잘못된 요청으로 이벤트를 만들려고 했을 때 다음과 같은 `400 Bad Request` 응답을 받는다.
-
 [[errors-email-duplication]]
 === 이메일 중복 예외
 operation::exception-emailDuplication[snippets='response-body,response-fields']
@@ -74,6 +73,23 @@ operation::exception-emailDuplication[snippets='response-body,response-fields']
 === 이메일 패스워드 틀림 예외
 operation::exception-emailOrPasswordWrong[snippets='response-body,response-fields']
 
+=== 유저 사진 가져오기 예외(가져올 사진이 없는 경우)
+operation::exception-urlNotExist[snippets='response-body,response-fields']
+
+=== 유저 정보 수정 실패(이메일 중복)
+operation::exception-userUpdateEmailDuplication[snippets='response-body,response-fields']
+
+=== 호스트의 방 기본 정보 등록 실패(Validation 예외처리)
+operation::exception-hostRegisterRoom[snippets='response-body,response-fields']
+
+=== 유저 이메일 업데이트 예외(중복된 이메일일 경우)
+operation::exception-userUpdateEmailDuplication[snippets='response-body,response-fields']
+
+=== 유저 이름 업데이트 예외(공백만 입력된 경우)
+operation::exception-userUpdate-blankName[snippets='response-body,response-fields']
+
+=== 유저 생일 업데이트 예외(날짜 포맷 오류)
+operation::exception-userUpdate-WrongDateFormat[snippets='response-body,response-fields']
 [[overview-hypermedia]]
 == 하이퍼미디어
 
