@@ -140,13 +140,18 @@ public class ReservationController {
 
     @DeleteMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> deleteReservation(@CurrentUser UserPrincipal userPrincipal,
-                                               @RequestBody CancelDto cancelDto) throws Exception {
+                                               @Valid @RequestBody CancelDto cancelDto, BindingResult error) throws Exception {
+        if (error.hasErrors()) {
+            throw new BadRequestException("요청 값이 잘못되었습니다");
+        }
+
         User user = userService.findById(userPrincipal.getId());
         List<Reservation> reservationList = reservationService.findByUser(user);
 
         if (!reservationList.stream().map(Reservation::getId).collect(Collectors.toList()).contains(cancelDto.getReservationId())) {
             throw new ReservationException("there is no reservation that you asked");
         }
+
         Cancel cancel = Cancel.builder()
                 .name(cancelDto.getName())
                 .reason(cancelDto.getReason())
@@ -160,7 +165,7 @@ public class ReservationController {
                 .build();
 
         EntityModel<ApiResponse> model = EntityModel.of(response);
-        model.add(linkTo(methodOn(ReservationController.class).deleteReservation(userPrincipal, cancelDto)).withSelfRel());
+        model.add(linkTo(methodOn(ReservationController.class).deleteReservation(userPrincipal, cancelDto, error)).withSelfRel());
         model.add(Link.of("/docs/api.html#resource-reservation-delete").withRel("profile"));
         return ResponseEntity.ok(model);
     }
