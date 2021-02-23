@@ -72,35 +72,39 @@ public class UserController {
     }
 
     @PostMapping(value = "/update/email", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> updateEmail(@CurrentUser UserPrincipal userPrincipal, @Valid EmailDto emailDto, BindingResult error) {
+    public ResponseEntity<?> updateEmail(@CurrentUser UserPrincipal userPrincipal, @Valid @RequestBody EmailDto emailDto, BindingResult error) {
         User user = userService.findById(userPrincipal.getId());
-        if(error.hasErrors())
+        if (error.hasErrors())
             throw new EmailOrPassWrongException("email양식에 맞지 않습니다.");
-        if(userRepository.existsByEmail(emailDto.getEmail()))
+        if (userRepository.existsByEmail(emailDto.getEmail()))
             throw new EmailDuplicationException();
 
         user.setEmail(emailDto.getEmail());
         userService.save(user);
 
         EntityModel<EmailDto> model = EntityModel.of(emailDto);
+        model.add(Link.of("/docs/api.html#resource-user-update-email").withRel("profile"));
         return ResponseEntity.ok(model);
     }
 
     @PostMapping(value = "/update/name", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> updateName(@CurrentUser UserPrincipal userPrincipal, NameDto nameDto) {
+    public ResponseEntity<?> updateName(@CurrentUser UserPrincipal userPrincipal, @Valid @RequestBody NameDto nameDto, BindingResult error) {
+        if (error.hasFieldErrors("name"))
+            throw new UserFieldNotValidException("변경될 이름을 기입해주세요");
         User user = userService.findById(userPrincipal.getId());
 
         user.setName(nameDto.getName());
         userService.save(user);
 
         EntityModel<NameDto> model = EntityModel.of(nameDto);
+        model.add(Link.of("/docs/api.html#resource-user-update-email").withRel("profile"));
         return ResponseEntity.ok(model);
     }
 
     @PostMapping(value = "/update/birth", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> updateBirth(@CurrentUser UserPrincipal userPrincipal, BirthDto birthDto) {
+    public ResponseEntity<?> updateBirth(@CurrentUser UserPrincipal userPrincipal, @RequestBody BirthDto birthDto) {
         LocalDate newBirth;
-        try{
+        try {
             newBirth = LocalDate.parse(birthDto.getBirth(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         } catch (DateTimeParseException e) {
             throw new DateFormatWrongException();
@@ -111,12 +115,13 @@ public class UserController {
         userService.save(user);
 
         EntityModel<BirthDto> model = EntityModel.of(birthDto);
+        model.add(Link.of("/docs/api.html#resource-user-update-email").withRel("profile"));
         return ResponseEntity.ok(model);
 
     }
 
     @PostMapping(value = "/update/photo", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal, @Nullable  @RequestPart MultipartFile file) throws IOException {
+    public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal, @Nullable @RequestPart MultipartFile file) throws IOException {
 
         User user = userService.findById((userPrincipal.getId()));
         String newImgUrl;
