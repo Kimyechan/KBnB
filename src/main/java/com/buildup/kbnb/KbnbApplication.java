@@ -14,11 +14,13 @@ public class KbnbApplication {
 
     public static final String APPLICATION_LOCATIONS = "spring.config.location="
             + "classpath:application.yml,"
+            + "classpath:bootpay.yml,"
             + "optional:classpath:database.yml,"
             + "optional:classpath:secret.yml,"
             + "optional:classpath:oauth2.yml,"
             + "optional:/home/ubuntu/config/project/kbnb/database.yml,"
-            + "optional:/home/ubuntu/config/project/kbnb/oauth2.yml";
+            + "optional:/home/ubuntu/config/project/kbnb/oauth2.yml,"
+            + "optional:/home/ubuntu/config/project/kbnb/bootpay.yml";
 
     public static void main(String[] args) {
         new SpringApplicationBuilder(KbnbApplication.class)
