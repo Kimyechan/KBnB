@@ -2,7 +2,7 @@ package com.buildup.kbnb.service;
 
 import com.buildup.kbnb.advice.exception.EmailDuplicationException;
 import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
-import com.buildup.kbnb.advice.exception.ReservationException;
+import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
 import com.buildup.kbnb.model.UserRoom;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
@@ -34,7 +34,7 @@ public class UserService {
     }
 
     public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new ReservationException("해당 유저를 찾을 수 없습니다."));
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
     }
 
     public User save(User user) {

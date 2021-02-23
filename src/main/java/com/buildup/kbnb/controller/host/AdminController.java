@@ -34,7 +34,6 @@ public class AdminController {
     public ResponseEntity<?> yearMonthIncome(@CurrentUser UserPrincipal userPrincipal, IncomeRequest incomeRequest) {
         User host = userService.findById(userPrincipal.getId());
 
-        //호스트가 가진 예약정보를 reservation - findbyhost 사용해서
         List<Reservation> byYear = reservationService.findByHostFilterByYear(host, incomeRequest.getYear());
         IncomeResponse incomeResponse = reservationService.separateByMonth(byYear);
 
