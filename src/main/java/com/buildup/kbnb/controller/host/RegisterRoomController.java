@@ -1,6 +1,7 @@
 package com.buildup.kbnb.controller.host;
 
 import com.buildup.kbnb.advice.exception.RoomFieldNotValidException;
+import com.buildup.kbnb.advice.exception.TypeMissMatchException;
 import com.buildup.kbnb.dto.host.HostPhotoResponse;
 import com.buildup.kbnb.dto.room.CreateRoomRequestDto;
 import com.buildup.kbnb.dto.room.CreateRoomResponseDto;
@@ -63,6 +64,12 @@ public class RegisterRoomController {
 
     @PostMapping(value = "/addPhoto", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal, @RequestParam Long roomId, @RequestPart List<MultipartFile> file) throws IOException {
+        int photoNum = 0;
+        for(MultipartFile file1 : file) {
+            photoNum++;
+            if (!((file1.getOriginalFilename().contains(".jpg")) || (file1.getOriginalFilename().contains(".png")) || (file1.getOriginalFilename().contains(".svg"))))
+                throw new TypeMissMatchException(photoNum + " 번째 사진이 이미지 파일이 아닙니다.");
+        }
         User user = userService.findById(userPrincipal.getId());
         Room room = roomService.findById(roomId);
         List<RoomImg> roomImgList = new ArrayList<>();

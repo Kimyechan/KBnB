@@ -243,39 +243,38 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andDo(document("user-updatePhoto",
                         requestParts(
-                                partWithName("file").description("변경될 이미지")
+                                partWithName("file.jpg").description("변경될 이미지")
                         ),
                         responseFields(
-                                fieldWithPath("newImgUrl").description("새로운 이미지URL"),
+                                fieldWithPath("newImgUrl").description("새로운 이미지 URL"),
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
                         )
                 ));
     }
 
-   /* @Test
+    @Test
     @DisplayName("유저 이미지 변경 실패 테스트")
     public void updatePhotoFail() throws Exception {
         User user = createUser();
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
         given(userService.findById(any())).willReturn(user);
         given(s3Uploader.upload(any(), any(), any())).willReturn("test url");
-        MockMultipartFile mockFile = new MockMultipartFile()
+
         mockMvc.perform(fileUpload("/user/update/photo").file("file", "example".getBytes())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
 
         ).andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document("user-updatePhoto",
-                        requestParts(
-                                partWithName("file").description("변경될 이미지")
-                        ),
+                .andExpect(status().isBadRequest())
+                .andDo(document("exception-wrongFileType",
+
                         responseFields(
-                                fieldWithPath("newImgUrl").description("새로운 이미지URL"),
-                                fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
+                                fieldWithPath("success").description("성공 실패 여부"),
+                                fieldWithPath("code").description("exception 코드 번호"),
+                                fieldWithPath("msg").description("exception 메세지")
                         )
                 ));
-    }*/
+    }
 
     @Test
     @DisplayName("유저 사진 가져오기 테스트")

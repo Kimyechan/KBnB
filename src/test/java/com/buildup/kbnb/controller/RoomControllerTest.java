@@ -552,42 +552,6 @@ class RoomControllerTest {
                 ));
     }
 
-
-    @Test
-    @DisplayName("방 등록_사진 추가")
-    public void addPhoto() throws Exception {
-        User user = createUser();
-        Room room = Room.builder().name("테스트방").build();
-        String token = tokenProvider.createToken(String.valueOf(user.getId()));
-        given(userService.findById(any())).willReturn(user);
-        given(roomService.findById(any())).willReturn(room);
-        given(s3Uploader.upload(any(), any(), any())).willReturn("test url");
-        given(roomService.save(any())).willReturn(room);
-
-        mockMvc.perform(fileUpload("/host/addPhoto")
-                .file("file", "example".getBytes())
-                .file("file", "example2".getBytes())
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .param("roomId", String.valueOf(1L))
-        ).andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document("host-addPhoto",
-                        requestParts(
-                                partWithName("file").description("업로드될 파일 리스트")
-                        ),
-                        requestParameters(
-                                parameterWithName("roomId").description("방 식별자")
-                        ),
-                        responseFields(
-                                fieldWithPath("imgCount").description("등록된 사진의 갯수"),
-                                fieldWithPath("_links.profile.href").description("해당 API 문서 주소")
-                        )
-                        )
-
-                );
-    }
-
     @Test
     @DisplayName("숙소 지난달 예약률로 숙소 추천")
     public void recommendRoom() throws Exception {

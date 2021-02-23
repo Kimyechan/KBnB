@@ -28,6 +28,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -41,9 +42,12 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.fileUpload;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -109,8 +113,10 @@ public class RegisterRoomTest {
     }
 
     private CreateRoomRequestDto createRoomRequestDtoList() {
-        List<BathRoomDto> bathRoomDtoList = new ArrayList<>(); bathRoomDtoList.add(new BathRoomDto());
-        List<BedRoomDto> bedRoomDtoList = new ArrayList<>(); bedRoomDtoList.add(new BedRoomDto());
+        List<BathRoomDto> bathRoomDtoList = new ArrayList<>();
+        bathRoomDtoList.add(new BathRoomDto());
+        List<BedRoomDto> bedRoomDtoList = new ArrayList<>();
+        bedRoomDtoList.add(new BedRoomDto());
         return CreateRoomRequestDto.builder()
                 .bathRoomDtoList(bathRoomDtoList)
                 .bedRoomDtoList(bedRoomDtoList)
@@ -189,7 +195,8 @@ public class RegisterRoomTest {
         given(userService.findById(any())).willReturn(user);
         given(roomService.createRoom(any(), any())).willReturn(room);
         given(roomService.save(any())).willReturn(room);
-        CreateRoomRequestDto req = new CreateRoomRequestDto(); req.setName("테스트");
+        CreateRoomRequestDto req = new CreateRoomRequestDto();
+        req.setName("테스트");
 
         mockMvc.perform(post("/host/registerBasicRoom")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -198,6 +205,79 @@ public class RegisterRoomTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andDo(document("exception-hostRegisterRoom",
+                        responseFields(
+                                fieldWithPath("success").description("성공 실패 여부"),
+                                fieldWithPath("code").description("exception 코드 번호"),
+                                fieldWithPath("msg").description("exception 메시지")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("방 등록_사진 추가")
+    public void addPhoto() throws Exception {
+        User user = createUser();
+        Room room = Room.builder().name("테스트방").build();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+        given(userService.findById(any())).willReturn(user);
+        given(roomService.findById(any())).willReturn(room);
+        given(s3Uploader.upload(any(), any(), any())).willReturn("test url");
+        given(roomService.save(any())).willReturn(room);
+
+        MockMultipartFile image1 = new MockMultipartFile("file", "image.png", "image/png",
+                "<<png data>>".getBytes());
+        MockMultipartFile image2 = new MockMultipartFile("file", "image.jpg", "image/jpg",
+                "<<jpg data>>".getBytes());
+
+        mockMvc.perform(fileUpload("/host/addPhoto")
+                .file(image1)
+                .file(image2)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .param("roomId", String.valueOf(1L))
+        ).andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("host-addPhoto",
+                        requestParts(
+                                partWithName("file").description("업로드될 파일 리스트")
+                        ),
+                        requestParameters(
+                                parameterWithName("roomId").description("방 식별자")
+                        ),
+                        responseFields(
+                                fieldWithPath("imgCount").description("등록된 사진의 갯수"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 주소")
+                        )
+                        )
+
+                );
+    }
+
+    @Test
+    @DisplayName("방 등록_사진 추가 실패")
+    public void addPhotoFail() throws Exception {
+        User user = createUser();
+        Room room = Room.builder().name("테스트방").build();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+        given(userService.findById(any())).willReturn(user);
+        given(roomService.findById(any())).willReturn(room);
+        given(s3Uploader.upload(any(), any(), any())).willReturn("test url");
+        given(roomService.save(any())).willReturn(room);
+
+        MockMultipartFile image1 = new MockMultipartFile("file", "image.jpg", "image/png",
+                "<<png data>>".getBytes());
+        MockMultipartFile image2 = new MockMultipartFile("file", "image.jpd", "image/jpg",
+                "<<jpg data>>".getBytes());
+
+        mockMvc.perform(fileUpload("/host/addPhoto")
+                .file(image1)
+                .file(image2)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .param("roomId", String.valueOf(1L))
+        ).andDo(print())
+                .andExpect(status().isBadRequest())
+                .andDo(document("exception-addRoomPhoto",
                         responseFields(
                                 fieldWithPath("success").description("성공 실패 여부"),
                                 fieldWithPath("code").description("exception 코드 번호"),
