@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.format.DateTimeParseException;
+
 @RestControllerAdvice
 public class ExceptionAdvice {
 
@@ -73,16 +75,14 @@ public class ExceptionAdvice {
                 .build();
     }
 
-    @ExceptionHandler(WrongDateFormatException.class)
+    @ExceptionHandler(DateTimeParseException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ExceptionResponse DateFormatWrong(WrongDateFormatException e) {
+    protected ExceptionResponse DateTimeParse(DateTimeParseException e) {
         return ExceptionResponse.builder()
-                .code(-5001)
+                .code(-6001)
                 .msg(e.getMessage())
                 .build();
     }
-
-
 //    @ExceptionHandler(Exception.class)
 //    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 //    protected ExceptionResponse entireException(Exception e) {

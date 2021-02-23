@@ -1,5 +1,6 @@
 package com.buildup.kbnb.service.reservation;
 
+import com.buildup.kbnb.dto.host.income.IncomeResponse;
 import com.buildup.kbnb.model.Payment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
@@ -138,5 +139,16 @@ class ReservationServiceTest {
         assertThat(reservationList.size()).isEqualTo(1);
         reservationList = reservationService.findByHostFilterByYear(host,afterYear);
         assertThat(reservationList.size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("월별 년별합산 테스트")
+    public void separateByMonth() {
+        List<Reservation> list = createReservationList();
+        IncomeResponse incomeResponse = reservationService.separateByMonth(list);
+        System.out.println(incomeResponse.getFeb());
+        assertThat(incomeResponse.getFeb()).isEqualTo(2000);
+//        System.out.println(incomeResponse.getYearlyIncome());
+//        assertThat(incomeResponse.getYearlyIncome()).isEqualTo(2000);
     }
 }
