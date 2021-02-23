@@ -70,8 +70,13 @@
 === 이메일 중복 예외
 operation::exception-emailDuplication[snippets='response-body,response-fields']
 
+[[errors-emailPasswordWrong]]
 === 이메일 패스워드 틀림 예외
 operation::exception-emailOrPasswordWrong[snippets='response-body,response-fields']
+
+[[errors-reservation]]
+=== 잘못된 날짜로 예약시 예외
+operation::exception-reservation[snippets='response-body,response-fields']
 
 === 유저 사진 가져오기 예외(가져올 사진이 없는 경우)
 operation::exception-urlNotExist[snippets='response-body,response-fields']
@@ -90,6 +95,7 @@ operation::exception-userUpdate-blankName[snippets='response-body,response-field
 
 === 유저 생일 업데이트 예외(날짜 포맷 오류)
 operation::exception-userUpdate-WrongDateFormat[snippets='response-body,response-fields']
+
 [[overview-hypermedia]]
 == 하이퍼미디어
 

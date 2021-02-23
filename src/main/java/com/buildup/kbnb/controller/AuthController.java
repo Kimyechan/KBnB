@@ -1,7 +1,5 @@
 package com.buildup.kbnb.controller;
 
-import com.buildup.kbnb.advice.exception.EmailDuplicationException;
-import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
 import com.buildup.kbnb.advice.exception.UserFieldNotValidException;
 import com.buildup.kbnb.dto.AuthResponse;
 import com.buildup.kbnb.dto.user.LoginRequest;
@@ -9,7 +7,6 @@ import com.buildup.kbnb.dto.user.SignUpRequest;
 import com.buildup.kbnb.dto.user.SignUpResponse;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
-import com.buildup.kbnb.repository.UserRepository;
 import com.buildup.kbnb.security.TokenProvider;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.UserService;
@@ -34,10 +31,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final TokenProvider tokenProvider;
     private final UserService userService;
 
@@ -64,18 +58,16 @@ public class AuthController {
             throw new UserFieldNotValidException();
         }
 
-        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new EmailDuplicationException();
-        }
+        userService.checkEmailExisted(signUpRequest.getEmail());
 
         User user = mapDtoToUser(signUpRequest);
-        User savedUser = userRepository.save(user);
+        User savedUser = userService.save(user);
 
         String token = tokenProvider.createToken(String.valueOf(savedUser.getId()));
         SignUpResponse response = SignUpResponse.builder()
-                    .accessToken(token)
-                    .tokenType("Bearer")
-                    .build();
+                .accessToken(token)
+                .tokenType("Bearer")
+                .build();
 
         URI location = linkTo(methodOn(UserController.class).getCurrentUser(UserPrincipal.create(savedUser))).toUri();
         EntityModel<SignUpResponse> model = EntityModel.of(response);

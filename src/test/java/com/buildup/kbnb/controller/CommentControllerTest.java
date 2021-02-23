@@ -2,6 +2,7 @@ package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.comment.CommentCreateReq;
+import com.buildup.kbnb.dto.comment.GradeInfo;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
@@ -140,6 +141,17 @@ class CommentControllerTest {
                 .id(1L)
                 .build();
 
+        GradeInfo gradeInfo = GradeInfo.builder()
+                .accuracy(5.0)
+                .checkIn(5.0)
+                .cleanliness(5.0)
+                .communication(5.0)
+                .locationRate(5.0)
+                .priceSatisfaction(5.0)
+                .totalGrade(5.0)
+                .build();
+
+        given(commentService.calcGradeInfo(any(), any(), any())).willReturn(gradeInfo);
         given(reservationService.findByIdWithRoomAndUser(eq(req.getReservationId()))).willReturn(reservation);
         given(commentService.createCommentTx(any(), any(), any(), any())).willReturn(res);
 

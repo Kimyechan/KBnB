@@ -25,23 +25,19 @@ public class BootPayApi {
     private final String URL_VERIFY = BASE_URL + "receipt";
     private final String URL_CANCEL = BASE_URL + "cancel.json";
 
-    @Value("${bootPay.applicationId}")
-    private String application_id;
-
-    @Value("${bootPay.privateKey}")
-    private String private_key;
+    private final BootPayProperties properties;
 
     public String getAccessToken() throws Exception {
-        if (this.application_id == null || this.application_id.isEmpty()) {
+        if (properties.getApplicationId() == null || properties.getApplicationId().isEmpty()) {
             throw new Exception("application_id 값이 비어있습니다.");
         }
-        if (this.private_key == null || this.private_key.isEmpty()) {
+        if (properties.getPrivateKey() == null || properties.getPrivateKey().isEmpty()) {
             throw new Exception("private_key 값이 비어있습니다.");
         }
 
         Token token = Token.builder()
-                .application_id(application_id)
-                .private_key(private_key)
+                .application_id(properties.getApplicationId())
+                .private_key(properties.getPrivateKey())
                 .build();
 
         ResToken resToken = restTemplate.postForObject(URL_ACCESS_TOKEN, token, ResToken.class);

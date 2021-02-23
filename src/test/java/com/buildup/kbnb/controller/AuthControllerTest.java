@@ -1,5 +1,6 @@
 package com.buildup.kbnb.controller;
 
+import com.buildup.kbnb.advice.exception.EmailDuplicationException;
 import com.buildup.kbnb.advice.exception.EmailOrPassWrongException;
 import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.user.LoginRequest;
@@ -114,7 +115,7 @@ class AuthControllerTest {
                 .password("test")
                 .build();
 
-        given(userService.getUserByEmail(loginRequest.getEmail())).willThrow(EmailOrPassWrongException.class);
+        given(userService.getUserByEmail(loginRequest.getEmail())).willThrow(new EmailOrPassWrongException());
 
         mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -148,7 +149,7 @@ class AuthControllerTest {
                 .build();
 
         given(userService.getUserByEmail(user.getEmail())).willReturn(user);
-        doThrow(EmailOrPassWrongException.class).when(userService).checkCorrectPassword(any(), any());
+        doThrow(new EmailOrPassWrongException()).when(userService).checkCorrectPassword(any(), any());
 
         mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -177,8 +178,7 @@ class AuthControllerTest {
                 .emailVerified(false)
                 .build();
 
-        given(userRepository.existsByEmail(signUpRequest.getEmail())).willReturn(false);
-        given(userRepository.save(any())).willReturn(user);
+        given(userService.save(any())).willReturn(user);
 
         mockMvc.perform(post("/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -217,7 +217,7 @@ class AuthControllerTest {
                 .password("test")
                 .build();
 
-        given(userRepository.existsByEmail(signUpRequest.getEmail())).willReturn(true);
+        doThrow(new EmailDuplicationException()).when(userService).checkEmailExisted(signUpRequest.getEmail());
 
         mockMvc.perform(post("/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
