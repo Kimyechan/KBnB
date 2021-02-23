@@ -258,7 +258,7 @@ class ReservationControllerTest {
 
         given(userService.findById(any())).willReturn(user);
         given(roomService.findById(any())).willReturn(room);
-        doThrow(ReservationException.class).when(reservationService).checkStrangeDate(any(), any());
+        doThrow(new ReservationException()).when(reservationService).checkStrangeDate(any(), any());
 
         mockMvc.perform(post("/reservation")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -266,7 +266,14 @@ class ReservationControllerTest {
                 .content(objectMapper.writeValueAsString(reservation_registerRequest)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("code").value("-2001"));
+                .andExpect(jsonPath("code").value("-2001"))
+                .andDo(document("exception-reservation",
+                        responseFields(
+                                fieldWithPath("success").description("성공 실패 여부"),
+                                fieldWithPath("code").description("exception 코드 번호"),
+                                fieldWithPath("msg").description("exception 메세지")
+                        ))
+                );
     }
 
     @Test

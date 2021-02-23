@@ -71,8 +71,14 @@
 === 이메일 중복 예외
 operation::exception-emailDuplication[snippets='response-body,response-fields']
 
+[[errors-emailPasswordWrong]]
 === 이메일 패스워드 틀림 예외
 operation::exception-emailOrPasswordWrong[snippets='response-body,response-fields']
+
+
+[[errors-reservation]]
+=== 잘못된 날짜로 예약시 예외
+operation::exception-reservation[snippets='response-body,response-fields']
 
 [[overview-hypermedia]]
 == 하이퍼미디어

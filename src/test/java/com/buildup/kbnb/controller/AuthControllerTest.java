@@ -115,7 +115,7 @@ class AuthControllerTest {
                 .password("test")
                 .build();
 
-        given(userService.getUserByEmail(loginRequest.getEmail())).willThrow(EmailOrPassWrongException.class);
+        given(userService.getUserByEmail(loginRequest.getEmail())).willThrow(new EmailOrPassWrongException());
 
         mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -149,7 +149,7 @@ class AuthControllerTest {
                 .build();
 
         given(userService.getUserByEmail(user.getEmail())).willReturn(user);
-        doThrow(EmailOrPassWrongException.class).when(userService).checkCorrectPassword(any(), any());
+        doThrow(new EmailOrPassWrongException()).when(userService).checkCorrectPassword(any(), any());
 
         mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -217,7 +217,7 @@ class AuthControllerTest {
                 .password("test")
                 .build();
 
-        doThrow(EmailDuplicationException.class).when(userService).checkEmailExisted(signUpRequest.getEmail());
+        doThrow(new EmailDuplicationException()).when(userService).checkEmailExisted(signUpRequest.getEmail());
 
         mockMvc.perform(post("/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
