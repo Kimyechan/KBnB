@@ -246,6 +246,24 @@ class ReservationControllerTest {
                 ));
     }
 
+
+    @Test
+    @DisplayName("예약 등록 시 잘못된 요청 에러")
+    public void registerReservationNotValidRequest() throws Exception {
+        User user = createUser();
+        String userToken = tokenProvider.createToken(String.valueOf(user.getId()));
+
+        ReservationRegisterRequest req = ReservationRegisterRequest.builder()
+                .build();
+
+        mockMvc.perform(post("/reservation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + userToken)
+                .content(objectMapper.writeValueAsString(req)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
     @Test
     @DisplayName("예약 등록 테스트시 예약 예외 발생1")
     public void registerWithReservationException1() throws Exception {
@@ -266,7 +284,7 @@ class ReservationControllerTest {
                 .content(objectMapper.writeValueAsString(reservation_registerRequest)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("code").value("-2001"))
+                .andExpect(jsonPath("code").value("-1005"))
                 .andDo(document("exception-reservation",
                         responseFields(
                                 fieldWithPath("success").description("성공 실패 여부"),
@@ -296,7 +314,7 @@ class ReservationControllerTest {
                 .content(objectMapper.writeValueAsString(reservation_registerRequest)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("code").value("-2001"));
+                .andExpect(jsonPath("code").value("-1005"));
     }
 
     @Test
