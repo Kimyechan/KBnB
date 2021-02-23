@@ -51,7 +51,3 @@ cloud:
       auto: false
     credentials:
       instanceProfile: true
-
-bootPay:
-  applicationId: 6024e5ee5b2948001d52037e
-  privateKey: n53GEUAuH4NuHjmsPhYJ5Um1N/Tf2K7eWy1w01iF7A8=

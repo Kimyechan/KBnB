@@ -54,7 +54,7 @@ public class UserController {
     @PostMapping(value = "/update", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> update(@CurrentUser UserPrincipal userPrincipal, @RequestBody UserUpdateRequest userUpdateRequest) {
         User user = userService.findById(userPrincipal.getId());
-        if(userRepository.existsByEmail(userUpdateRequest.getEmail())) {
+        if (userRepository.existsByEmail(userUpdateRequest.getEmail())) {
             throw new EmailDuplicationException();
         }
         UserUpdateResponse userUpdateResponse = updateUserAndReturnResponseDto(user, userUpdateRequest);
@@ -64,8 +64,8 @@ public class UserController {
         return ResponseEntity.ok(model);
     }
 
-    @PostMapping(value = "/update/photo" , produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
-    public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal,  @RequestPart MultipartFile file) throws IOException {
+    @PostMapping(value = "/update/photo", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal, @RequestPart MultipartFile file) throws IOException {
         User user = userService.findById((userPrincipal.getId()));
         String newImgUrl;
         if (file == null)
@@ -93,7 +93,7 @@ public class UserController {
                 .email(user.getEmail()).birth(user.getBirth()).name(user.getName()).build();
     }
 
-    @GetMapping(value = "/photo" , produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    @GetMapping(value = "/photo", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getPhoto(@CurrentUser UserPrincipal userPrincipal) {
         User user = userService.findById(userPrincipal.getId());
         GetPhotoResponse getPhotoResponse = GetPhotoResponse.builder()

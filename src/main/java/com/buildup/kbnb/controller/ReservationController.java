@@ -1,12 +1,12 @@
 package com.buildup.kbnb.controller;
 
 
+import com.buildup.kbnb.advice.exception.BadRequestException;
 import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.dto.ApiResponse;
 import com.buildup.kbnb.dto.reservation.*;
 import com.buildup.kbnb.model.Payment;
 import com.buildup.kbnb.model.Reservation;
-import com.buildup.kbnb.model.room.BedRoom;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.security.CurrentUser;
@@ -50,17 +50,16 @@ public class ReservationController {
                                                  @Valid @RequestBody ReservationRegisterRequest reservationRegisterRequest,
                                                  BindingResult error) throws Exception {
         if (error.hasErrors()) {
-            throw new ReservationException("예약 등록 입력값이 잘못되었습니다");
+            throw new BadRequestException("예약 등록 입력값이 잘못되었습니다");
         }
 
         User user = userService.findById(userPrincipal.getId());
         Room room = roomService.findById(reservationRegisterRequest.getRoomId());
-        List<Reservation> reservationList = reservationService.findByRoomId(room.getId());
 
         LocalDate checkIn = reservationRegisterRequest.getCheckIn();
         LocalDate checkOut = reservationRegisterRequest.getCheckOut();
-        checkStrangeDate(checkIn, checkOut);
-        checkAvailableDate(reservationList, checkIn, checkOut);
+        reservationService.checkStrangeDate(checkIn, checkOut);
+        reservationService.checkAvailableDate(room.getId(), checkIn, checkOut);
 
         Reservation reservation = mapToReservation(room, reservationRegisterRequest, user);
         Payment payment = mapToPayment(reservationRegisterRequest);
@@ -101,24 +100,6 @@ public class ReservationController {
                 .user(user)
                 .build();
     }
-
-    private void checkStrangeDate(LocalDate checkIn, LocalDate checkOut) {
-        if (checkIn.isAfter(checkOut) || checkIn.isBefore(LocalDate.now()) || checkOut.isBefore(LocalDate.now())) {
-            throw new ReservationException("예약 날짜가 잘못되었습니다");
-        }
-    }
-
-    private void checkAvailableDate(List<Reservation> reservationList, LocalDate checkIn, LocalDate checkOut) {
-        for (Reservation reservation : reservationList) {
-            if ((checkIn.isEqual(reservation.getCheckIn()) || checkIn.isAfter(reservation.getCheckIn()) && checkIn.isBefore(reservation.getCheckOut()))
-                    || (checkIn.isBefore(reservation.getCheckIn()) && checkOut.isAfter(reservation.getCheckOut()))
-                    || (checkOut.isAfter(reservation.getCheckIn()) && (checkOut.isBefore(reservation.getCheckOut()) || checkOut.isEqual(reservation.getCheckOut()))
-                    || (checkIn.isEqual(reservation.getCheckIn()) && checkOut.isEqual(reservation.getCheckOut())))) {
-                throw new ReservationException("예약이 불가능한 날짜입니다.");
-            }
-        }
-    }
-
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> getConfirmedReservationLIst(@CurrentUser UserPrincipal userPrincipal,

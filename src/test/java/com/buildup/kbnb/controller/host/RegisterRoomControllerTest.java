@@ -1,16 +1,15 @@
 package com.buildup.kbnb.controller.host;
 
+import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.host.income.IncomeResponse;
 import com.buildup.kbnb.model.Payment;
 import com.buildup.kbnb.model.Reservation;
-import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.security.CustomUserDetailsService;
 import com.buildup.kbnb.security.TokenProvider;
 import com.buildup.kbnb.security.UserPrincipal;
 import com.buildup.kbnb.service.UserService;
 import com.buildup.kbnb.service.reservation.ReservationService;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,15 +32,14 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

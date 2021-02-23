@@ -7,10 +7,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-/**
- * Created by rajeevkumarsingh on 02/08/17.
- */
-
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder

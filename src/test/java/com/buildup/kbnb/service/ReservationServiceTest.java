@@ -1,8 +1,8 @@
 package com.buildup.kbnb.service;
 
 import com.buildup.kbnb.model.Comment;
-import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.Payment;
+import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
 import com.buildup.kbnb.model.user.AuthProvider;
 import com.buildup.kbnb.model.user.User;
