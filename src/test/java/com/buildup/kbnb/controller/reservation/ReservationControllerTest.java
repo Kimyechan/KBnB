@@ -261,7 +261,14 @@ class ReservationControllerTest {
                 .header("Authorization", "Bearer " + userToken)
                 .content(objectMapper.writeValueAsString(req)))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("exception-badRequest",
+                        responseFields(
+                                fieldWithPath("success").description("성공 실패 여부"),
+                                fieldWithPath("code").description("exception 코드 번호"),
+                                fieldWithPath("msg").description("exception 메세지")
+                        ))
+                );
     }
 
     @Test
