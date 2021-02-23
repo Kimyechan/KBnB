@@ -1,9 +1,11 @@
 package com.buildup.kbnb.controller.reservation;
 
+import com.buildup.kbnb.advice.exception.PaymentException;
 import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.reservation.*;
 import com.buildup.kbnb.model.Location;
+import com.buildup.kbnb.model.Payment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
@@ -246,6 +248,31 @@ class ReservationControllerTest {
                 ));
     }
 
+
+    @Test
+    @DisplayName("예약 등록 시 잘못된 요청 에러")
+    public void registerReservationNotValidRequest() throws Exception {
+        User user = createUser();
+        String userToken = tokenProvider.createToken(String.valueOf(user.getId()));
+
+        ReservationRegisterRequest req = ReservationRegisterRequest.builder()
+                .build();
+
+        mockMvc.perform(post("/reservation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + userToken)
+                .content(objectMapper.writeValueAsString(req)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andDo(document("exception-badRequest",
+                        responseFields(
+                                fieldWithPath("success").description("성공 실패 여부"),
+                                fieldWithPath("code").description("exception 코드 번호"),
+                                fieldWithPath("msg").description("exception 메세지")
+                        ))
+                );
+    }
+
     @Test
     @DisplayName("예약 등록 테스트시 예약 예외 발생1")
     public void registerWithReservationException1() throws Exception {
@@ -266,7 +293,7 @@ class ReservationControllerTest {
                 .content(objectMapper.writeValueAsString(reservation_registerRequest)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("code").value("-2001"))
+                .andExpect(jsonPath("code").value("-1005"))
                 .andDo(document("exception-reservation",
                         responseFields(
                                 fieldWithPath("success").description("성공 실패 여부"),
@@ -296,7 +323,37 @@ class ReservationControllerTest {
                 .content(objectMapper.writeValueAsString(reservation_registerRequest)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("code").value("-2001"));
+                .andExpect(jsonPath("code").value("-1005"));
+    }
+
+    @Test
+    @DisplayName("예약 등록시 결제 예외 발생")
+    public void paymentExceptionWhenReservation() throws Exception {
+        User user = createUser();
+        String userToken = tokenProvider.createToken(String.valueOf(user.getId()));
+
+        Location location = createLocation();
+        Room room = createRoom(user, location);
+        ReservationRegisterRequest reservation_registerRequest = createReservation_RegisterRequest(room);
+
+        given(userService.findById(any())).willReturn(user);
+        given(roomService.findById(any())).willReturn(room);
+        doThrow(new PaymentException()).when(reservationService).processWithPayment(any(), any());
+
+        mockMvc.perform(post("/reservation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + userToken)
+                .content(objectMapper.writeValueAsString(reservation_registerRequest)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("code").value("-1006"))
+                .andDo(document("exception-payment",
+                        responseFields(
+                                fieldWithPath("success").description("성공 실패 여부"),
+                                fieldWithPath("code").description("exception 코드 번호"),
+                                fieldWithPath("msg").description("exception 메세지")
+                        ))
+                );
     }
 
     @Test
