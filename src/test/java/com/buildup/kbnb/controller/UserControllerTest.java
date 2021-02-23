@@ -411,7 +411,7 @@ class UserControllerTest {
                 .content(objectMapper.writeValueAsString(emailDto)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andDo(document("user-update-name",
+                .andDo(document("exception-userUpdate-blankName",
                         responseFields(
                                 fieldWithPath("success").description("성공 실패 여부"),
                                 fieldWithPath("code").description("exception 코드 번호"),
@@ -465,7 +465,7 @@ class UserControllerTest {
                 .content(objectMapper.writeValueAsString(birthDto)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andDo(document("user-update-birth",
+                .andDo(document("exception-userUpdate-WrongDateFormat",
                         responseFields(
                                 fieldWithPath("success").description("성공 실패 여부"),
                                 fieldWithPath("code").description("exception 코드 번호"),

@@ -73,9 +73,9 @@ public class ExceptionAdvice {
                 .build();
     }
 
-    @ExceptionHandler(DateFormatWrongException.class)
+    @ExceptionHandler(WrongDateFormatException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ExceptionResponse DateFormatWrong(DateFormatWrongException e) {
+    protected ExceptionResponse DateFormatWrong(WrongDateFormatException e) {
         return ExceptionResponse.builder()
                 .code(-5001)
                 .msg(e.getMessage())

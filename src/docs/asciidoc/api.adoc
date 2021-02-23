@@ -81,6 +81,15 @@ operation::exception-userUpdateEmailDuplication[snippets='response-body,response
 
 === 호스트의 방 기본 정보 등록 실패(Validation 예외처리)
 operation::exception-hostRegisterRoom[snippets='response-body,response-fields']
+
+=== 유저 이메일 업데이트 예외(중복된 이메일일 경우)
+operation::exception-userUpdateEmailDuplication[snippets='response-body,response-fields']
+
+=== 유저 이름 업데이트 예외(공백만 입력된 경우)
+operation::exception-userUpdate-blankName[snippets='response-body,response-fields']
+
+=== 유저 생일 업데이트 예외(날짜 포맷 오류)
+operation::exception-userUpdate-WrongDateFormat[snippets='response-body,response-fields']
 [[overview-hypermedia]]
 == 하이퍼미디어
 

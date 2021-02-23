@@ -21,8 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -107,7 +105,7 @@ public class UserController {
         try {
             newBirth = LocalDate.parse(birthDto.getBirth(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         } catch (DateTimeParseException e) {
-            throw new DateFormatWrongException();
+            throw new WrongDateFormatException();
         }
         User user = userService.findById(userPrincipal.getId());
 
