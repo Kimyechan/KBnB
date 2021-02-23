@@ -1,6 +1,10 @@
 package com.buildup.kbnb.service.reservation;
 
+
+import com.buildup.kbnb.dto.host.income.IncomeResponse;
+
 import com.buildup.kbnb.advice.exception.ReservationException;
+
 import com.buildup.kbnb.model.Payment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;
@@ -47,7 +51,7 @@ class ReservationServiceTest {
         LocalDate now = LocalDate.now();
 
         assertThrows(ReservationException.class,
-                () ->reservationService.checkStrangeDate(now.minusDays(2), now.minusDays(1)));
+                () -> reservationService.checkStrangeDate(now.minusDays(2), now.minusDays(1)));
     }
 
     @Test
@@ -56,7 +60,7 @@ class ReservationServiceTest {
         LocalDate now = LocalDate.now();
 
         assertThrows(ReservationException.class,
-                () ->reservationService.checkStrangeDate(now.plusDays(2), now.plusDays(1)));
+                () -> reservationService.checkStrangeDate(now.plusDays(2), now.plusDays(1)));
     }
 
     @Test
@@ -64,7 +68,7 @@ class ReservationServiceTest {
     public void checkStrangeDatePass() {
         LocalDate now = LocalDate.now();
 
-        assertDoesNotThrow(() ->reservationService.checkStrangeDate(now.plusDays(1), now.plusDays(2)));
+        assertDoesNotThrow(() -> reservationService.checkStrangeDate(now.plusDays(1), now.plusDays(2)));
     }
 
     public List<Reservation> createReservationList(LocalDate startDate, LocalDate endDate) {
@@ -93,7 +97,7 @@ class ReservationServiceTest {
         doReturn(reservationList).when(reservationService).findByRoomId(roomId);
 
         assertThrows(ReservationException.class,
-                () ->reservationService.checkAvailableDate(roomId, startDate.minusDays(1), startDate.plusDays(1)));
+                () -> reservationService.checkAvailableDate(roomId, startDate.minusDays(1), startDate.plusDays(1)));
     }
 
     @Test
@@ -109,7 +113,7 @@ class ReservationServiceTest {
         doReturn(reservationList).when(reservationService).findByRoomId(roomId);
 
         assertThrows(ReservationException.class,
-                () ->reservationService.checkAvailableDate(roomId, startDate.plusDays(1), endDate.minusDays(1)));
+                () -> reservationService.checkAvailableDate(roomId, startDate.plusDays(1), endDate.minusDays(1)));
     }
 
     @Test
@@ -125,7 +129,7 @@ class ReservationServiceTest {
         doReturn(reservationList).when(reservationService).findByRoomId(roomId);
 
         assertThrows(ReservationException.class,
-                () ->reservationService.checkAvailableDate(roomId, startDate.plusDays(1), endDate.plusDays(1)));
+                () -> reservationService.checkAvailableDate(roomId, startDate.plusDays(1), endDate.plusDays(1)));
     }
 
     @Test
@@ -140,7 +144,7 @@ class ReservationServiceTest {
         List<Reservation> reservationList = createReservationList(startDate, endDate);
         doReturn(reservationList).when(reservationService).findByRoomId(roomId);
 
-        assertDoesNotThrow(() ->reservationService.checkAvailableDate(roomId, endDate.plusDays(1), endDate.plusDays(2)));
+        assertDoesNotThrow(() -> reservationService.checkAvailableDate(roomId, endDate.plusDays(1), endDate.plusDays(2)));
     }
 
     @Test
@@ -155,7 +159,7 @@ class ReservationServiceTest {
         List<Reservation> reservationList = createReservationList(startDate, endDate);
         doReturn(reservationList).when(reservationService).findByRoomId(roomId);
 
-        assertDoesNotThrow(() ->reservationService.checkAvailableDate(roomId, startDate.minusDays(2), startDate.minusDays(1)));
+        assertDoesNotThrow(() -> reservationService.checkAvailableDate(roomId, startDate.minusDays(2), startDate.minusDays(1)));
     }
 
     @Test
@@ -170,7 +174,7 @@ class ReservationServiceTest {
         List<Reservation> reservationList = createReservationList(startDate, endDate);
         doReturn(reservationList).when(reservationService).findByRoomId(roomId);
 
-        assertDoesNotThrow(() ->reservationService.checkAvailableDate(roomId, startDate.minusDays(1), startDate));
+        assertDoesNotThrow(() -> reservationService.checkAvailableDate(roomId, startDate.minusDays(1), startDate));
     }
 
     @Test
@@ -185,7 +189,7 @@ class ReservationServiceTest {
         List<Reservation> reservationList = createReservationList(startDate, endDate);
         doReturn(reservationList).when(reservationService).findByRoomId(roomId);
 
-        assertDoesNotThrow(() ->reservationService.checkAvailableDate(roomId, endDate, endDate.plusDays(1)));
+        assertDoesNotThrow(() -> reservationService.checkAvailableDate(roomId, endDate, endDate.plusDays(1)));
     }
 
     @Test
@@ -265,8 +269,8 @@ class ReservationServiceTest {
         List<Reservation> list = new ArrayList<>();
         Reservation reservation2 = Reservation.builder()
                 .id(2L)
-                .payment(new Payment(2L,"2",2000))
-                .checkIn(LocalDate.of(2021,2,2))
+                .payment(new Payment(2L, "2", 2000))
+                .checkIn(LocalDate.of(2021, 2, 2))
                 .build();
 
         list.add(reservation2);
@@ -280,12 +284,25 @@ class ReservationServiceTest {
         given(reservationRepository.findByHostWithPayment(any())).willReturn(createReservationList());
 
 
-        int beforeYear = 2020; int year = 2021; int afterYear = 2022;
-        List<Reservation> reservationList = reservationService.findByHostFilterByYear(host,beforeYear);
+        int beforeYear = 2020;
+        int year = 2021;
+        int afterYear = 2022;
+        List<Reservation> reservationList = reservationService.findByHostFilterByYear(host, beforeYear);
         assertThat(reservationList.size()).isEqualTo(0);
-        reservationList = reservationService.findByHostFilterByYear(host,year);
+        reservationList = reservationService.findByHostFilterByYear(host, year);
         assertThat(reservationList.size()).isEqualTo(1);
-        reservationList = reservationService.findByHostFilterByYear(host,afterYear);
+        reservationList = reservationService.findByHostFilterByYear(host, afterYear);
         assertThat(reservationList.size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("월별 년별합산 테스트")
+    public void separateByMonth() {
+        List<Reservation> list = createReservationList();
+        IncomeResponse incomeResponse = reservationService.separateByMonth(list);
+        System.out.println(incomeResponse.getFeb());
+        assertThat(incomeResponse.getFeb()).isEqualTo(2000);
+//        System.out.println(incomeResponse.getYearlyIncome());
+//        assertThat(incomeResponse.getYearlyIncome()).isEqualTo(2000);
     }
 }
