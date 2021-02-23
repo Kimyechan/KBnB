@@ -39,3 +39,4 @@ out/
 secret.yml
 src/main/resources/database.yml
 src/main/resources/oauth2.yml
+src/main/resources/bootpay.yml

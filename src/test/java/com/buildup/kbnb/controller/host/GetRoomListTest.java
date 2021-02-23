@@ -1,10 +1,6 @@
 package com.buildup.kbnb.controller.host;
 
-import com.amazonaws.services.ec2.model.Host;
-import com.amazonaws.services.ec2.model.Reservation;
 import com.buildup.kbnb.config.RestDocsConfiguration;
-import com.buildup.kbnb.dto.host.manage.HostGetRoomRes;
-import com.buildup.kbnb.dto.reservation.ReservationConfirmedResponse;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
@@ -40,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;

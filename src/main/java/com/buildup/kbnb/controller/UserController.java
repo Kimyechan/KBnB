@@ -116,7 +116,6 @@ public class UserController {
 
     @PostMapping(value = "/update/photo", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal, @Nullable @RequestPart MultipartFile file) throws IOException {
-
         User user = userService.findById((userPrincipal.getId()));
         String newImgUrl;
         if (file == null)

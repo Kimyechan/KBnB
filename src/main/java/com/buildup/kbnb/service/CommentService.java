@@ -48,6 +48,26 @@ public class CommentService {
         return comment;
     }
 
+    public GradeInfo calcGradeInfo(Room room, Integer commentCount, CommentCreateReq req) {
+        Double cleanliness = (room.getCleanliness() * commentCount + req.getCleanliness()) / (commentCount + 1);
+        Double accuracy = (room.getAccuracy() * commentCount + req.getAccuracy()) / (commentCount + 1);
+        Double communication = (room.getCommunication() * commentCount + req.getCommunication()) / (commentCount + 1);
+        Double locationRate = (room.getLocationRate() * commentCount + req.getLocationRate()) / (commentCount + 1);
+        Double checkIn = (room.getCheckIn() * commentCount + req.getCheckIn()) / (commentCount + 1);
+        Double priceSatisfaction = (room.getPriceSatisfaction() * commentCount + req.getPriceSatisfaction()) / (commentCount + 1);
+        Double totalGrade = (cleanliness + accuracy + communication + locationRate + checkIn + priceSatisfaction) / 6;
+
+        return GradeInfo.builder()
+                .cleanliness(cleanliness)
+                .accuracy(accuracy)
+                .communication(communication)
+                .locationRate(locationRate)
+                .checkIn(checkIn)
+                .priceSatisfaction(priceSatisfaction)
+                .totalGrade(totalGrade)
+                .build();
+    }
+
     public Comment createCommentTx(CommentCreateReq req, Reservation reservation, Room room, GradeInfo gradeInfo) {
         Room savedRoom = roomService.updateRoomGrade(room, gradeInfo);
         Comment comment = saveComment(req, reservation.getUser(), savedRoom);
