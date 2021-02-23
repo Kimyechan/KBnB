@@ -102,11 +102,7 @@ public class UserController {
     @PostMapping(value = "/update/birth", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> updateBirth(@CurrentUser UserPrincipal userPrincipal, @RequestBody BirthDto birthDto) {
         LocalDate newBirth;
-        try {
-            newBirth = LocalDate.parse(birthDto.getBirth(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        } catch (DateTimeParseException e) {
-            throw new WrongDateFormatException();
-        }
+        newBirth = LocalDate.parse(birthDto.getBirth(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         User user = userService.findById(userPrincipal.getId());
 
         user.setBirth(newBirth);
