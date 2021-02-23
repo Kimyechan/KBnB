@@ -1,9 +1,7 @@
 package com.buildup.kbnb.controller;
 
-import com.buildup.kbnb.advice.exception.EmailDuplicationException;
-import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
-import com.buildup.kbnb.advice.exception.TypeMissMatchException;
-import com.buildup.kbnb.advice.exception.UserFieldNotValidException;
+import com.buildup.kbnb.advice.exception.*;
+import com.buildup.kbnb.dto.user.BirthDto;
 import com.buildup.kbnb.dto.user.*;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
@@ -16,12 +14,18 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Nullable;
+import javax.validation.Valid;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -67,6 +71,50 @@ public class UserController {
         return ResponseEntity.ok(model);
     }
 
+    @PostMapping(value = "/update/email", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> updateEmail(@CurrentUser UserPrincipal userPrincipal, @Valid EmailDto emailDto, BindingResult error) {
+        User user = userService.findById(userPrincipal.getId());
+        if(error.hasErrors())
+            throw new EmailOrPassWrongException("email양식에 맞지 않습니다.");
+        if(userRepository.existsByEmail(emailDto.getEmail()))
+            throw new EmailDuplicationException();
+
+        user.setEmail(emailDto.getEmail());
+        userService.save(user);
+
+        EntityModel<EmailDto> model = EntityModel.of(emailDto);
+        return ResponseEntity.ok(model);
+    }
+
+    @PostMapping(value = "/update/name", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> updateName(@CurrentUser UserPrincipal userPrincipal, NameDto nameDto) {
+        User user = userService.findById(userPrincipal.getId());
+
+        user.setName(nameDto.getName());
+        userService.save(user);
+
+        EntityModel<NameDto> model = EntityModel.of(nameDto);
+        return ResponseEntity.ok(model);
+    }
+
+    @PostMapping(value = "/update/birth", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
+    public ResponseEntity<?> updateBirth(@CurrentUser UserPrincipal userPrincipal, BirthDto birthDto) {
+        LocalDate newBirth;
+        try{
+            newBirth = LocalDate.parse(birthDto.getBirth(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        } catch (DateTimeParseException e) {
+            throw new DateFormatWrongException();
+        }
+        User user = userService.findById(userPrincipal.getId());
+
+        user.setBirth(newBirth);
+        userService.save(user);
+
+        EntityModel<BirthDto> model = EntityModel.of(birthDto);
+        return ResponseEntity.ok(model);
+
+    }
+
     @PostMapping(value = "/update/photo", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal, @Nullable  @RequestPart MultipartFile file) throws IOException {
 
@@ -84,7 +132,6 @@ public class UserController {
         model.add(Link.of("/docs/api.html#resource-user-updatePhoto").withRel("profile"));
         return ResponseEntity.ok(model);
     }
-
 
     public UserUpdateResponse updateUserAndReturnResponseDto(User user, UserUpdateRequest userUpdateRequest) {
         user.setEmail(userUpdateRequest.getEmail());

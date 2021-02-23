@@ -11,11 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -25,10 +27,10 @@ class UserServiceTest {
     @InjectMocks
     UserService userService;
 
-    @Mock
+    @Spy
     UserRepository userRepository;
 
-    @Mock
+    @Spy
     PasswordEncoder passwordEncoder;
 
     @Test
@@ -103,5 +105,21 @@ class UserServiceTest {
 
         assertFalse(isChecked);
     }
+   /* @Test
+    @DisplayName("findById Exception 작동하는지")
+    public void findById() {
+        User user = User.builder()
+                .id(1L)
+                .name("test")
+                .email("test@gmail.com")
+                .emailVerified(false)
+                .provider(AuthProvider.local)
+                .checkRoomList(new ArrayList<>())
+                .build();
 
+        User savedUser = userService.save(user);
+        System.out.println(savedUser.getId());
+        assertThat(userService.findById(1L)).isEqualTo(user);
+
+    }*/
 }

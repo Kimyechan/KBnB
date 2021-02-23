@@ -73,6 +73,16 @@ public class ExceptionAdvice {
                 .build();
     }
 
+    @ExceptionHandler(DateFormatWrongException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ExceptionResponse DateFormatWrong(DateFormatWrongException e) {
+        return ExceptionResponse.builder()
+                .code(-5001)
+                .msg(e.getMessage())
+                .build();
+    }
+
+
 //    @ExceptionHandler(Exception.class)
 //    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 //    protected ExceptionResponse entireException(Exception e) {
