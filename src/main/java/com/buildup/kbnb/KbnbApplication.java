@@ -14,7 +14,7 @@ public class KbnbApplication {
 
     public static final String APPLICATION_LOCATIONS = "spring.config.location="
             + "classpath:application.yml,"
-            + "classpath:bootpay.yml,"
+            + "optional:classpath:bootpay.yml,"
             + "optional:classpath:database.yml,"
             + "optional:classpath:secret.yml,"
             + "optional:classpath:oauth2.yml,"
