@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +68,7 @@ public class RegisterRoomController {
         List<RoomImg> roomImgList = new ArrayList<>();
         int i = 0;
         for (MultipartFile file1 : file) {
-            String newUrl = s3Uploader.upload(file1, "roomImg", user.getName() + i++);
+            String newUrl = s3Uploader.upload(file1, "roomImg", user.getName() + "-" + roomId + "-" + i++);
             RoomImg roomImg = RoomImg.builder().room(room).url(newUrl).build();
             roomImgRepository.save(roomImg);
             roomImgList.add(roomImg);

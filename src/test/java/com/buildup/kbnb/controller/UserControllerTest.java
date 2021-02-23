@@ -25,6 +25,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -234,7 +235,7 @@ class UserControllerTest {
         given(userService.findById(any())).willReturn(user);
         given(s3Uploader.upload(any(), any(), any())).willReturn("test url");
 
-        mockMvc.perform(fileUpload("/user/update/photo").file("file", "example".getBytes())
+        mockMvc.perform(fileUpload("/user/update/photo").file("file.jpg", "example".getBytes())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
 
@@ -251,19 +252,29 @@ class UserControllerTest {
                 ));
     }
 
-/*    @Test
+   /* @Test
     @DisplayName("유저 이미지 변경 실패 테스트")
     public void updatePhotoFail() throws Exception {
         User user = createUser();
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
-        User notMultipartFile = new User();
-        mockMvc.perform(post("/user/update/photo")
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+        given(userService.findById(any())).willReturn(user);
+        given(s3Uploader.upload(any(), any(), any())).willReturn("test url");
+        MockMultipartFile mockFile = new MockMultipartFile()
+        mockMvc.perform(fileUpload("/user/update/photo").file("file", "example".getBytes())
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .content(objectMapper.writeValueAsString(notMultipartFile))
-        ).andDo(print())
-                .andExpect(status().isBadRequest());
 
+        ).andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("user-updatePhoto",
+                        requestParts(
+                                partWithName("file").description("변경될 이미지")
+                        ),
+                        responseFields(
+                                fieldWithPath("newImgUrl").description("새로운 이미지URL"),
+                                fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
+                        )
+                ));
     }*/
 
     @Test
