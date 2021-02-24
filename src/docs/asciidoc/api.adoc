@@ -100,6 +100,12 @@ operation::exception-userUpdate-blankName[snippets='response-body,response-field
 === 유저 생일 업데이트 예외(날짜 포맷 오류)
 operation::exception-userUpdate-WrongDateFormat[snippets='response-body,response-fields']
 
+=== 유저 이미지 변경 예외(이미지 파일이 아닌경우)
+operation::exception-wrongFileType
+
+=== 방 이미지 등록 예외(파일 리스트 중 이미지 파일이 아닌 파일이 존재 할 경우)
+operation::exception-hostRegisterRoom
+
 [[overview-hypermedia]]
 == 하이퍼미디어
 

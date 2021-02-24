@@ -25,6 +25,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -234,7 +235,7 @@ class UserControllerTest {
         given(userService.findById(any())).willReturn(user);
         given(s3Uploader.upload(any(), any(), any())).willReturn("test url");
 
-        mockMvc.perform(fileUpload("/user/update/photo").file("file", "example".getBytes())
+        mockMvc.perform(fileUpload("/user/update/photo").file("file.jpg", "example".getBytes())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
 
@@ -242,29 +243,40 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andDo(document("user-updatePhoto",
                         requestParts(
-                                partWithName("file").description("변경될 이미지")
+                                partWithName("file.jpg").description("변경될 이미지")
                         ),
                         responseFields(
-                                fieldWithPath("newImgUrl").description("새로운 이미지URL"),
+                                fieldWithPath("newImgUrl").description("새로운 이미지 URL"),
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 URL")
                         )
                 ));
     }
 
-/*    @Test
+    @Test
     @DisplayName("유저 이미지 변경 실패 테스트")
     public void updatePhotoFail() throws Exception {
         User user = createUser();
         String token = tokenProvider.createToken(String.valueOf(user.getId()));
-        User notMultipartFile = new User();
-        mockMvc.perform(post("/user/update/photo")
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .content(objectMapper.writeValueAsString(notMultipartFile))
-        ).andDo(print())
-                .andExpect(status().isBadRequest());
+        given(userService.findById(any())).willReturn(user);
+        given(s3Uploader.upload(any(), any(), any())).willReturn("test url");
 
-    }*/
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file","originFilName","docs/d","example".getBytes());
+
+        mockMvc.perform(fileUpload("/user/update/photo").file(mockMultipartFile)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+
+        ).andDo(print())
+                .andExpect(status().isBadRequest())
+                .andDo(document("exception-wrongFileType",
+
+                        responseFields(
+                                fieldWithPath("success").description("성공 실패 여부"),
+                                fieldWithPath("code").description("exception 코드 번호"),
+                                fieldWithPath("msg").description("exception 메세지")
+                        )
+                ));
+    }
 
     @Test
     @DisplayName("유저 사진 가져오기 테스트")

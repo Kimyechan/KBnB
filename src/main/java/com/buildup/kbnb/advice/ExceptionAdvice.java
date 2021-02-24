@@ -92,6 +92,15 @@ public class ExceptionAdvice {
                 .msg(e.getMessage())
                 .build();
     }
+
+    @ExceptionHandler(TypeMissMatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ExceptionResponse TypeMissMatch(TypeMissMatchException e) {
+        return ExceptionResponse.builder()
+                .code(-7001)
+                .msg(e.getMessage())
+                .build();
+    }
 //    @ExceptionHandler(Exception.class)
 //    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 //    protected ExceptionResponse entireException(Exception e) {
