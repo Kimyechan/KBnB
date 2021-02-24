@@ -260,7 +260,9 @@ class UserControllerTest {
         given(userService.findById(any())).willReturn(user);
         given(s3Uploader.upload(any(), any(), any())).willReturn("test url");
 
-        mockMvc.perform(fileUpload("/user/update/photo").file("file", "example".getBytes())
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file","originFilName","docs/d","example".getBytes());
+
+        mockMvc.perform(fileUpload("/user/update/photo").file(mockMultipartFile)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
 

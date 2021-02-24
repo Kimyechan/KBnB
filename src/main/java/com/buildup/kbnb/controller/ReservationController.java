@@ -109,7 +109,7 @@ public class ReservationController {
 
         Page<Reservation> reservationPage = reservationService.findPageByUser(user, pageable);
 
-        List<Reservation> reservationList = reservationPage.getContent(); //해당 페이지의 모든 컨텐츠
+        List<Reservation> reservationList = reservationPage.getContent();
         List<ReservationConfirmedResponse> reservation_confirmedResponseList = reservationService.createResponseList(reservationList);
         PagedModel<EntityModel<ReservationConfirmedResponse>> model = makePageModel(reservation_confirmedResponseList, pageable, reservationPage.getTotalElements(), assembler);
 

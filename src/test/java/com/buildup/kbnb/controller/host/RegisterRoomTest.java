@@ -264,9 +264,9 @@ public class RegisterRoomTest {
         given(s3Uploader.upload(any(), any(), any())).willReturn("test url");
         given(roomService.save(any())).willReturn(room);
 
-        MockMultipartFile image1 = new MockMultipartFile("file", "image.jpg", "image/png",
+        MockMultipartFile image1 = new MockMultipartFile("file", "image.jpg", "sdf/png",
                 "<<png data>>".getBytes());
-        MockMultipartFile image2 = new MockMultipartFile("file", "image.jpd", "image/jpg",
+        MockMultipartFile image2 = new MockMultipartFile("file", "image.jpd", "sdf/jpg",
                 "<<jpg data>>".getBytes());
 
         mockMvc.perform(fileUpload("/host/addPhoto")

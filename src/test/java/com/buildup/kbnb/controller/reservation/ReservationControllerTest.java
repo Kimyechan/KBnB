@@ -310,7 +310,8 @@ class ReservationControllerTest {
         Page<Reservation> reservationPage = new PageImpl<>(
                 reservationList,
                 pageable,
-                getReservationList(user, location).size()); List<ReservationConfirmedResponse> reservationConfirmedResponseList = new ArrayList<>();
+                getReservationList(user, location).size());
+        List<ReservationConfirmedResponse> reservationConfirmedResponseList = new ArrayList<>();
         ReservationConfirmedResponse reservationConfirmedResponse = ReservationConfirmedResponse.builder().reservationId(1L).build();
         reservationConfirmedResponseList.add(reservationConfirmedResponse);
 
@@ -347,6 +348,7 @@ class ReservationControllerTest {
                                 fieldWithPath("_embedded.reservationConfirmedResponseList[].roomId").description("방 식별자"),
                                 fieldWithPath("_embedded.reservationConfirmedResponseList[].imgUrl").description("방 imgUrl 리스트"),
                                 fieldWithPath("_embedded.reservationConfirmedResponseList[].imgUrl").description("방 imgUrl"),
+                                fieldWithPath("_embedded.reservationConfirmedResponseList[].reviewed").description("리뷰 등록 여부"),
                                 fieldWithPath("page.size").description("페이지 사이즈"),
                                 fieldWithPath("page.totalElements").description("요소의 총 개수"),
                                 fieldWithPath("page.totalPages").description("총 페이지 개수"),
@@ -364,8 +366,10 @@ class ReservationControllerTest {
         Room room = createRoom(user, location);
         for (int i = 0; i < 5; i++) {
             Reservation reservation = Reservation.builder()
-                    .user(user).id((long) i).room(room).
-                            checkIn(LocalDate.parse("2020-11-11")).checkOut(LocalDate.parse("2021-11-11")).build();
+                    .user(user).id((long) i).room(room)
+                    .checkIn(LocalDate.parse("2020-11-11"))
+                    .checkOut(LocalDate.parse("2021-11-11"))
+                    .build();
             list.add(reservation);
         }
         return list;
@@ -380,7 +384,8 @@ class ReservationControllerTest {
 
         Reservation reservation = createReservation(room, createReservation_RegisterRequest(room), user);
 
-        List<Reservation> reservationList = new ArrayList<>(); reservationList.add(reservation);
+        List<Reservation> reservationList = new ArrayList<>();
+        reservationList.add(reservation);
         List<ReservationConfirmedResponse> reservationConfirmedResponseList = new ArrayList<>();
         ReservationConfirmedResponse reservationConfirmedResponse = ReservationConfirmedResponse.builder().reservationId(1L).build();
         reservationConfirmedResponseList.add(reservationConfirmedResponse);

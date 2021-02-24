@@ -65,9 +65,9 @@ public class RegisterRoomController {
     @PostMapping(value = "/addPhoto", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal, @RequestParam Long roomId, @RequestPart List<MultipartFile> file) throws IOException {
         int photoNum = 0;
-        for(MultipartFile file1 : file) {
+        for (MultipartFile file1 : file) {
             photoNum++;
-            if (!((file1.getOriginalFilename().contains(".jpg")) || (file1.getOriginalFilename().contains(".png")) || (file1.getOriginalFilename().contains(".svg"))))
+            if (!(file1 == null || file1.getContentType().contains("image")))
                 throw new TypeMissMatchException(photoNum + " 번째 사진이 이미지 파일이 아닙니다.");
         }
         User user = userService.findById(userPrincipal.getId());

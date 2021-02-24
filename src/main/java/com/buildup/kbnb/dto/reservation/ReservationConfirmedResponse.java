@@ -19,4 +19,5 @@ public class ReservationConfirmedResponse {
     private String hostName;
     private LocalDate checkIn;
     private LocalDate checkOut;
+    private boolean isReviewed;
 }

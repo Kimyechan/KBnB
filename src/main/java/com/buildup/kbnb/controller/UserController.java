@@ -116,8 +116,7 @@ public class UserController {
 
     @PostMapping(value = "/update/photo", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal, @Nullable @RequestPart MultipartFile file) throws IOException {
-
-        if(!(file == null||(file.getOriginalFilename().contains(".jpg"))||(file.getOriginalFilename().contains(".png"))||(file.getOriginalFilename().contains(".svg"))))
+        if(!(file==null||file.getContentType().contains("image")))
             throw new TypeMissMatchException("이미지 파일이 아닙니다.");
         User user = userService.findById((userPrincipal.getId()));
         String newImgUrl;
