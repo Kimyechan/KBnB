@@ -39,15 +39,6 @@ public class ExceptionAdvice {
                 .build();
     }
 
-    @ExceptionHandler(CommentFieldNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ExceptionResponse commentFieldNotValid(CommentFieldNotValidException e) {
-        return ExceptionResponse.builder()
-                .code(-1004)
-                .msg(e.getMessage())
-                .build();
-    }
-
     @ExceptionHandler(ReservationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ExceptionResponse reservation(ReservationException e) {

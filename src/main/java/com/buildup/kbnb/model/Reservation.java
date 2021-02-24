@@ -30,8 +30,6 @@ public class Reservation {
     @ManyToOne(fetch = FetchType.LAZY )
     private Room room;
 
-    private Boolean commentExisted;
-
     @OneToOne(fetch = FetchType.LAZY)
     private Comment comment;
 
