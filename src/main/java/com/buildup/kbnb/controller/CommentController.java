@@ -1,6 +1,6 @@
 package com.buildup.kbnb.controller;
 
-import com.buildup.kbnb.advice.exception.CommentFieldNotValidException;
+import com.buildup.kbnb.advice.exception.BadRequestException;
 import com.buildup.kbnb.dto.comment.*;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Reservation;
@@ -40,7 +40,7 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid CommentCreateReq req, BindingResult error) {
         if (error.hasErrors()) {
-            throw new CommentFieldNotValidException();
+            throw new BadRequestException("댓글 등록 요청값이 잘못되었습니다.");
         }
 
         Reservation reservation = reservationService.findByIdWithRoomAndUser(req.getReservationId());

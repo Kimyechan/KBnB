@@ -75,6 +75,7 @@ public class CommentService {
 
         return comment;
     }
+
     public List<Comment> findAllByRoomId(Long roomId) {
         return commentRepository.findAllByRoomId(roomId);
     }

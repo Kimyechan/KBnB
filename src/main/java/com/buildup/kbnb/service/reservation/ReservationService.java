@@ -2,6 +2,7 @@ package com.buildup.kbnb.service.reservation;
 
 import com.buildup.kbnb.advice.exception.BadRequestException;
 import com.buildup.kbnb.advice.exception.ReservationException;
+import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
 import com.buildup.kbnb.dto.host.income.IncomeResponse;
 import com.buildup.kbnb.dto.reservation.ReservationConfirmedResponse;
 import com.buildup.kbnb.dto.reservation.ReservationDetailResponse;
@@ -72,12 +73,11 @@ public class ReservationService {
 
     public Reservation updateWithComment(Reservation reservation, Comment comment) {
         reservation.setComment(comment);
-        reservation.setCommentExisted(true);
         return reservationRepository.save(reservation);
     }
 
     public Reservation findByIdWithRoomAndUser(Long reservationId) {
-        return reservationRepository.findByIdWithRoomAndUser(reservationId).orElseThrow();
+        return reservationRepository.findByIdWithRoomAndUser(reservationId).orElseThrow(() -> new ResourceNotFoundException("Reservation", "id", reservationId));
     }
 
     public List<ReservationDate> findByRoomFilterDay(Long roomId, LocalDate date) {
@@ -89,6 +89,8 @@ public class ReservationService {
         for (Reservation reservation : reservationList) {
             Room room = reservation.getRoom();
             Location location = room.getLocation();
+            boolean isReviewed = checkCreateComment(reservation.getComment());
+
             ReservationConfirmedResponse reservation_confirmedResponse = ReservationConfirmedResponse
                     .builder()
                     .reservationId(reservation.getId())
@@ -97,46 +99,59 @@ public class ReservationService {
                     .hostName(getHostName(reservation))
                     .imgUrl(room.getRoomImgList().get(0).getUrl()).roomName(room.getName())
                     .roomId(room.getId())
-                    .roomLocation(location.getCountry() + " " + location.getCity() + " "
-                            + location.getBorough() + " " + location.getNeighborhood()
-                            + " " + location.getDetailAddress())
+                    .roomLocation(getDetailLocation(location))
                     .status("예약 완료")
-                    .isReviewed(reservation.getCommentExisted())
+                    .isReviewed(isReviewed)
                     .build();
 
-
-            if (reservation_confirmedResponse.getCheckOut().isBefore(LocalDate.now()))
+            if (reservation_confirmedResponse.getCheckOut().isBefore(LocalDate.now())) {
                 reservation_confirmedResponse.setStatus("완료된 여정");
+            }
+
             reservation_confirmedResponseList.add(reservation_confirmedResponse);
         }
         return reservation_confirmedResponseList;
     }
 
+    private boolean checkCreateComment(Comment comment) {
+        boolean isReviewed = false;
+        if (comment != null) {
+            isReviewed = true;
+        }
+        return isReviewed;
+    }
+
+    private String getDetailLocation(Location location) {
+        return location.getCountry() + " " + location.getCity() + " " + location.getBorough()
+                + " " + location.getNeighborhood() + " " + location.getDetailAddress();
+    }
+
     public ReservationDetailResponse judgeReservationIdUserHaveContainReservationId(List<Long> reservationIdUserHave, Long reservationId) {
         ReservationDetailResponse reservationDetailResponse;
-        if (reservationIdUserHave.contains(reservationId))
+
+        if (reservationIdUserHave.contains(reservationId)) {
             reservationDetailResponse = ifReservationIdExist(reservationId);
-        else throw new ReservationException("해당 유저의 예약 리스트에는 요청한 예약건이 없습니다.");
+        } else {
+            throw new ReservationException("해당 유저의 예약 리스트에는 요청한 예약건이 없습니다.");
+        }
+
         return reservationDetailResponse;
     }
 
     public ReservationDetailResponse ifReservationIdExist(Long reservationId) {
         Reservation reservation = findById(reservationId);
         List<BedRoom> bedRoomList = reservation.getRoom().getBedRoomList();
+
         int bedRoomNum = bedRoomList.size();
         int bedNum = reservation.getRoom().getBedNum();
+
         ReservationDetailResponse reservation_detail_response = ReservationDetailResponse.builder()
                 .hostImage(reservation.getRoom().getHost().getImageUrl())
                 .roomImage(reservation.getRoom().getRoomImgList().get(0).getUrl())
                 .bedRoomNum(bedRoomNum)
                 .bedNum(bedNum)
                 .bathRoomNum(reservation.getRoom().getBathRoomList().size())
-                .address(
-                        reservation.getRoom().getLocation().getCountry() + " "
-                                + reservation.getRoom().getLocation().getCity() + " "
-                                + reservation.getRoom().getLocation().getBorough() + " "
-                                + reservation.getRoom().getLocation().getNeighborhood() + " "
-                                + reservation.getRoom().getLocation().getDetailAddress())
+                .address(getDetailLocation(reservation.getRoom().getLocation()))
                 .latitude(reservation.getRoom().getLocation().getLatitude())
                 .longitude(reservation.getRoom().getLocation().getLongitude())
                 .checkIn(reservation.getCheckIn())
@@ -149,6 +164,7 @@ public class ReservationService {
                 .roomId(reservation.getRoom().getId())
                 .totalCost(reservation.getTotalCost())
                 .build();
+
         return reservation_detail_response;
     }
 

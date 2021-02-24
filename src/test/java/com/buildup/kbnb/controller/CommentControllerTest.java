@@ -1,5 +1,6 @@
 package com.buildup.kbnb.controller;
 
+import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
 import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.comment.CommentCreateReq;
 import com.buildup.kbnb.dto.comment.GradeInfo;
@@ -41,6 +42,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -134,7 +136,6 @@ class CommentControllerTest {
                 .user(user)
                 .comment(Comment.builder().build())
                 .room(room)
-                .commentExisted(false)
                 .build();
 
         Comment res = Comment.builder()
@@ -187,6 +188,32 @@ class CommentControllerTest {
                 ));
     }
 
+    @Test
+    @DisplayName("댓글 등록시 요청이 잘못되었을 때")
+    public void createCommentNotValidRequest() throws Exception {
+        User user = createUser();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+
+        mockMvc.perform(post("/comment")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("댓글 등록시 댓글 등록전 예약을 하지 않은 경우")
+    public void createCommentBeforeReservation() throws Exception {
+        User user = createUser();
+        String token = tokenProvider.createToken(String.valueOf(user.getId()));
+
+        doThrow(new ResourceNotFoundException()).when(reservationService).findByIdWithRoomAndUser(any());
+        mockMvc.perform(post("/comment")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
     @Test
     @DisplayName("댓글 리스트 확인")
     public void getCommentList() throws Exception {
@@ -287,15 +314,5 @@ class CommentControllerTest {
                                 fieldWithPath("_links.profile.href").description("해당 API 문서 주소")
                         )
                 ));
-    }
-    public List<Comment> createCommentList() {
-        List<Comment> commentList = new ArrayList<>();
-        for(int i = 0; i< 7; i++) {
-            Comment comment = Comment.builder()
-                    .accuracy(2.2).checkIn(2.2).cleanliness(2.2).communication(2.3)
-                    .id((long)i).priceSatisfaction(2.2).locationRate(2.2).build();
-            commentList.add(comment);
-        }
-        return commentList;
     }
 }
