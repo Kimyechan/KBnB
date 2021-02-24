@@ -52,7 +52,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ExceptionResponse reservation(ReservationException e) {
         return ExceptionResponse.builder()
-                .code(-2001)
+                .code(-1005)
                 .msg(e.getMessage())
                 .build();
     }
@@ -61,7 +61,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ExceptionResponse payment(PaymentException e) {
         return ExceptionResponse.builder()
-                .code(-3001)
+                .code(-1006)
                 .msg(e.getMessage())
                 .build();
     }
@@ -70,7 +70,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ExceptionResponse RoomFieldNotValid(RoomFieldNotValidException e) {
         return ExceptionResponse.builder()
-                .code(-4001)
+                .code(-1007)
                 .msg(e.getMessage())
                 .build();
     }
@@ -79,7 +79,25 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ExceptionResponse DateTimeParse(DateTimeParseException e) {
         return ExceptionResponse.builder()
-                .code(-6001)
+                .code(-1008)
+                .msg(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler({BadRequestException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ExceptionResponse badRequest(BadRequestException e) {
+        return ExceptionResponse.builder()
+                .code(-1009)
+                .msg(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(TypeMissMatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ExceptionResponse TypeMissMatch(TypeMissMatchException e) {
+        return ExceptionResponse.builder()
+                .code(-7001)
                 .msg(e.getMessage())
                 .build();
     }

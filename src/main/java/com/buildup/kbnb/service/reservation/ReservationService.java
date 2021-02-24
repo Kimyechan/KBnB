@@ -44,9 +44,11 @@ public class ReservationService {
     public Reservation findById(Long reservationId) {
         return reservationRepository.findById(reservationId).orElseThrow(() -> new BadRequestException("there is no reservation which reservationId = " + reservationId));
     }
+
     public List<Reservation> findByRoomId(Long roomId) {
         return reservationRepository.findByRoomId(roomId);
     }
+
     @Transactional
     public Reservation save(Reservation reservation) {
         return reservationRepository.save(reservation);
@@ -84,23 +86,35 @@ public class ReservationService {
 
     public List<ReservationConfirmedResponse> createResponseList(List<Reservation> reservationList) {
         List<ReservationConfirmedResponse> reservation_confirmedResponseList = new ArrayList<>();
-        for(Reservation reservation : reservationList) {
-            Room room = reservation.getRoom(); Location location = room.getLocation();
-            ReservationConfirmedResponse reservation_confirmedResponse = ReservationConfirmedResponse.builder()
-                    .reservationId(reservation.getId()).checkIn(reservation.getCheckIn()).checkOut(reservation.getCheckOut())
-                    .hostName(getHostName(reservation)).imgUrl(room.getRoomImgList().get(0).getUrl()).roomName(room.getName())
-                    .roomId(room.getId()).roomLocation(location.getCountry() + " " + location.getCity() + " " +  location.getBorough() + " " +  location.getNeighborhood() + " " + location.getDetailAddress())
-                    .status("예약 완료").build();
+        for (Reservation reservation : reservationList) {
+            Room room = reservation.getRoom();
+            Location location = room.getLocation();
+            ReservationConfirmedResponse reservation_confirmedResponse = ReservationConfirmedResponse
+                    .builder()
+                    .reservationId(reservation.getId())
+                    .checkIn(reservation.getCheckIn())
+                    .checkOut(reservation.getCheckOut())
+                    .hostName(getHostName(reservation))
+                    .imgUrl(room.getRoomImgList().get(0).getUrl()).roomName(room.getName())
+                    .roomId(room.getId())
+                    .roomLocation(location.getCountry() + " " + location.getCity() + " "
+                            + location.getBorough() + " " + location.getNeighborhood()
+                            + " " + location.getDetailAddress())
+                    .status("예약 완료")
+                    .isReviewed(reservation.getCommentExisted())
+                    .build();
 
-            if(reservation_confirmedResponse.getCheckOut().isBefore(LocalDate.now()))
+
+            if (reservation_confirmedResponse.getCheckOut().isBefore(LocalDate.now()))
                 reservation_confirmedResponse.setStatus("완료된 여정");
             reservation_confirmedResponseList.add(reservation_confirmedResponse);
         }
         return reservation_confirmedResponseList;
     }
+
     public ReservationDetailResponse judgeReservationIdUserHaveContainReservationId(List<Long> reservationIdUserHave, Long reservationId) {
         ReservationDetailResponse reservationDetailResponse;
-        if(reservationIdUserHave.contains(reservationId))
+        if (reservationIdUserHave.contains(reservationId))
             reservationDetailResponse = ifReservationIdExist(reservationId);
         else throw new ReservationException("해당 유저의 예약 리스트에는 요청한 예약건이 없습니다.");
         return reservationDetailResponse;
@@ -228,11 +242,12 @@ public class ReservationService {
     public List<Reservation> findByHostFilterByYear(User host, int year) {
         List<Reservation> reservationList = reservationRepository.findByHostWithPayment(host);
         List<Reservation> filterByYear = new ArrayList<>();
-        Calendar cal = Calendar.getInstance(); cal.set(year,12,1);
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, 12, 1);
         int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        for(Reservation reservation : reservationList) {
-            if(reservation.getCheckIn().isBefore(LocalDate.of(year + 1,1,1)) && reservation.getCheckIn().isAfter(LocalDate.of(year - 1,12,lastDay)))
-            filterByYear.add(reservation);
+        for (Reservation reservation : reservationList) {
+            if (reservation.getCheckIn().isBefore(LocalDate.of(year + 1, 1, 1)) && reservation.getCheckIn().isAfter(LocalDate.of(year - 1, 12, lastDay)))
+                filterByYear.add(reservation);
         }
         return filterByYear;
     }

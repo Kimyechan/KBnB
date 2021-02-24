@@ -116,13 +116,16 @@ public class UserController {
 
     @PostMapping(value = "/update/photo", produces = MediaTypes.HAL_JSON_VALUE + ";charset=utf8")
     public ResponseEntity<?> updatePhoto(@CurrentUser UserPrincipal userPrincipal, @Nullable @RequestPart MultipartFile file) throws IOException {
+        if(!(file==null||file.getContentType().contains("image")))
+            throw new TypeMissMatchException("이미지 파일이 아닙니다.");
         User user = userService.findById((userPrincipal.getId()));
         String newImgUrl;
         if (file == null)
             newImgUrl = "https://kbnbbucket.s3.ap-northeast-2.amazonaws.com/userImg/test";
         else {
-            newImgUrl = s3Uploader.upload(file, "userImg", user.getName());
+            newImgUrl = s3Uploader.upload(file, "userImg", user.getId() + "-" + user.getName());
         }
+        
         user.setImageUrl(newImgUrl);
         userService.save(user);
         UserImgUpdateResponse userImgUpdateResponse = UserImgUpdateResponse.builder().newImgUrl(newImgUrl).build();

@@ -1,6 +1,7 @@
 package com.buildup.kbnb.service;
 
 import com.buildup.kbnb.advice.exception.ReservationException;
+import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
 import com.buildup.kbnb.controller.RoomController;
 import com.buildup.kbnb.dto.comment.GradeInfo;
 import com.buildup.kbnb.dto.room.BathRoomDto;
@@ -51,7 +52,7 @@ public class RoomService {
     }
 
     public Room getRoomDetailById(Long roomId) {
-        return roomRepository.findByIdWithUserLocation(roomId).orElseThrow();
+        return roomRepository.findByIdWithUserLocation(roomId).orElseThrow(() -> new ResourceNotFoundException("room", "id", roomId));
     }
 
     public Room findById(Long id) {
@@ -193,6 +194,7 @@ public class RoomService {
         }
 
     }
+
     public List<BathRoom> setBathRoomList(Room room, List<BathRoomDto> bathRoomDtoList) {
         List<BathRoom> bathRoomList = new ArrayList<>();
         for(BathRoomDto bathRoomDto: bathRoomDtoList) {

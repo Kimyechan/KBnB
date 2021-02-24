@@ -1,7 +1,7 @@
 package com.buildup.kbnb.advice.exception;
 
 public class ReservationException extends RuntimeException{
-    private static final String MESSAGE = "Reservation Exception";
+    private static final String MESSAGE = "Not valid reservation info";
     public ReservationException() {
         super(MESSAGE);
     }
