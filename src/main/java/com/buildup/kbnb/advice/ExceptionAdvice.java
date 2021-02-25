@@ -88,7 +88,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ExceptionResponse TypeMissMatch(TypeMissMatchException e) {
         return ExceptionResponse.builder()
-                .code(-7001)
+                .code(-1010)
                 .msg(e.getMessage())
                 .build();
     }
