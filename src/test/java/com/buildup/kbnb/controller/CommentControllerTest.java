@@ -228,6 +228,7 @@ class CommentControllerTest {
 
         Room room = Room.builder()
                 .id(1L)
+                .grade(4.5)
                 .cleanliness(4.5)
                 .accuracy(4.5)
                 .communication(4.5)

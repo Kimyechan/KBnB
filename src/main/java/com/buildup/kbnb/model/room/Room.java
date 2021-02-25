@@ -69,4 +69,31 @@ public class Room {
         this.priceSatisfaction = this.priceSatisfaction == null ? 0 : this.priceSatisfaction;
     }
 
+    public Double getGrade() {
+        return Math.round(grade * 100) / 100.0;
+    }
+
+    public Double getCleanliness() {
+        return Math.round(cleanliness * 100) / 100.0;
+    }
+
+    public Double getAccuracy() {
+        return Math.round(accuracy * 100) / 100.0;
+    }
+
+    public Double getCommunication() {
+        return Math.round(communication * 100) / 100.0;
+    }
+
+    public Double getLocationRate() {
+        return Math.round(locationRate * 100) / 100.0;
+    }
+
+    public Double getCheckIn() {
+        return Math.round(checkIn * 100) / 100.0;
+    }
+
+    public Double getPriceSatisfaction() {
+        return (double) (Math.round(priceSatisfaction * 100) / 100);
+    }
 }
