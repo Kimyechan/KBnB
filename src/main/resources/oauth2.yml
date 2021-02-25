@@ -1,7 +1,0 @@
-spring:
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            clientSecret: chB7l-RK5GINE0pDojbWjsHB
