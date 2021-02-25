@@ -1,5 +1,67 @@
 # KBnB
 Room reservation spring web server project
+![20210225125501](https://user-images.githubusercontent.com/50402288/109100781-e196e980-7768-11eb-9f84-b2ea84f2bc9d.png)
+
+## Dependencies
+
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'mysql:mysql-connector-java'
+    implementation 'com.querydsl:querydsl-jpa'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.1.RELEASE'
+
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '+'
+    compile group: 'com.google.code.gson', name: 'gson', version: '+'
+    compile group: 'commons-io', name: 'commons-io', version: '+'
+
+    implementation 'org.modelmapper:modelmapper:2.3.2'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
+    compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'com.h2database:h2:1.4.199 '
+    
+## Tech/Framework used
+- Java 11
+- Spring boot 2.0
+- Oauth2
+- Spring Security
+- Spring HATEOAS
+- Spring Rest Docs
+- Query dsl
+- AWS EC2
+- AWS S3
+- JPA
+- MySql
+- JWT
+- H2
+
+## CI/CD
+- Heroku
+- GitHub Action
+
+## Contribute
+[Kimyechan](https://github.com/Kimyechan)
+
+[Hansol](https://github.com/Hansol-Jeong)
+
+## Provide APIs
+[back-end APIs](http://3.34.198.174:8080/docs/api.html)
+
+## Credits
+[Oauth & Security setting](https://github.com/callicoder/spring-boot-react-oauth2-social-login-demo)
+[Use of Rest Docs](https://docs.spring.io/spring-restdocs/docs/current/reference/html5/)
 
 ## Project Convention
 ### Git Commit
@@ -23,3 +85,4 @@ Room reservation spring web server project
 - 매일 개발 시작전 10분 Scrum
 - Code Review는 Pull Request 발생시에 바로 시작
 - 기능 개발 끝나면 바로 Deploy
+
