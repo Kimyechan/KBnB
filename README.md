@@ -1,6 +1,9 @@
 # KBnB
-Accommodation Reservation Web Backend API Server
-
+`Accommodation Reservation Web Backend API Server`
+- front server : https://kbnb.herokuapp.com
+- backend server : https://backend.kbnb.tk
+- api docs : https://backend.kbnb.tk/docs/api.html
+    
 ## Table of Contents
 - 프로젝트 실행 방법
 - 프로젝트 설계
@@ -13,8 +16,9 @@ Accommodation Reservation Web Backend API Server
     - Infra
     - development
     - documentation
+- Infra 구성도
 - CI/CD
-- 구현된 기능
+- 구현 기능 부연 명
 
 ## How to run project
 ### Register secret config file
@@ -154,3 +158,52 @@ Accommodation Reservation Web Backend API Server
 ## Usage Skill
 
 ![pic3](https://user-images.githubusercontent.com/12459864/109123499-4106f080-778d-11eb-812d-d94b581727af.png)
+
+## Infra Structure
+
+![kbnb aws infra (1)](https://user-images.githubusercontent.com/12459864/109154112-2e9eae00-77b1-11eb-90a8-883be7acb85a.png)
+- 과정 설명
+    1. 사용자가 React Server로 접근한다
+    1. React Server는 Backend Server의 도메인 ip 주소를 DNS에 요청한다
+    1. DNS가 ip주소를 반환해 준다
+    1. 해당 ip주소의 433포트로 접근한다
+    1. Web Server가 요청을 처리해주는 WAS로 보낸다
+    1. WAS는 해당 요청의 URL을 통해 처리해주는 Handler로 매핑시킨 후 DB 정보가 필요하다면 AWS RDS에 쿼리를 보낸다
+    1. DB애서 요청 쿼리에 맞는 응답을 보낸다
+    1. Handler에서 Http Response 만들어서 Web Server로 보낸다
+    1. Web Server는 요청이 들어온 React Server로 응답 정보를 보낸다
+    1. React Server는 응답 결과와 HTML을 조합해서 사용자에게 HTML을 전달한다
+    
+## CI/CD
+
+![kbnb aws infra](https://user-images.githubusercontent.com/12459864/109153345-242fe480-77b0-11eb-9bd6-bce8611bff23.png)
+
+## 구현 기능 부연 설명
+
+- OAuth2 
+
+- Query DSL 이용한 숙소 검색
+    - API 문서 URL : https://backend.kbnb.tk/docs/api.html#resource-room-get-list-by-condition
+    - 위치 조건은 필수값, 나머지는 동적으로 검색 가능
+    - 검색 조건 종류
+        - 위치 : 위도 경도 범위값으로 숙소 검색
+        - 체크인, 체크아웃 날짜 : 해당 날짜에 예약 가능한 숙소 검색
+        - 총 인원 수 : 제한 인원 내에 있는 숙소로 검색
+        - 최저 최대 비용 : 최저 최대 비용 사이에 있는 숙소 검색
+        - 숙소 유형 : 유형에 맞는 숙소 검색
+        - 침대 수: 설정 값 이상의 숙소 검색
+        - 침실 수: 설정 값 이상의 숙소 검색
+        - 욕실 수: 설정 값 이상의 숙소 검색
+            
+- 예약시 결제 연동 
+    - boot pay api 사용
+    - API 문서 URL : https://backend.kbnb.tk/docs/api.html#resource-reservation-register
+    - 결제 과정
+        ![bootpay](https://user-images.githubusercontent.com/12459864/109171617-4d0ea480-77c5-11eb-9dd1-2513389ac157.png)
+        
+- 숙소 추천 API 로직
+    - API 문서 URL : https://backend.kbnb.tk/docs/api.html#resource-room-recommend
+    - 추천 내부 로직
+        1. 해당 숙소 지난 달 예약률 조회
+        1. 해당 숙소 예약률 90%이상인 숙소 확인
+        1. 90% 이상일 때 추천 숙소로 응답값 전송
