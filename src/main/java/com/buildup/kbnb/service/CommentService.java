@@ -10,7 +10,9 @@ import com.buildup.kbnb.repository.CommentRepository;
 import com.buildup.kbnb.service.reservation.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,8 +28,11 @@ public class CommentService {
     public Comment save(Comment comment) {
         return commentRepository.save(comment);
     }
+
     public Page<Comment> getListByRoomIdWithUser(Room room, Pageable pageable) {
-        return commentRepository.findByRoom(room, pageable);
+        Pageable newPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("date").descending());
+
+        return commentRepository.findByRoom(room, newPageable);
     }
 
     public Comment saveComment(CommentCreateReq req, User user, Room savedRoom) {

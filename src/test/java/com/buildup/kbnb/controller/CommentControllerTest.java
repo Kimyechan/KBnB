@@ -24,10 +24,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -214,6 +211,7 @@ class CommentControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
+
     @Test
     @DisplayName("댓글 리스트 확인")
     public void getCommentList() throws Exception {
@@ -238,8 +236,9 @@ class CommentControllerTest {
                 .priceSatisfaction(4.5)
                 .commentList(new ArrayList<>())
                 .build();
+
         List<Comment> commentList = new ArrayList<>();
-        for (int i = 0; i<2; i++) {
+        for (int i = 1; i <= 2; i++) {
             Comment comment = Comment.builder()
                     .id((long) i)
                     .cleanliness(4.5)
@@ -250,14 +249,15 @@ class CommentControllerTest {
                     .priceSatisfaction(4.5)
                     .user(user)
                     .room(room)
-                    .date(LocalDate.parse("2020-02-02"))
+                    .date(LocalDate.of(2021, 2, i))
                     .description("오호홓 너무좋아요")
                     .build();
             commentList.add(comment);
         }
+
         Pageable pageable = PageRequest.of(0, 2);
         Page<Comment> commentPage = new PageImpl<>(commentList, pageable, commentList.size());
-        String token = tokenProvider.createToken(String.valueOf(user.getId())); //이거 인증 뺴도 되는부분인데 물어보기
+
         given(roomService.findById(any())).willReturn(room);
         given(commentService.findAllByRoomId(any())).willReturn(commentList);
         given(commentService.getListByRoomIdWithUser(any(), any())).willReturn(commentPage);
