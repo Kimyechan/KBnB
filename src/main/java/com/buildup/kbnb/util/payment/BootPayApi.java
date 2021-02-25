@@ -6,7 +6,6 @@ import com.buildup.kbnb.util.payment.model.request.Confirm;
 import com.buildup.kbnb.util.payment.model.request.Token;
 import com.buildup.kbnb.util.payment.model.response.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;

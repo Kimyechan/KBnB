@@ -1,10 +1,8 @@
 package com.buildup.kbnb.service.reservation;
 
 
-import com.buildup.kbnb.dto.host.income.IncomeResponse;
-
 import com.buildup.kbnb.advice.exception.ReservationException;
-
+import com.buildup.kbnb.dto.host.income.IncomeResponse;
 import com.buildup.kbnb.model.Payment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.Room;

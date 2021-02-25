@@ -1,7 +1,6 @@
 package com.buildup.kbnb.controller;
 
 import com.buildup.kbnb.advice.exception.*;
-import com.buildup.kbnb.dto.user.BirthDto;
 import com.buildup.kbnb.dto.user.*;
 import com.buildup.kbnb.model.user.User;
 import com.buildup.kbnb.repository.UserRepository;
@@ -23,7 +22,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;

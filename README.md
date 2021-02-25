@@ -1,5 +1,4 @@
 # KBnB
-<<<<<<< HEAD
 Room reservation spring web server project
 ![20210225125501](https://user-images.githubusercontent.com/50402288/109100781-e196e980-7768-11eb-9f84-b2ea84f2bc9d.png)
 
@@ -62,7 +61,9 @@ Room reservation spring web server project
 
 ## Credits
 [Oauth & Security setting](https://github.com/callicoder/spring-boot-react-oauth2-social-login-demo)
+
 [Use of Rest Docs](https://docs.spring.io/spring-restdocs/docs/current/reference/html5/)
+
 =======
 Accommodation Reservation Web Backend API Server
 
@@ -192,7 +193,6 @@ Accommodation Reservation Web Backend API Server
 ### ERD
 
 ![K-B B DATABASE (2)](https://user-images.githubusercontent.com/12459864/109127898-44e94180-7792-11eb-8e0f-2b91bd0c3eb9.png)
->>>>>>> f7099f1272b8ce5078383034232d129001b0cd28
 
 ## Project Convention
 ### Git Commit
@@ -217,9 +217,7 @@ Accommodation Reservation Web Backend API Server
 - Code Review는 Pull Request 발생시에 바로 시작
 - 기능 개발 끝나면 바로 Deploy
 
-<<<<<<< HEAD
 =======
 ## Usage Skill
 
 ![pic3](https://user-images.githubusercontent.com/12459864/109123499-4106f080-778d-11eb-812d-d94b581727af.png)
->>>>>>> f7099f1272b8ce5078383034232d129001b0cd28

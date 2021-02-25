@@ -5,7 +5,6 @@ import com.buildup.kbnb.advice.exception.ReservationException;
 import com.buildup.kbnb.config.RestDocsConfiguration;
 import com.buildup.kbnb.dto.reservation.*;
 import com.buildup.kbnb.model.Location;
-import com.buildup.kbnb.model.Payment;
 import com.buildup.kbnb.model.Reservation;
 import com.buildup.kbnb.model.room.BathRoom;
 import com.buildup.kbnb.model.room.BedRoom;
