@@ -300,7 +300,5 @@ class ReservationServiceTest {
         IncomeResponse incomeResponse = reservationService.separateByMonth(list);
         System.out.println(incomeResponse.getFeb());
         assertThat(incomeResponse.getFeb()).isEqualTo(2000);
-//        System.out.println(incomeResponse.getYearlyIncome());
-//        assertThat(incomeResponse.getYearlyIncome()).isEqualTo(2000);
     }
 }

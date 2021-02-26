@@ -64,5 +64,4 @@ class ReservationRepositoryTest {
 
         return ChronoUnit.DAYS.between(startDate, endDate);
     }
-
 }

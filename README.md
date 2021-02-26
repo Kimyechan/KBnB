@@ -33,6 +33,7 @@ Room reservation spring web server project
     testImplementation 'com.h2database:h2:1.4.199 '
     
 ## Tech/Framework used
+![](https://img.shields.io/badge/github-Give_Us_Star-red?style=plastic)
 - Java 11
 - Spring boot 2.0
 - Oauth2
@@ -52,9 +53,10 @@ Room reservation spring web server project
 - GitHub Action
 
 ## Contribute
+![](https://img.shields.io/badge/role-master-red?style=plastic)
 [Kimyechan](https://github.com/Kimyechan)
 
-[Hansol](https://github.com/Hansol-Jeong)
+![](https://img.shields.io/badge/role-master-red?style=plastic) [Hansol](https://github.com/Hansol-Jeong)
 
 ## Provide APIs
 [back-end APIs](http://3.34.198.174:8080/docs/api.html)
