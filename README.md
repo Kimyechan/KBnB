@@ -56,7 +56,7 @@ Room reservation spring web server project
 ![](https://img.shields.io/badge/role-master-red?style=plastic)
 [Kimyechan](https://github.com/Kimyechan)
 
-![](https://img.shields.io/badge/role-master-red?style=plastic) [Hansol](https://github.com/Hansol-Jeong)
+![](https://img.shields.io/badge/role-slave-red?style=plastic) [Hansol](https://github.com/Hansol-Jeong)
 
 ## Provide APIs
 [back-end APIs](http://3.34.198.174:8080/docs/api.html)
