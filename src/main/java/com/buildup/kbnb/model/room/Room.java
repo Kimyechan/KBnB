@@ -94,6 +94,6 @@ public class Room {
     }
 
     public Double getPriceSatisfaction() {
-        return (double) (Math.round(priceSatisfaction * 10) / 1.0;
+        return Math.round(priceSatisfaction * 10) / 10.0;
     }
 }
