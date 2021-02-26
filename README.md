@@ -48,13 +48,14 @@ Room reservation spring web server project
 - JWT
 - H2
 
-## CI/CD
+## CI/CD 
+![example workflow](https://github.com/Kimyechan/KBnB/actions/workflows/deploy.yml/badge.svg)
 - Heroku
 - GitHub Action
 
 ## Contribute
 ![](https://img.shields.io/badge/role-master-red?style=plastic)
-[Kimyechan](https://github.com/Kimyechan)
+[Kimyechan](https://github.com/Kimyechan)h
 
 ![](https://img.shields.io/badge/role-slave-red?style=plastic) [Hansol](https://github.com/Hansol-Jeong)
 
