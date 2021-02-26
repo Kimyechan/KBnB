@@ -18,7 +18,8 @@
     - documentation
 - Infra 구성도
 - CI/CD
-- 구현 기능 부연 명
+- 구현 기능 부연 설명
+- 프로젝트 진행 일정
 
 ## How to run project
 ### Register secret config file
@@ -182,6 +183,8 @@
 
 - OAuth2 
 
+    ![OAuht2 Flow](https://user-images.githubusercontent.com/12459864/109258919-9222ed00-783e-11eb-8cf9-631f63989ac8.png)
+
 - Query DSL 이용한 숙소 검색
     - API 문서 URL : https://backend.kbnb.tk/docs/api.html#resource-room-get-list-by-condition
     - 위치 조건은 필수값, 나머지는 동적으로 검색 가능
@@ -207,3 +210,25 @@
         1. 해당 숙소 지난 달 예약률 조회
         1. 해당 숙소 예약률 90%이상인 숙소 확인
         1. 90% 이상일 때 추천 숙소로 응답값 전송
+
+- 호스트 수입 조회 API 로직
+    - 로직 설명
+    
+        ![image](https://user-images.githubusercontent.com/12459864/109259208-18d7ca00-783f-11eb-8c5a-21da073f6d7f.png)
+        
+        ![20210226140354](https://user-images.githubusercontent.com/12459864/109259301-4290f100-783f-11eb-9070-6c122b02faa0.png)
+        
+        1.    IncomeRequest로 year, month를 받습니다.
+        2.    reservationService.findByHostFilterByYear메소드에 host와 incomeRequest의 year필드를 파라미터로 건네줍니다.
+        3.    건네받은 host파라미터를 이용하여 reservationRepository.findByHostWithPayment를 시전합니다. -> 결과값으로 host가 호스트인 모든 예약내역이 payment와 함께 리스트로 생성됩니다.
+        4.    해당 예약들을 year파라미터로 year년에 일치하는 예약만 걸러냅니다.
+        5.    결과적으로 해당년에 예약된 예약만 리스트로 반환됩니다.(byYear)
+        6.    reservationService.separateByMonth메소드에 byYear리스트를 파라미터로 건네줍니다.
+        7.    리턴값으로 byYear의 월별 합산치가 incomeResponse에 반환됩니다.
+        8.    incomeResponse.setYearlyIncome()을 통해 연별 합산치를 세팅합니다.
+        9.    연별, 월별 합산치가 포함된 IncomeResponse를 ResponseEntity로 래핑합니다.
+
+## Project Schedule
+- 프로젝트 계획 방법 : git issue, git milestones, git project 활용
+- 전체 일정 요약
+    ![20210226141128](https://user-images.githubusercontent.com/12459864/109259583-d8c51700-783f-11eb-8c86-fd843c3c6575.png)
