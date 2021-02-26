@@ -70,30 +70,30 @@ public class Room {
     }
 
     public Double getGrade() {
-        return Math.round(grade * 100) / 100.0;
+        return Math.round(grade * 10) / 10.0;
     }
 
     public Double getCleanliness() {
-        return Math.round(cleanliness * 100) / 100.0;
+        return Math.round(cleanliness * 10) / 10.0;
     }
 
     public Double getAccuracy() {
-        return Math.round(accuracy * 100) / 100.0;
+        return Math.round(accuracy * 10) / 10.0;
     }
 
     public Double getCommunication() {
-        return Math.round(communication * 100) / 100.0;
+        return Math.round(communication * 10) / 10.0;
     }
 
     public Double getLocationRate() {
-        return Math.round(locationRate * 100) / 100.0;
+        return Math.round(locationRate * 10) / 10.0;
     }
 
     public Double getCheckIn() {
-        return Math.round(checkIn * 100) / 100.0;
+        return Math.round(checkIn * 10) / 10.0;
     }
 
     public Double getPriceSatisfaction() {
-        return (double) (Math.round(priceSatisfaction * 100) / 100);
+        return (double) (Math.round(priceSatisfaction * 10) / 1.0;
     }
 }
