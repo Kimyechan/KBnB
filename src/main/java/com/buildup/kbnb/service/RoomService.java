@@ -101,6 +101,7 @@ public class RoomService {
 
     public void createRoomDummyData(RoomController.RoomDummy roomDummy, UserPrincipal userPrincipal) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow();
+
         for (RoomController.RoomDummyDetail roomDummyDetail : roomDummy.getRoomList()) {
             Location location = Location.builder()
                     .country(roomDummyDetail.getCountry())
@@ -114,10 +115,10 @@ public class RoomService {
             locationRepository.save(location);
 
             Room room = Room.builder()
-                    .name("room name")
-                    .roomType("Shared room")
-                    .roomCost(20000.0)
-                    .cleaningCost(5000.0)
+                    .name("Busan room" + roomDummyDetail.getRoom_id())
+                    .roomType(roomDummyDetail.getRoom_type())
+                    .roomCost(roomDummyDetail.getPrice() * 1000)
+                    .cleaningCost(1000.0)
                     .tax(1000.0)
                     .peopleLimit(4)
                     .description("room description")
@@ -126,7 +127,7 @@ public class RoomService {
                     .isSmoking(false)
                     .isParking(false)
                     .grade(0.0)
-                    .bedNum(4)
+                    .bedNum(2)
                     .location(location)
                     .host(user)
                     .build();
@@ -139,31 +140,31 @@ public class RoomService {
             roomImgRepository.save(roomImg1);
 
             RoomImg roomImg2 = RoomImg.builder()
-                    .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-16T11%3A57%3A13.657290.png")
+                    .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/582021-02-26T02%3A42%3A22.996987.png")
                     .room(savedRoom)
                     .build();
             roomImgRepository.save(roomImg2);
 
             RoomImg roomImg3 = RoomImg.builder()
-                    .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-16T11%3A57%3A07.679442.png")
+                    .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/582021-02-26T02%3A42%3A39.958180.png")
                     .room(savedRoom)
                     .build();
             roomImgRepository.save(roomImg3);
 
             RoomImg roomImg4 = RoomImg.builder()
-                    .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-16T11%3A57%3A02.003599.png")
+                    .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/582021-02-26T02%3A43%3A02.103762.png")
                     .room(savedRoom)
                     .build();
             roomImgRepository.save(roomImg4);
 
             RoomImg roomImg5 = RoomImg.builder()
-                    .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-16T11%3A56%3A56.467072.png")
+                    .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/582021-02-26T02%3A43%3A54.958201.png")
                     .room(savedRoom)
                     .build();
             roomImgRepository.save(roomImg5);
 
             RoomImg roomImg6 = RoomImg.builder()
-                    .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/12021-02-16T11%3A56%3A16.700504.png")
+                    .url("https://pungdong.s3.ap-northeast-2.amazonaws.com/kbnbRoom/582021-02-26T02%3A43%3A33.018302.png")
                     .room(savedRoom)
                     .build();
             roomImgRepository.save(roomImg6);
@@ -176,21 +177,12 @@ public class RoomService {
 
             BedRoom bedRoom1 = BedRoom.builder()
                     .queenSize(0)
-                    .doubleSize(2)
-                    .singleSize(0)
+                    .doubleSize(0)
+                    .singleSize(2)
                     .superSingleSize(0)
                     .room(savedRoom)
                     .build();
             bedRoomRepository.save(bedRoom1);
-
-            BedRoom bedRoom2 = BedRoom.builder()
-                    .queenSize(0)
-                    .doubleSize(2)
-                    .singleSize(0)
-                    .superSingleSize(0)
-                    .room(savedRoom)
-                    .build();
-            bedRoomRepository.save(bedRoom2);
         }
 
     }

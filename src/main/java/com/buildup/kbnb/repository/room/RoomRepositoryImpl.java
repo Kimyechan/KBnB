@@ -2,14 +2,18 @@ package com.buildup.kbnb.repository.room;
 
 import com.buildup.kbnb.dto.room.search.*;
 import com.buildup.kbnb.model.room.Room;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -27,6 +31,9 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
 
     @Override
     public Page<Room> searchByCondition(RoomSearchCondition condition, Pageable pageable) {
+        PathBuilder pathBuilder = new PathBuilder(room.getType(), room.getMetadata());
+        Sort.Order o = Sort.by("id").ascending().getOrderFor("id");
+
         List<Room> content = queryFactory
                 .selectFrom(room).distinct()
                 .join(room.location, location).fetchJoin()
@@ -41,6 +48,7 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
                         dateBetween(condition.getCheckDateSearch(), room.id))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(new OrderSpecifier(o.isAscending() ? Order.ASC : Order.DESC, pathBuilder.get(o.getProperty())))
                 .fetch();
 
         long total = queryFactory

@@ -273,6 +273,7 @@ public class RoomController {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class RoomDummyDetail {
+        private String room_id;
         private String room_type;
         private String country;
         private String city;
@@ -281,5 +282,6 @@ public class RoomController {
         private Double latitude;
         private Double longitude;
         private String location;
+        private Double price;
     }
 }

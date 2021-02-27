@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Slf4j
@@ -52,8 +53,8 @@ public class S3Uploader {
     }
 
     private Optional<File> convert(MultipartFile file, String userEmail) throws IOException {
-        String uniqueFileName = userEmail + ".png"; //해당 구문에서 오류
-//        String uniqueFileName = userEmail + ".png";
+        String uniqueFileName = userEmail + ".png";
+
         File convertFile = new File(uniqueFileName);
         if(convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
