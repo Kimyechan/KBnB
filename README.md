@@ -1,6 +1,6 @@
 # KBnB
 `Accommodation Reservation Web Backend API Server`
-- front server : https://kbnb.herokuapp.com
+- front server : https://k-bnb.netlify.app
 - backend server : https://backend.kbnb.tk
 - api docs : https://backend.kbnb.tk/docs/api.html
     
