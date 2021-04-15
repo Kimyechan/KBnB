@@ -41,6 +41,7 @@ app:
     authorizedRedirectUris:
       - http://localhost:3000/oauth2/redirect
       - https://kbnb.herokuapp.com/oauth2/redirect
+      - https://k-bnb.netlify.app/oauth2/redirect
 
 cloud:
   aws:
