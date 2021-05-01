@@ -1,8 +1,8 @@
 # KBnB
 `Accommodation Reservation Web Backend API Server`
 - front server : https://k-bnb.netlify.app
-- backend server : https://backend.kbnb.tk
-- api docs : https://backend.kbnb.tk/docs/api.html
+- backend server : https://kbnb.buil-dup.link
+- api docs : https://kbnb.buil-dup.link/docs/api.html
     
 ## Table of Contents
 - 프로젝트 실행 방법
