@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.kafka.support.converter.RecordMessageConverter;
+import org.springframework.kafka.support.converter.StringJsonMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
@@ -18,8 +20,10 @@ public class KbnbApplication {
             + "optional:classpath:database.yml,"
             + "optional:classpath:secret.yml,"
             + "optional:classpath:oauth2.yml,"
+            + "optional:classpath:kafka.yml,"
             + "optional:/home/ubuntu/config/project/kbnb/database.yml,"
             + "optional:/home/ubuntu/config/project/kbnb/oauth2.yml,"
+            + "optional:/home/ubuntu/config/project/kbnb/kafka.yml,"
             + "optional:/home/ubuntu/config/project/kbnb/bootpay.yml";
 
     public static void main(String[] args) {
@@ -43,5 +47,10 @@ public class KbnbApplication {
                     .build();
         factory.setHttpClient(httpClient);
         return new RestTemplate(factory);
+    }
+
+    @Bean
+    public RecordMessageConverter converter() {
+        return new StringJsonMessageConverter();
     }
 }
