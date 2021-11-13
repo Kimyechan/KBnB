@@ -7,6 +7,7 @@ import com.buildup.kbnb.dto.host.income.IncomeResponse;
 import com.buildup.kbnb.dto.reservation.ReservationConfirmedResponse;
 import com.buildup.kbnb.dto.reservation.ReservationDetailResponse;
 import com.buildup.kbnb.dto.room.detail.ReservationDate;
+import com.buildup.kbnb.kafka.payment.PaymentProducer;
 import com.buildup.kbnb.model.Comment;
 import com.buildup.kbnb.model.Location;
 import com.buildup.kbnb.model.Payment;
@@ -39,6 +40,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Transactional
 public class ReservationService {
     private final ReservationRepository reservationRepository;
+    private final PaymentProducer paymentProducer;
     private final PaymentService paymentService;
     private final BootPayApi bootPayApi;
 
@@ -196,8 +198,8 @@ public class ReservationService {
         reservation.setPayment(savedPayment);
         Reservation savedReservation = save(reservation);
 
-        ResponseEntity<ResDefault> res = bootPayApi.confirm(token, payment.getReceiptId());
-        bootPayApi.checkConfirm(res);
+        paymentProducer.sendPaymentInfo(token, payment.getReceiptId());
+
         return savedReservation;
     }
 

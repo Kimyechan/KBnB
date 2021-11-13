@@ -83,7 +83,7 @@ public class BootPayApi {
         }
     }
 
-    public ResponseEntity<ResDefault> confirm(String token, String receipt_id) throws Exception {
+    public ResponseEntity<ResDefault> confirm(String token, String receipt_id) {
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.AUTHORIZATION, token);
 
