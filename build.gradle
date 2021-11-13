@@ -36,6 +36,7 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     implementation 'com.querydsl:querydsl-jpa'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.1.RELEASE'
+    implementation 'org.springframework.kafka:spring-kafka'
 
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '+'
     compile group: 'com.google.code.gson', name: 'gson', version: '+'
