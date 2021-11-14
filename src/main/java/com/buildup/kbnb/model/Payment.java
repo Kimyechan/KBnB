@@ -19,4 +19,5 @@ public class Payment {
     private Long id;
     private String receiptId;
     private Integer price;
+    private Boolean isConfirm;
 }

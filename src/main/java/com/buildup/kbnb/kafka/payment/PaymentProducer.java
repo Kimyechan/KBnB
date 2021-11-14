@@ -10,7 +10,17 @@ import org.springframework.stereotype.Service;
 public class PaymentProducer {
     private final KafkaTemplate<Object, Object> kafkaTemplate;
 
-    public void sendPaymentInfo(String token, String receiptId) {
+    public void sendPaymentInfo(String token, String receiptId, Long paymentId) {
+        PaymentDto paymentDto = PaymentDto.builder()
+                .token(token)
+                .receiptId(receiptId)
+                .paymentId(paymentId)
+                .build();
+
+        kafkaTemplate.send("payment-confirm", paymentDto);
+    }
+
+    public void sendPaymentInfo2(String token, String receiptId) {
         PaymentDto paymentDto = PaymentDto.builder()
                 .token(token)
                 .receiptId(receiptId)
