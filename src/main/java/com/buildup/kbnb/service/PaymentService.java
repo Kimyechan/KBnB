@@ -23,7 +23,7 @@ public class PaymentService {
 
     public void makeConfirmStateTrue(Long paymentId) {
         Payment payment = findPayment(paymentId);
-        payment.setIsConfirm(false);
+        payment.setIsConfirm(true);
 
         paymentRepository.save(payment);
     }
