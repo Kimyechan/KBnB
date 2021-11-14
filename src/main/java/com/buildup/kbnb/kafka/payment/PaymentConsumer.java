@@ -1,6 +1,7 @@
 package com.buildup.kbnb.kafka.payment;
 
 import com.buildup.kbnb.kafka.dto.PaymentDto;
+import com.buildup.kbnb.service.PaymentService;
 import com.buildup.kbnb.util.payment.BootPayApi;
 import com.buildup.kbnb.util.payment.model.response.ResDefault;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +15,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PaymentConsumer {
     private final BootPayApi bootPayApi;
+    private final PaymentService paymentService;
 
     @KafkaListener(topics = "payment-confirm", groupId = "payment")
     public void confirmPayment(PaymentDto paymentDto, Consumer<Object, Object> consumer) {
         ResponseEntity<ResDefault> res = bootPayApi.confirm(paymentDto.getToken(), paymentDto.getReceiptId());
         if (res.getBody() != null && res.getBody().getStatus() == 200) {
+            paymentService.makeConfirmStateTrue(paymentDto.getPaymentId());
+
             consumer.commitAsync();
         }
     }

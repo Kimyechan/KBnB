@@ -87,6 +87,7 @@ public class ReservationController {
     private Payment mapToPayment(ReservationRegisterRequest reservationRegisterRequest) {
         return Payment.builder()
                 .receiptId(reservationRegisterRequest.getPayment().getReceipt_id())
+                .isConfirm(false)
                 .build();
     }
 

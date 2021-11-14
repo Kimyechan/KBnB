@@ -6,6 +6,7 @@ import com.buildup.kbnb.advice.exception.ResourceNotFoundException;
 import com.buildup.kbnb.dto.host.income.IncomeResponse;
 import com.buildup.kbnb.dto.reservation.ReservationConfirmedResponse;
 import com.buildup.kbnb.dto.reservation.ReservationDetailResponse;
+import com.buildup.kbnb.dto.reservation.ReservationRegisterRequest;
 import com.buildup.kbnb.dto.room.detail.ReservationDate;
 import com.buildup.kbnb.kafka.payment.PaymentProducer;
 import com.buildup.kbnb.model.Comment;
@@ -198,7 +199,7 @@ public class ReservationService {
         reservation.setPayment(savedPayment);
         Reservation savedReservation = save(reservation);
 
-        paymentProducer.sendPaymentInfo(token, payment.getReceiptId());
+        paymentProducer.sendPaymentInfo(token, payment.getReceiptId(), payment.getId());
 
         return savedReservation;
     }

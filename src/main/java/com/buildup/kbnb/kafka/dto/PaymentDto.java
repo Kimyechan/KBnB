@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class PaymentDto {
+    Long paymentId;
     String token;
     String receiptId;
 }

@@ -62,7 +62,7 @@ public class ReservationServiceTest {
         List<Reservation> list = new ArrayList<>();
         Reservation reservation2 = Reservation.builder()
                 .id(2L)
-                .payment(new Payment(2L,"2",2000))
+                .payment(new Payment(2L,"2",2000, true))
                 .checkIn(LocalDate.of(2021,2,2))
                 .build();
 
