@@ -19,13 +19,4 @@ public class PaymentProducer {
 
         kafkaTemplate.send("payment-confirm", paymentDto);
     }
-
-    public void sendPaymentInfo2(String token, String receiptId) {
-        PaymentDto paymentDto = PaymentDto.builder()
-                .token(token)
-                .receiptId(receiptId)
-                .build();
-
-        kafkaTemplate.send("payment-confirm", paymentDto);
-    }
 }
