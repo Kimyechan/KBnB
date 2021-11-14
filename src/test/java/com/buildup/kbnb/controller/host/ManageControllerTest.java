@@ -83,11 +83,11 @@ public class ManageControllerTest {
         List<Reservation> list = new ArrayList<>();
             Reservation reservation1 = Reservation.builder()
                     .checkIn(LocalDate.of(2020,2,2))
-                    .payment(new Payment(1L,"1",1000))
+                    .payment(new Payment(1L,"1",1000, true))
                     .build();
             Reservation reservation2 = Reservation.builder()
                     .checkIn(LocalDate.of(2021,2,2))
-                    .payment(new Payment(1L,"1",1000))
+                    .payment(new Payment(1L,"1",1000, true))
                     .build();
             list.add(reservation1); list.add(reservation2);
             return list;
